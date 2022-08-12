@@ -25,8 +25,8 @@ const routes: Routes = [
     loadChildren: () =>
       import("./user/feature/login/login.module").then((m) => m.LoginModule),
   },
-  { path: "pages/notfound", component: NotfoundComponent },
-  { path: "**", redirectTo: "pages/notfound" },
+  { path: "notfound", component: NotfoundComponent },
+  { path: "**", redirectTo: "notfound" },
 ];
 
 @NgModule({
