@@ -12,6 +12,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppLayoutModule } from "./shared/feature/app-layout/app-layout.module";
 import { httpInterceptorProviders } from "./shared/data-access/interceptors";
 import { AuthService } from "./shared/data-access/services/auth.service";
+import { TuiPortalModule } from "@taiga-ui/cdk";
 
 function tryToGetUser(authService: AuthService) {
   return () => {
@@ -36,6 +37,7 @@ function tryToGetUser(authService: AuthService) {
     BrowserModule,
     AppLayoutModule,
     BrowserAnimationsModule,
+    TuiRootModule,
     TuiRootModule,
     TuiDialogModule,
     TuiAlertModule,
