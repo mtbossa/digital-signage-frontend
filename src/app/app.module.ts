@@ -11,7 +11,6 @@ import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppLayoutModule } from "./shared/feature/app-layout/app-layout.module";
 import { httpInterceptorProviders } from "./shared/interceptors";
-import { NotfoundComponent } from "./shared/ui/notfound/notfound.component";
 import { AuthService } from "./user/data-access/auth.service";
 
 function tryToGetUser(authService: AuthService) {
@@ -30,7 +29,7 @@ function tryToGetUser(authService: AuthService) {
   };
 }
 @NgModule({
-  declarations: [AppComponent, NotfoundComponent],
+  declarations: [AppComponent],
   imports: [
     CookieModule.withOptions(),
     HttpClientModule,
