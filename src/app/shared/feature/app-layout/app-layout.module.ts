@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { AppSidebarModule } from "../../ui/app-sidebar/app-sidebar.module";
 
+import { AppSidebarModule } from "../../ui/app-sidebar/app-sidebar.module";
 import { AppLayoutComponent } from "./app-layout.component";
 
 @NgModule({

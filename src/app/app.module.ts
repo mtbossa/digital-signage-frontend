@@ -9,10 +9,9 @@ import { of } from "rxjs";
 
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
-import { AppLayoutModule } from "./shared/feature/app-layout/app-layout.module";
 import { httpInterceptorProviders } from "./shared/data-access/interceptors";
 import { AuthService } from "./shared/data-access/services/auth.service";
-import { TuiPortalModule } from "@taiga-ui/cdk";
+import { AppLayoutModule } from "./shared/feature/app-layout/app-layout.module";
 
 function tryToGetUser(authService: AuthService) {
   return () => {

@@ -16,7 +16,9 @@ export class LoginGuard implements CanActivateChild {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivateChild(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     route: ActivatedRouteSnapshot,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     state: RouterStateSnapshot
   ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     return this.authService.getLoggedUser().pipe(
