@@ -5067,6 +5067,13 @@ ng-morph@^2.1.0:
     multimatch "5.0.0"
     ts-morph "10.0.2"
 
+ngx-cookie@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/ngx-cookie/-/ngx-cookie-6.0.1.tgz#feb83200bc30494cbadd18571d9fabf7ca70361f"
+  integrity sha512-TfQPROUaWBOOtPrI6bWqYQelkc7PKwZich5a3bNNgxlH6+v9VgH4D3GoNzTc1Cs2s8dfIw4nGuOHkLiH+FZqiw==
+  dependencies:
+    tslib "^2.0.0"
+
 nice-napi@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/nice-napi/-/nice-napi-1.0.2.tgz#dc0ab5a1eac20ce548802fc5686eaa6bc654927b"
@@ -6825,7 +6832,7 @@ tsconfig-paths@^3.9.0:
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
-tslib@2.4.0, tslib@^2.1.0, tslib@^2.3.0:
+tslib@2.4.0, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
