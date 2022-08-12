@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
-import { AuthService } from "../../data-access/auth.service";
+import { AuthService } from "../../../shared/data-access/services/auth.service";
 
 @Component({
   selector: "app-login",

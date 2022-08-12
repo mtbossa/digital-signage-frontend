@@ -10,7 +10,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { CookieService } from "ngx-cookie";
 import { catchError, Observable, throwError } from "rxjs";
-import { AuthService } from "src/app/user/data-access/auth.service";
+import { AuthService } from "src/app/shared/data-access/services/auth.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
