@@ -1,0 +1,21 @@
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+
+header {
+  height: 4rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-inline: 3.5rem;
+
+  background-color: white;
+  @include shadow(4);
+}
+
+.dropdown {
+  width: 4rem;
+
+  padding-block: 1rem;
+  padding-inline: 2rem;
+}

@@ -1,0 +1,25 @@
+<header class="tui-text_h6">
+  INTUS
+  <ng-container *ngIf="user$ | async as user">
+    <span (tuiActiveZoneChange)="onActiveZone($event)">
+      <a
+        tuiLink
+        icon="tuiIconChevronDown"
+        iconAlign="right"
+        [tuiDropdownContent]="dropdownContent"
+        [tuiDropdown]="open"
+        (click)="onClick()"
+      >
+        {{ user.email }}
+      </a>
+
+      <ng-template #dropdownContent>
+        <div class="dropdown tui-text_body-l">
+          <ul>
+            <li>Sair</li>
+          </ul>
+        </div>
+      </ng-template>
+    </span>
+  </ng-container>
+</header>
