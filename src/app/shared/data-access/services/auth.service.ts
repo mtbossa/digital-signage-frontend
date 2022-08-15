@@ -52,4 +52,14 @@ export class AuthService {
   public isLogged() {
     return this.getLoggedUser().pipe(map((userOrNull) => (userOrNull ? true : false)));
   }
+
+  public logOut() {
+    this.http
+      .post(`${environment.apiUrl}/logout`, {})
+      .pipe(take(1))
+      .subscribe((_) => {
+        this.setLoggedUser(null);
+        this.router.navigateByUrl("/login");
+      });
+  }
 }
