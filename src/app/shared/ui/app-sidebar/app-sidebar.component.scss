@@ -1,0 +1,16 @@
+a {
+  font-size: 17px;
+  line-height: 1.41;
+  color: var(--tui-text-03);
+}
+
+a:hover {
+  color: var(--tui-text-02);
+}
+
+.sidebar {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

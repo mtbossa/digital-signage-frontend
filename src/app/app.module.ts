@@ -37,7 +37,6 @@ function tryToGetUser(authService: AuthService) {
     AppLayoutModule,
     BrowserAnimationsModule,
     TuiRootModule,
-    TuiRootModule,
     TuiDialogModule,
     TuiAlertModule,
     AppRoutingModule,
