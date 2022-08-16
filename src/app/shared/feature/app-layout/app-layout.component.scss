@@ -1,8 +1,10 @@
-.tui-container {
-  height: calc(100vh - 168px);
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+
+.tui-row {
+  height: 100%;
 }
 
-.tui-container
-> .tui-row {
-  height: 100%;
+.tui-container {
+  height: 90vh;
+  padding-block: 2rem;
 }
