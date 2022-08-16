@@ -1,0 +1,10 @@
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+
+aside {
+  padding: 2rem;
+
+  height: 100%;
+
+  @include shadow(4);
+}
+

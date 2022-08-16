@@ -1,0 +1,8 @@
+main {
+  height: calc(100vh - 168px);
+}
+
+main
+> div {
+  height: 100%;
+}
