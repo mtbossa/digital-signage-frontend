@@ -1,8 +1,8 @@
-main {
+.tui-container {
   height: calc(100vh - 168px);
 }
 
-main
-> div {
+.tui-container
+> .tui-row {
   height: 100%;
 }
