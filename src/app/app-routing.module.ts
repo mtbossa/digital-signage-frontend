@@ -17,6 +17,13 @@ const routes: Routes = [
         loadChildren: () =>
           import("./dashboard/feature/dashboard.module").then((m) => m.DashboardModule),
       },
+      {
+        path: "medias",
+        loadChildren: () =>
+          import("./media/feature/media-shell/media-shell.module").then(
+            (m) => m.MediaShellModule
+          ),
+      },
     ],
   },
   {
