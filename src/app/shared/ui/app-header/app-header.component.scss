@@ -4,9 +4,7 @@ header {
   @include shadow(4);
 }
 
-.container {
-  @include tui-space('horizontal', 15);
-
+.header {
   height: 4rem;
 
   display: flex;
