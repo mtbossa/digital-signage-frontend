@@ -1,0 +1,10 @@
+@import '../../../../styles/variables';
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+
+.container {
+  height: 100%;
+
+  padding: $default-padding;
+
+  @include shadow(4);
+}

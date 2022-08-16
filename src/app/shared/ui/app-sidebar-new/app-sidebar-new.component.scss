@@ -1,7 +1,8 @@
+@import '../../../../styles/variables';
 @import '~@taiga-ui/core/styles/taiga-ui-local';
 
 aside {
-  padding: 2rem;
+  padding: $default-padding;
 
   height: 100%;
 
