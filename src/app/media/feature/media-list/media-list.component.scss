@@ -8,3 +8,13 @@
 
   @include shadow(4);
 }
+
+.buttons-header {
+  padding-block: 1.5rem;
+  padding-inline: 2rem;
+
+  border-radius: .5rem;
+  border: 1px solid var(--tui-base-03);
+
+  background-color: var(--tui-base-02);
+}

@@ -1,1 +1,13 @@
-<div class="container">oi</div>
+<div class="container">
+  <h1>Mídias</h1>
+  <div class="buttons-header">
+    <button tuiButton icon="tuiIconPlus" size="m">Criar</button>
+  </div>
+  <ng-container *ngIf="medias$ | async as medias; else loading">
+    <div *ngFor="let media of medias">
+      <p>{{ media.description }}</p>
+    </div>
+  </ng-container>
+
+  <ng-template #loading> <h1>Loading</h1> </ng-template>
+</div>
