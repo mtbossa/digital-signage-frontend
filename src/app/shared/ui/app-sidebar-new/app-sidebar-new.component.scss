@@ -9,3 +9,7 @@ aside {
   @include shadow(4);
 }
 
+:host {
+  height: 100%;
+}
+

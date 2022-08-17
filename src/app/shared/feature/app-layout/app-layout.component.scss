@@ -7,4 +7,10 @@
 .tui-container {
   height: 90vh;
   padding-block: 2rem;
+
+  overflow: hidden;
+}
+
+main {
+  height: 100%;
 }
