@@ -57,7 +57,7 @@ export class AuthService {
     this.http
       .post(`${environment.apiUrl}/logout`, {})
       .pipe(take(1))
-      .subscribe((_) => {
+      .subscribe(() => {
         this.setLoggedUser(null);
         this.router.navigateByUrl("/login");
       });

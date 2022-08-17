@@ -1,5 +1,4 @@
 import { CommonModule } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { TuiButtonModule } from "@taiga-ui/core";
 import { Observable } from "rxjs";
