@@ -4,7 +4,6 @@ import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "./shared/data-access/guards/auth.guard";
 import { AppLayoutComponent } from "./shared/feature/app-layout/app-layout.component";
 import { NotfoundComponent } from "./shared/ui/notfound/notfound.component";
-import { TestComponent } from "./test/test.component";
 import { LoginGuard } from "./user/feature/login/guards/login.guard";
 
 const routes: Routes = [
@@ -32,10 +31,6 @@ const routes: Routes = [
     // canActivateChild: [LoginGuard],
     loadChildren: () =>
       import("./user/feature/login/login.module").then((m) => m.LoginModule),
-  },
-  {
-    path: "test",
-    component: TestComponent,
   },
   { path: "notfound", component: NotfoundComponent },
   { path: "**", redirectTo: "notfound" },
