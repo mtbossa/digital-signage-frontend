@@ -7,6 +7,11 @@ const routes: Routes = [
     loadComponent: () =>
       import("../media-list/media-list.component").then((m) => m.MediaListComponent),
   },
+  {
+    path: "create",
+    loadComponent: () =>
+      import("../media-form/media-form.component").then((m) => m.MediaFormComponent),
+  },
 ];
 
 @NgModule({
