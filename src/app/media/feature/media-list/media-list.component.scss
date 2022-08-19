@@ -1,14 +1,6 @@
 @import '../../../../styles/variables';
 @import '~@taiga-ui/core/styles/taiga-ui-local';
 
-.container {
-  height: 100%;
-
-  padding: $default-padding;
-
-  @include shadow(4);
-}
-
 .buttons-header {
   padding-block: 1.5rem;
   padding-inline: 2rem;
