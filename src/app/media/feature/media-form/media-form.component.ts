@@ -9,32 +9,15 @@ import {
   TuiTextfieldControllerModule,
 } from "@taiga-ui/core";
 import {
-  TuiDataListWrapperModule,
+  TUI_VALIDATION_ERRORS,
   TuiFieldErrorModule,
   TuiFieldErrorPipeModule,
-  TuiInputDateModule,
+  TuiFileLike,
+  TuiInputFilesModule,
   TuiInputModule,
-  TuiInputSliderModule,
-  TuiSelectModule,
-  TuiStepperModule,
 } from "@taiga-ui/kit";
-
-class User {
-  constructor(readonly firstName: string, readonly lastName: string) {}
-
-  toString(): string {
-    return `${this.firstName} ${this.lastName}`;
-  }
-}
-
-class Account {
-  constructor(
-    readonly id: string,
-    readonly name: string,
-    readonly amount: number,
-    readonly cardSvg: string
-  ) {}
-}
+import { Subject } from "rxjs";
+import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
 @Component({
   selector: `app-media-form`,
@@ -45,49 +28,41 @@ class Account {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    TuiStepperModule,
     TuiFieldErrorPipeModule,
     TuiFieldErrorModule,
-    TuiInputSliderModule,
-    TuiDataListWrapperModule,
-    TuiSelectModule,
     TuiTextfieldControllerModule,
     TuiErrorModule,
-    TuiGroupModule,
     TuiButtonModule,
     TuiInputModule,
-    TuiInputDateModule,
+    TuiInputFilesModule,
+  ],
+  providers: [
+    {
+      provide: TUI_VALIDATION_ERRORS,
+      useValue: CustomValidators,
+    },
   ],
 })
 export class MediaFormComponent {
-  readonly svgIcons = {
-    common: `https://ng-web-apis.github.io/dist/assets/images/common.svg`,
-    universal: `https://ng-web-apis.github.io/dist/assets/images/universal.svg`,
-    intersection: `https://ng-web-apis.github.io/dist/assets/images/intersection-observer.svg`,
-    mutation: `https://ng-web-apis.github.io/dist/assets/images/mutation-observer.svg`,
-  };
-
-  persons = [new User(`Roman`, `Sedov`), new User(`Alex`, `Inkin`)];
-
-  testForm = new FormGroup({
-    nameValue: new FormControl(``, Validators.required),
-    textValue: new FormControl(``, Validators.required),
-    passwordValue: new FormControl(``, Validators.required),
-    phoneValue: new FormControl(``, Validators.required),
-    moneyValue: new FormControl(`100`, Validators.required),
-    periodValue: new FormControl(new TuiDay(2017, 2, 15), Validators.required),
-    timeValue: new FormControl(new TuiTime(12, 30), Validators.required),
-    personValue: new FormControl(this.persons[0]),
-    quantityValue: new FormControl(0, Validators.required),
-    radioValue: new FormControl(`with-commission`),
-    accountWherefrom: new FormControl(null),
-    accountWhere: new FormControl(null),
-    checkboxValue: new FormControl(false),
-    osnoValue: new FormControl(false),
-    usnValue: new FormControl(false),
-    eshnValue: new FormControl(false),
-    envdValue: new FormControl(false),
-    usn2Value: new FormControl(false),
-    patentValue: new FormControl(false),
+  mediaForm = new FormGroup({
+    description: new FormControl("", [Validators.required, Validators.maxLength(50)]),
+    file: new FormControl<File | null>(null, Validators.required),
   });
+  readonly fileControl = new FormControl();
+
+  ngOnInit() {
+    this.fileControl.valueChanges.subscribe((file: File) =>
+      this.mediaForm.get("file")?.setValue(file)
+    );
+  }
+
+  removeFile(): void {
+    this.fileControl.setValue(null);
+  }
+
+  onSubmit() {
+    this.mediaForm.markAllAsTouched();
+    if (this.mediaForm.invalid) return;
+    console.log(this.mediaForm.value);
+  }
 }
