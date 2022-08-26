@@ -1,29 +1,27 @@
-<header class="tui-text_h6">
-  <div class="tui-container_fullwidth header">
-    INTUS
-    <div *ngIf="user$ | async as user">
-      <span (tuiActiveZoneChange)="onActiveZone($event)">
-        <a
-          tuiLink
-          icon="tuiIconChevronDown"
-          iconAlign="right"
-          [tuiDropdownContent]="dropdownContent"
-          [tuiDropdown]="open"
-          (click)="onClick()"
-        >
-          {{ user.email }}
-        </a>
+<header class="tui-text_h6 tui-container_fullwidth header">
+  INTUS
+  <div *ngIf="user$ | async as user">
+    <span (tuiActiveZoneChange)="onActiveZone($event)">
+      <a
+        tuiLink
+        icon="tuiIconChevronDown"
+        iconAlign="right"
+        [tuiDropdownContent]="dropdownContent"
+        [tuiDropdown]="open"
+        (click)="onClick()"
+      >
+        {{ user.email }}
+      </a>
 
-        <ng-template #dropdownContent>
-          <div class="dropdown tui-text_body-l">
-            <ul>
-              <li>
-                <a tuiLink (click)="logOut()"> Sair </a>
-              </li>
-            </ul>
-          </div>
-        </ng-template>
-      </span>
-    </div>
+      <ng-template #dropdownContent>
+        <div class="dropdown tui-text_body-l">
+          <ul>
+            <li>
+              <a tuiLink (click)="logOut()"> Sair </a>
+            </li>
+          </ul>
+        </div>
+      </ng-template>
+    </span>
   </div>
 </header>

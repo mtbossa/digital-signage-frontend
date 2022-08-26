@@ -1,21 +1,23 @@
 @import '~src/styles/variables';
 @import '~@taiga-ui/core/styles/taiga-ui-local';
 
-.tui-row {
-  height: 100%;
+.page {
+  display: grid;
+  grid-template: 5rem calc(100vh - 5rem) / auto 4fr;
 }
 
-.tui-container {
-  height: 90vh;
-  padding-block: 2rem;
+app-header {
+  grid-column: 1 / -1;
 
-  overflow: hidden;
+  display: flex;
+
+  @include shadow(4);
+}
+
+app-sidebar-new {
+  height: 100%;
 }
 
 main {
-  height: 100%;
-
-  padding: $default-padding;
-
-  @include shadow(4);
+  overflow: auto;
 }
