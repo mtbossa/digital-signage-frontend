@@ -20,6 +20,6 @@ app-sidebar-new {
 }
 
 main {
-  padding: $default-padding;
+  padding: $default-padding $default-padding $default-padding 0;
   overflow: auto;
 }
