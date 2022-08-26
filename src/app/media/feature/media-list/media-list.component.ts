@@ -73,4 +73,8 @@ export class MediaListComponent {
   onPage(page: number): void {
     this.page$.next(page + 1);
   }
+
+  onSize(size: number): void {
+    this.size$.next(size);
+  }
 }

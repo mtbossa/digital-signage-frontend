@@ -39,7 +39,7 @@ export class MediasService {
 
   private medias$ = new BehaviorSubject<Media[] | null>(null);
 
-  public fetchIndex(key: Key, direction: -1 | 1, page: number, size = 10) {
+  public fetchIndex(key: Key, direction: -1 | 1, page: number, size: number) {
     return this.http.get<PaginatedResponse<Media>>(`${environment.apiUrl}/api/medias`, {
       params: {
         page,
