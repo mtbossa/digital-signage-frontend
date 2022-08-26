@@ -2,10 +2,12 @@
 @import '~@taiga-ui/core/styles/taiga-ui-local';
 
 aside {
-  padding: $default-padding;
-
   height: 100%;
+}
 
+nav {
+  padding: $default-padding;
+  height: 100%;
   @include shadow(4);
 }
 

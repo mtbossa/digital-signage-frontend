@@ -16,8 +16,10 @@ app-header {
 
 app-sidebar-new {
   height: 100%;
+  padding: $default-padding;
 }
 
 main {
+  padding: $default-padding;
   overflow: auto;
 }
