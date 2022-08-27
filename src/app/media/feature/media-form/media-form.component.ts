@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 import {
   TuiButtonModule,
   TuiErrorModule,
@@ -53,7 +54,7 @@ export class MediaFormComponent {
   });
   readonly fileControl = new FormControl();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private route: Router) {}
 
   ngOnInit() {
     this.fileControl.valueChanges.subscribe((file: File) =>
@@ -78,7 +79,9 @@ export class MediaFormComponent {
     });
 
     this.http.post(`${environment.apiUrl}/api/medias`, formData).subscribe({
-      next: (res) => console.log({ res }),
+      next: (res) => {
+        this.route.navigate(["../medias"]);
+      },
       error: (err) => console.log({ err }),
     });
   }
