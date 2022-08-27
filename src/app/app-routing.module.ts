@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: "",
     component: AppLayoutComponent,
-    // canActivateChild: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: "",
@@ -28,7 +28,7 @@ const routes: Routes = [
   },
   {
     path: "login",
-    // canActivateChild: [LoginGuard],
+    canActivateChild: [LoginGuard],
     loadChildren: () =>
       import("./user/feature/login/login.module").then((m) => m.LoginModule),
   },

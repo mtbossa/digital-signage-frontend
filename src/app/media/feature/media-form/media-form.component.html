@@ -24,7 +24,8 @@
           <div class="tui-form__row">
             <tui-input-files
               *ngIf="!fileControl.value"
-              accept="image/*"
+              accept="image/png,image/jpg,image/jpeg,video/mp4,video/avi"
+              [maxFileSize]="150000000"
               [multiple]="false"
               [formControl]="fileControl"
             ></tui-input-files>
