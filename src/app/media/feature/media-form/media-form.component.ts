@@ -1,6 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EmbeddedViewRef,
+  Inject,
+  TemplateRef,
+} from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import {
@@ -16,6 +22,7 @@ import {
   TuiInputModule,
 } from "@taiga-ui/kit";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
+import { CrudPortalService } from "src/app/shared/feature/portals/crud-host/crud-portal.service";
 import { environment } from "src/environments/environment";
 
 @Component({
@@ -43,6 +50,8 @@ import { environment } from "src/environments/environment";
   ],
 })
 export class MediaFormComponent {
+  templates: Array<EmbeddedViewRef<unknown>> = [];
+
   mediaForm = new FormGroup({
     description: new FormControl("", {
       nonNullable: true,
@@ -54,7 +63,12 @@ export class MediaFormComponent {
   });
   readonly fileControl = new FormControl();
 
-  constructor(private http: HttpClient, private route: Router) {}
+  constructor(
+    private http: HttpClient,
+    private route: Router,
+    @Inject(CrudPortalService)
+    private readonly crudPortalService: CrudPortalService
+  ) {}
 
   ngOnInit() {
     this.fileControl.valueChanges.subscribe((file: File) =>
@@ -66,7 +80,7 @@ export class MediaFormComponent {
     this.fileControl.setValue(null);
   }
 
-  onSubmit() {
+  onSubmit(template: TemplateRef<unknown>) {
     this.mediaForm.markAllAsTouched();
     if (this.mediaForm.invalid) return;
 
@@ -81,8 +95,22 @@ export class MediaFormComponent {
     this.http.post(`${environment.apiUrl}/api/medias`, formData).subscribe({
       next: (res) => {
         this.route.navigate(["../medias"]);
+        this.addTemplate(template);
+        setTimeout(() => this.removeTemplate(), 2000);
       },
       error: (err) => console.log({ err }),
     });
+  }
+
+  addTemplate(template: TemplateRef<unknown>): void {
+    this.templates = [...this.templates, this.crudPortalService.addTemplate(template)];
+  }
+
+  removeTemplate(): void {
+    const viewRef = this.templates.pop();
+
+    if (viewRef) {
+      this.crudPortalService.removeTemplate(viewRef);
+    }
   }
 }

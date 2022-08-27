@@ -12,6 +12,8 @@ import { AppRoutingModule } from "./app-routing.module";
 import { httpInterceptorProviders } from "./shared/data-access/interceptors";
 import { AuthService } from "./shared/data-access/services/auth.service";
 import { AppLayoutModule } from "./shared/feature/app-layout/app-layout.module";
+import { CrudHostComponent } from "./shared/feature/portals/crud-host/crud-host.component";
+import { CrudHostModule } from "./shared/feature/portals/crud-host/crud-host.module";
 
 function tryToGetUser(authService: AuthService) {
   return () => {
@@ -34,6 +36,7 @@ function tryToGetUser(authService: AuthService) {
     CookieModule.withOptions(),
     HttpClientModule,
     BrowserModule,
+    CrudHostModule,
     AppLayoutModule,
     BrowserAnimationsModule,
     TuiRootModule,
