@@ -18,6 +18,7 @@ import {
 } from "rxjs";
 
 import { Key, Media, MediasService } from "../../data-access/medias.service";
+import { MediasListService } from "../../data-access/medias-list.service";
 
 @Component({
   selector: "app-media-list",
@@ -37,50 +38,19 @@ import { Key, Media, MediasService } from "../../data-access/medias.service";
 export class MediaListComponent {
   columns = ["id", "description", "type", "filename", "size_kb", "actions"];
 
-  private readonly page$ = new BehaviorSubject(1);
-  private readonly size$ = new BehaviorSubject(10);
-  readonly direction$ = new BehaviorSubject<-1 | 1>(-1);
-  readonly sorter$ = new BehaviorSubject<Key>(`id`);
-  search = ``;
-
-  readonly request$ = combineLatest([
-    this.sorter$,
-    this.direction$,
-    this.page$,
-    this.size$,
-  ]).pipe(
-    // zero time debounce for a case when both key and direction change
-    debounceTime(0),
-    switchMap((query) => this.mediasService.fetchIndex(...query).pipe(startWith(null))),
-    share()
-  );
-
-  readonly loading$ = this.request$.pipe(map((value) => !value));
-
-  readonly total$ = this.request$.pipe(
-    filter(tuiIsPresent),
-    map(({ total }) => total),
-    startWith(1)
-  );
-
-  readonly data$: Observable<readonly Media[]> = this.request$.pipe(
-    filter(tuiIsPresent),
-    map((mediasResponse) => mediasResponse.data.filter(tuiIsPresent)),
-    startWith([])
-  );
-
   constructor(
     private mediasService: MediasService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    public mediasListService: MediasListService
   ) {}
 
   onPage(page: number): void {
-    this.page$.next(page + 1);
+    this.mediasListService.changePage(page);
   }
 
   onSize(size: number): void {
-    this.size$.next(size);
+    this.mediasListService.changeSize(size);
   }
 
   goTo(where: string) {
@@ -88,6 +58,10 @@ export class MediaListComponent {
   }
 
   remove(item: Media): void {
-    this.mediasService.remove(item.id).subscribe({ next: (res) => console.log(res) });
+    this.mediasService.remove(item.id).subscribe({
+      next: () => {
+        this.mediasListService.refresh();
+      },
+    });
   }
 }
