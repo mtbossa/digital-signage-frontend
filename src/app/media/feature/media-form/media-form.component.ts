@@ -1,12 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EmbeddedViewRef,
-  Inject,
-  TemplateRef,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import {
@@ -24,7 +18,6 @@ import {
   TuiInputModule,
 } from "@taiga-ui/kit";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
-import { CrudPortalService } from "src/app/shared/feature/portals/crud-host/crud-portal.service";
 import { environment } from "src/environments/environment";
 
 @Component({
@@ -51,7 +44,7 @@ import { environment } from "src/environments/environment";
     },
   ],
 })
-export class MediaFormComponent {
+export class MediaFormComponent implements OnInit {
   mediaForm = new FormGroup({
     description: new FormControl("", {
       validators: [Validators.required, Validators.maxLength(50)],
