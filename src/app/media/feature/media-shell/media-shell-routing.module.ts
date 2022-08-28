@@ -8,7 +8,7 @@ const routes: Routes = [
       import("../media-list/media-list.component").then((m) => m.MediaListComponent),
   },
   {
-    path: "create",
+    path: "criar",
     loadComponent: () =>
       import("../media-form/media-form.component").then((m) => m.MediaFormComponent),
   },
