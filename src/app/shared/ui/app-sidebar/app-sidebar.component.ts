@@ -4,10 +4,10 @@ import { RouterModule } from "@angular/router";
 import { TuiLinkModule } from "@taiga-ui/core";
 
 @Component({
-  selector: "app-sidebar-new",
+  selector: "app-sidebar",
   standalone: true,
   imports: [CommonModule, RouterModule, TuiLinkModule],
-  templateUrl: "./app-sidebar-new.component.html",
-  styleUrls: ["./app-sidebar-new.component.scss"],
+  templateUrl: "./app-sidebar.component.html",
+  styleUrls: ["./app-sidebar.component.scss"],
 })
-export class AppSidebarNewComponent {}
+export class AppSidebarComponent {}
