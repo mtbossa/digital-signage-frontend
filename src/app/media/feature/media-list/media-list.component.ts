@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ActivatedRoute, Route, Router } from "@angular/router";
 import { TuiTableModule, TuiTablePaginationModule } from "@taiga-ui/addon-table";
 import { tuiIsPresent, TuiLetModule } from "@taiga-ui/cdk";
 import { TuiButtonModule, TuiLoaderModule } from "@taiga-ui/core";
@@ -68,7 +69,11 @@ export class MediaListComponent {
     startWith([])
   );
 
-  constructor(private mediasService: MediasService) {}
+  constructor(
+    private mediasService: MediasService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   onPage(page: number): void {
     this.page$.next(page + 1);
@@ -76,5 +81,9 @@ export class MediaListComponent {
 
   onSize(size: number): void {
     this.size$.next(size);
+  }
+
+  goTo(where: string) {
+    this.router.navigate([where], { relativeTo: this.activatedRoute });
   }
 }

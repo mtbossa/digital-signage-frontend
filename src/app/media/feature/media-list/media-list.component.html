@@ -1,7 +1,7 @@
 <div>
   <h1>Mídias</h1>
   <div class="buttons-header tui-space_vertical-8">
-    <button tuiButton icon="tuiIconPlus" size="m">Criar</button>
+    <button tuiButton icon="tuiIconPlus" size="m" (click)="goTo('create')">Criar</button>
   </div>
   <div>
     <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
