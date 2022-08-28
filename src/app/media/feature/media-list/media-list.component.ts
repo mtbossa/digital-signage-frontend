@@ -35,7 +35,7 @@ import { Key, Media, MediasService } from "../../data-access/medias.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaListComponent {
-  columns = ["id", "description", "type", "filename", "size_kb"];
+  columns = ["id", "description", "type", "filename", "size_kb", "actions"];
 
   private readonly page$ = new BehaviorSubject(1);
   private readonly size$ = new BehaviorSubject(10);
@@ -85,5 +85,9 @@ export class MediaListComponent {
 
   goTo(where: string) {
     this.router.navigate([where], { relativeTo: this.activatedRoute });
+  }
+
+  remove(item: Media): void {
+    this.mediasService.remove(item.id).subscribe({ next: (res) => console.log(res) });
   }
 }

@@ -22,6 +22,7 @@
             <th *tuiHead="'type'" tuiTh tuiSortable>Tipo</th>
             <th *tuiHead="'filename'" tuiTh tuiSortable>Nome do arquivo</th>
             <th *tuiHead="'size_kb'" tuiTh tuiSortable>Tamanho</th>
+            <th *tuiHead="'actions'" tuiTh [sorter]="null"></th>
           </tr>
         </thead>
         <tbody tuiTbody [data]="data">
@@ -40,6 +41,18 @@
             </td>
             <td *tuiCell="'size_kb'" tuiTd>
               {{ item.size_kb }}
+            </td>
+            <td *tuiCell="'actions'" tuiTd>
+              <button
+                tuiIconButton
+                appearance="flat"
+                size="s"
+                icon="tuiIconTrash"
+                title="Remove"
+                shape="rounded"
+                class="remove"
+                (click)="remove(item)"
+              ></button>
             </td>
           </tr>
         </tbody>

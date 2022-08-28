@@ -51,4 +51,8 @@ export class MediasService {
   public getMedias() {
     return this.medias$.asObservable();
   }
+
+  public remove(mediaId: number) {
+    return this.http.delete(`${environment.apiUrl}/api/medias/${mediaId}`);
+  }
 }
