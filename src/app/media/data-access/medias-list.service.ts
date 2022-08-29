@@ -48,7 +48,7 @@ export class MediasListService {
     startWith(1)
   );
 
-  readonly data$: Observable<readonly Media[]> = this.request$.pipe(
+  readonly data$: Observable<Media[]> = this.request$.pipe(
     filter(tuiIsPresent),
     map((mediasResponse) => mediasResponse.data.filter(tuiIsPresent)),
     startWith([])

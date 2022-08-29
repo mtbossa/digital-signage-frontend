@@ -1,5 +1,10 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from "@angular/core";
 import { ActivatedRoute, Route, Router } from "@angular/router";
 import { TuiTableModule, TuiTablePaginationModule } from "@taiga-ui/addon-table";
 import { tuiIsPresent, TuiLetModule } from "@taiga-ui/cdk";
@@ -37,13 +42,19 @@ import { MediasListService } from "../../data-access/medias-list.service";
 })
 export class MediaListComponent {
   columns = ["id", "description", "type", "filename", "size_kb", "actions"];
+  medias: Media[] = [];
 
   constructor(
     private mediasService: MediasService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
     public mediasListService: MediasListService
   ) {}
+
+  ngOnInit() {
+    this.mediasListService.data$.subscribe((res) => (this.medias = res));
+  }
 
   onPage(page: number): void {
     this.mediasListService.changePage(page);
@@ -60,7 +71,8 @@ export class MediaListComponent {
   remove(item: Media): void {
     this.mediasService.remove(item.id).subscribe({
       next: () => {
-        this.mediasListService.refresh();
+        this.medias = this.medias.filter((media) => media.id !== item.id);
+        this.cdr.markForCheck();
       },
     });
   }

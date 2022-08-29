@@ -7,7 +7,7 @@
     <tui-loader [overlay]="true" [showLoader]="!!(mediasListService.loading$ | async)">
       <table
         class="table"
-        *tuiLet="mediasListService.data$ | async as data"
+        *tuiLet="medias as data"
         [columns]="columns"
         [direction]="(mediasListService.direction$ | async) || 1"
         [tuiSortBy]="mediasListService.sorter$ | async"
