@@ -40,14 +40,12 @@ export class MediasService {
   private medias$ = new BehaviorSubject<Media[] | null>(null);
 
   public fetchIndex(key: Key, direction: -1 | 1, page: number, size: number) {
-    return this.http
-      .get<PaginatedResponse<Media>>(`${environment.apiUrl}/api/medias`, {
-        params: {
-          page,
-          size,
-        },
-      })
-      .pipe(take(1));
+    return this.http.get<PaginatedResponse<Media>>(`${environment.apiUrl}/api/medias`, {
+      params: {
+        page,
+        size,
+      },
+    });
   }
 
   public getMedias() {

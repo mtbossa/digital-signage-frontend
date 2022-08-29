@@ -10,6 +10,7 @@ import {
   share,
   startWith,
   switchMap,
+  take,
 } from "rxjs";
 
 import { Key, Media, MediasService } from "./medias.service";

@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
+  OnDestroy,
   OnInit,
 } from "@angular/core";
 import { ActivatedRoute, Route, Router } from "@angular/router";
@@ -25,7 +26,9 @@ import {
   Observable,
   share,
   startWith,
+  Subscription,
   switchMap,
+  tap,
 } from "rxjs";
 
 import { Key, Media, MediasService } from "../../data-access/medias.service";
@@ -46,21 +49,30 @@ import { MediasListService } from "../../data-access/medias-list.service";
   styleUrls: ["./media-list.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MediaListComponent implements OnInit {
+export class MediaListComponent implements OnInit, OnDestroy {
   columns = ["id", "description", "type", "filename", "size_kb", "actions"];
   medias: Media[] = [];
 
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
-    private mediasService: MediasService,
+    private cdr: ChangeDetectorRef,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private cdr: ChangeDetectorRef,
+    private mediasService: MediasService,
     public mediasListService: MediasListService
   ) {}
 
+  private subscriptions: Subscription[] = [];
+
   ngOnInit() {
-    this.mediasListService.data$.subscribe((res) => (this.medias = res));
+    const subscription = this.mediasListService.data$.subscribe(
+      (res) => (this.medias = res)
+    );
+    this.subscriptions = [subscription, ...this.subscriptions];
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   onPage(page: number): void {
