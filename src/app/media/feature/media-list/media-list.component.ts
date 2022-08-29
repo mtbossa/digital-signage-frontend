@@ -40,7 +40,7 @@ import { MediasListService } from "../../data-access/medias-list.service";
   styleUrls: ["./media-list.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MediaListComponent {
+export class MediaListComponent implements OnInit {
   columns = ["id", "description", "type", "filename", "size_kb", "actions"];
   medias: Media[] = [];
 
