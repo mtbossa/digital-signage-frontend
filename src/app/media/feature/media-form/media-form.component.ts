@@ -85,7 +85,7 @@ export class MediaFormComponent implements OnInit {
 
     this.http.post(`${environment.apiUrl}/api/medias`, formData).subscribe({
       next: (res) => {
-        this.route.navigate(["../medias"]);
+        this.route.navigate(["../midias"]);
         this.alertService
           .open(`Mídia criada com sucesso!`, { status: TuiNotification.Success })
           .subscribe();
