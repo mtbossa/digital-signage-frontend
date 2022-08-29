@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, take } from "rxjs";
 import { environment } from "src/environments/environment";
 
 interface PaginatedResponse<T> {
@@ -40,12 +40,14 @@ export class MediasService {
   private medias$ = new BehaviorSubject<Media[] | null>(null);
 
   public fetchIndex(key: Key, direction: -1 | 1, page: number, size: number) {
-    return this.http.get<PaginatedResponse<Media>>(`${environment.apiUrl}/api/medias`, {
-      params: {
-        page,
-        size,
-      },
-    });
+    return this.http
+      .get<PaginatedResponse<Media>>(`${environment.apiUrl}/api/medias`, {
+        params: {
+          page,
+          size,
+        },
+      })
+      .pipe(take(1));
   }
 
   public getMedias() {
