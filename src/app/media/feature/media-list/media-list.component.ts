@@ -3,12 +3,18 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
   OnInit,
 } from "@angular/core";
 import { ActivatedRoute, Route, Router } from "@angular/router";
 import { TuiTableModule, TuiTablePaginationModule } from "@taiga-ui/addon-table";
 import { tuiIsPresent, TuiLetModule } from "@taiga-ui/cdk";
-import { TuiButtonModule, TuiLoaderModule } from "@taiga-ui/core";
+import {
+  TuiAlertService,
+  TuiButtonModule,
+  TuiLoaderModule,
+  TuiNotification,
+} from "@taiga-ui/core";
 import { TUI_ARROW } from "@taiga-ui/kit";
 import {
   BehaviorSubject,
@@ -45,6 +51,7 @@ export class MediaListComponent implements OnInit {
   medias: Media[] = [];
 
   constructor(
+    @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
     private mediasService: MediasService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -72,6 +79,9 @@ export class MediaListComponent implements OnInit {
     this.mediasService.remove(item.id).subscribe({
       next: () => {
         this.medias = this.medias.filter((media) => media.id !== item.id);
+        this.alertService
+          .open(`Mídia removida com sucesso!`, { status: TuiNotification.Success })
+          .subscribe();
         this.cdr.markForCheck();
       },
     });
