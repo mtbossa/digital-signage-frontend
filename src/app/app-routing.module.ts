@@ -24,6 +24,13 @@ const routes: Routes = [
             (m) => m.MediaShellModule
           ),
       },
+      {
+        path: "displays",
+        loadChildren: () =>
+          import("./display/feature/display-shell/display-shell.module").then(
+            (m) => m.DisplayShellModule
+          ),
+      },
     ],
   },
   {

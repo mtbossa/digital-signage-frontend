@@ -1,0 +1,6 @@
+<ng-container *ngIf="display$ | async as display; else loading">
+  <app-display-form (formSubmitted)="updateDisplay($event)" [displayData]="display">
+  </app-display-form>
+</ng-container>
+
+<ng-template #loading> loading </ng-template>
