@@ -18,7 +18,6 @@ import { MediaForm, MediaFormComponent } from "../media-form/media-form.componen
 export class MediaCreateFormComponent {
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
-    private http: HttpClient,
     private route: Router,
     private mediasService: MediasService
   ) {}
@@ -27,6 +26,9 @@ export class MediaCreateFormComponent {
     const formData = new FormData();
     Object.entries($event).forEach(([key, value]) => {
       console.log(value);
+      // We can assert that a file exists because the media-form component already
+      // did this check for us, since it'll only emit the formSubmitted event when the
+      // form is valid
       formData.append(key, value!);
     });
     this.mediasService.create(formData).subscribe({

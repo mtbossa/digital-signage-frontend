@@ -101,18 +101,30 @@ export class MediaFormComponent implements OnInit {
 
   private configureUpdate(mediaData: { description: string; path: string }) {
     this.mediaForm.get("file")?.disable();
-    this.mediaForm.patchValue(mediaData);
-    this.mediaForm.get("description")?.valueChanges.subscribe(() => {
-      if (this.formDisabled) {
+    this.mediaForm.get("description")?.setValue(mediaData.description);
+    this.mediaForm.get("description")?.valueChanges.subscribe(
+      () =>
         // Form gets disabled when trying to update a media without changing the description
         // so when the user changed the description, we can enable the form back
-        this.formDisabled = false;
-      }
-    });
+        (this.formDisabled = false)
+    );
   }
 
   removeFile(): void {
+    // Since we'll only call this method when the input file component is in the screen
+    // we can assert that we have the fileControl.
     this.fileControl!.setValue(null);
+  }
+
+  private handleUpdate(formData: MediaForm) {
+    // Here we know for sure this.mediaData is set
+    if (this.mediaData!.description === formData.description) {
+      this.formDisabled = true;
+    } else {
+      this.mediaData!.description = formData.description;
+      this.formDisabled = false;
+      this.formSubmitted.emit(formData);
+    }
   }
 
   onSubmit() {
@@ -123,13 +135,7 @@ export class MediaFormComponent implements OnInit {
     const formRawData = this.mediaForm.getRawValue();
 
     if (this.mediaData) {
-      if (this.mediaData?.description === formRawData.description) {
-        this.formDisabled = true;
-      } else {
-        this.mediaData.description = formRawData.description;
-        this.formDisabled = false;
-        this.formSubmitted.emit(formRawData);
-      }
+      this.handleUpdate(formRawData);
     } else {
       this.formSubmitted.emit(formRawData);
     }
