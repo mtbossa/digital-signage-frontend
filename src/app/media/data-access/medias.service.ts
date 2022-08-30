@@ -3,6 +3,8 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, take } from "rxjs";
 import { environment } from "src/environments/environment";
 
+import { MediaForm } from "../feature/media-form/media-form.component";
+
 interface PaginatedResponse<T> {
   current_page: number;
   data: Array<T>;
@@ -46,6 +48,24 @@ export class MediasService {
         size,
       },
     });
+  }
+
+  // Needs to be FormData since we need to upload the file
+  public create(data: FormData) {
+    return this.http.post(`${environment.apiUrl}/api/medias`, data).pipe(take(1));
+  }
+
+  public show(mediaId: number) {
+    return this.http
+      .get<Media>(`${environment.apiUrl}/api/medias/${mediaId}`)
+      .pipe(take(1));
+  }
+
+  // Can only update media description
+  public update(mediaId: number, data: { description: string }) {
+    return this.http
+      .patch(`${environment.apiUrl}/api/medias/${mediaId}`, data)
+      .pipe(take(1));
   }
 
   public getMedias() {

@@ -1,0 +1,6 @@
+<ng-container *ngIf="media$ | async as media; else loading">
+  <app-media-form (formSubmitted)="updateMedia($event)" [mediaData]="media">
+  </app-media-form>
+</ng-container>
+
+<ng-template #loading> loading </ng-template>

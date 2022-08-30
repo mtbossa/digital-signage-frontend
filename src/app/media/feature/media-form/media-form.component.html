@@ -21,18 +21,18 @@
           <h3 class="tui-form__header tui-form__header_margin-top_1">
             Arquivo <span class="tui-required"></span>
           </h3>
-          <div class="tui-form__row">
+          <div class="tui-form__row" *ngIf="!mediaData">
             <tui-input-files
-              *ngIf="!fileControl.value"
+              *ngIf="!fileControl!.value"
               accept="image/png,image/jpg,image/jpeg,video/mp4,video/avi"
               [maxFileSize]="150000000"
               [multiple]="false"
-              [formControl]="fileControl"
+              [formControl]="fileControl!"
             ></tui-input-files>
 
             <tui-files class="tui-space_top-1">
               <tui-file
-                *ngIf="fileControl.valueChanges | async as file"
+                *ngIf="fileControl!.valueChanges | async as file"
                 [file]="file"
                 (removed)="removeFile()"
               ></tui-file>
@@ -45,7 +45,13 @@
           </div>
 
           <div class="tui-form__buttons">
-            <button tuiButton size="l" type="submit" class="tui-form__button">
+            <button
+              tuiButton
+              size="l"
+              type="submit"
+              class="tui-form__button"
+              [disabled]="formDisabled"
+            >
               Submit
             </button>
           </div>

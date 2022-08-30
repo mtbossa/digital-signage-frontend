@@ -10,12 +10,16 @@ const routes: Routes = [
   {
     path: "criar",
     loadComponent: () =>
-      import("../media-form/media-form.component").then((m) => m.MediaFormComponent),
+      import("../media-create-form/media-create-form.component").then(
+        (m) => m.MediaCreateFormComponent
+      ),
   },
   {
     path: ":id/editar",
     loadComponent: () =>
-      import("../media-form/media-form.component").then((m) => m.MediaFormComponent),
+      import("../media-update-form/media-update-form.component").then(
+        (m) => m.MediaUpdateFormComponent
+      ),
   },
 ];
 

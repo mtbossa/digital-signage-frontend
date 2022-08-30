@@ -1,6 +1,15 @@
 import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Output,
+  Type,
+} from "@angular/core";
 import {
   AbstractControl,
   FormControl,
@@ -25,6 +34,13 @@ import {
 } from "@taiga-ui/kit";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 import { environment } from "src/environments/environment";
+
+import { Media } from "../../data-access/medias.service";
+
+export type MediaForm = {
+  description: string;
+  file: File | null;
+};
 
 @Component({
   selector: `app-media-form`,
@@ -51,52 +67,71 @@ import { environment } from "src/environments/environment";
   ],
 })
 export class MediaFormComponent implements OnInit {
+  @Output() formSubmitted = new EventEmitter<MediaForm>();
+
+  // If mediaData, means it's an update
+  @Input() mediaData?: { description: string; path: string };
+
+  formDisabled = false;
   mediaForm = new FormGroup({
     description: new FormControl("", {
+      nonNullable: true,
       validators: [Validators.required, Validators.maxLength(50)],
     }),
     file: new FormControl<File | null>(null, {
       validators: [Validators.required],
     }),
   });
-  readonly fileControl = new FormControl();
-
-  constructor(
-    private http: HttpClient,
-    private route: Router,
-    @Inject(TuiAlertService) private readonly alertService: TuiAlertService
-  ) {}
+  fileControl?: FormControl;
 
   ngOnInit() {
+    if (this.mediaData) {
+      this.configureUpdate(this.mediaData);
+    } else {
+      this.configureCreate();
+    }
+  }
+
+  private configureCreate() {
+    this.fileControl = new FormControl();
     this.fileControl.valueChanges.subscribe((file: File) =>
       this.mediaForm.get("file")?.setValue(file)
     );
   }
 
+  private configureUpdate(mediaData: { description: string; path: string }) {
+    this.mediaForm.get("file")?.disable();
+    this.mediaForm.patchValue(mediaData);
+    this.mediaForm.get("description")?.valueChanges.subscribe(() => {
+      if (this.formDisabled) {
+        // Form gets disabled when trying to update a media without changing the description
+        // so when the user changed the description, we can enable the form back
+        this.formDisabled = false;
+      }
+    });
+  }
+
   removeFile(): void {
-    this.fileControl.setValue(null);
+    this.fileControl!.setValue(null);
   }
 
   onSubmit() {
     this.mediaForm.markAllAsTouched();
+
     if (this.mediaForm.invalid) return;
 
     const formRawData = this.mediaForm.getRawValue();
-    const formData = new FormData();
 
-    Object.entries(formRawData).forEach(([key, value]) => {
-      console.log(value);
-      formData.append(key, value!);
-    });
-
-    this.http.post(`${environment.apiUrl}/api/medias`, formData).subscribe({
-      next: (res) => {
-        this.route.navigate(["../midias"]);
-        this.alertService
-          .open(`Mídia criada com sucesso!`, { status: TuiNotification.Success })
-          .subscribe();
-      },
-      error: (err) => console.log({ err }),
-    });
+    if (this.mediaData) {
+      if (this.mediaData?.description === formRawData.description) {
+        this.formDisabled = true;
+      } else {
+        this.mediaData.description = formRawData.description;
+        this.formDisabled = false;
+        this.formSubmitted.emit(formRawData);
+      }
+    } else {
+      this.formSubmitted.emit(formRawData);
+    }
   }
 }
