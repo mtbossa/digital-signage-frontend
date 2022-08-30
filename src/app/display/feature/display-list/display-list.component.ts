@@ -27,6 +27,7 @@ import {
   startWith,
   Subscription,
   switchMap,
+  tap,
 } from "rxjs";
 
 import { Display, DisplaysService, Key } from "../../data-access/displays.service";
@@ -47,7 +48,7 @@ import { Display, DisplaysService, Key } from "../../data-access/displays.servic
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisplayListComponent implements OnInit, OnDestroy {
-  columns = ["id", "description", "type", "filename", "size_kb", "actions"];
+  columns = ["id", "name", "width", "height", "size", "touch", "actions"];
   displays: Display[] = [];
 
   private readonly page$ = new BehaviorSubject(1);
@@ -124,7 +125,7 @@ export class DisplayListComponent implements OnInit, OnDestroy {
       next: () => {
         this.displays = this.displays.filter((display) => display.id !== displayId);
         this.alertService
-          .open(`Mídia removida com sucesso!`, { status: TuiNotification.Success })
+          .open(`Display removido com sucesso!`, { status: TuiNotification.Success })
           .subscribe();
         this.cdr.markForCheck();
       },

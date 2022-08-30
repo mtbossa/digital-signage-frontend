@@ -1,5 +1,5 @@
 <div>
-  <h1>Mídias</h1>
+  <h1>Displays</h1>
   <div class="buttons-header tui-space_vertical-8">
     <button tuiButton icon="tuiIconPlus" size="m" (click)="goTo('criar')">Criar</button>
   </div>
@@ -18,10 +18,11 @@
         <thead>
           <tr tuiThGroup>
             <th *tuiHead="'id'" tuiTh tuiSortable>ID</th>
-            <th *tuiHead="'description'" tuiTh tuiSortable>Descrição</th>
-            <th *tuiHead="'type'" tuiTh tuiSortable>Tipo</th>
-            <th *tuiHead="'filename'" tuiTh tuiSortable>Nome do arquivo</th>
-            <th *tuiHead="'size_kb'" tuiTh tuiSortable>Tamanho</th>
+            <th *tuiHead="'name'" tuiTh tuiSortable>Nome</th>
+            <th *tuiHead="'width'" tuiTh tuiSortable>Largura</th>
+            <th *tuiHead="'height'" tuiTh tuiSortable>Altura</th>
+            <th *tuiHead="'size'" tuiTh tuiSortable>Polegadas</th>
+            <th *tuiHead="'touch'" tuiTh tuiSortable>Touch</th>
             <th *tuiHead="'actions'" tuiTh [sorter]="null"></th>
           </tr>
         </thead>
@@ -30,17 +31,20 @@
             <td *tuiCell="'id'" tuiTd>
               {{ item.id }}
             </td>
-            <td *tuiCell="'description'" tuiTd>
-              {{ item.description }}
+            <td *tuiCell="'name'" tuiTd>
+              {{ item.name }}
             </td>
-            <td *tuiCell="'type'" tuiTd>
-              {{ item.type }}
+            <td *tuiCell="'width'" tuiTd>
+              {{ item.width }}
             </td>
-            <td *tuiCell="'filename'" tuiTd>
-              {{ item.filename }}
+            <td *tuiCell="'height'" tuiTd>
+              {{ item.height }}
             </td>
-            <td *tuiCell="'size_kb'" tuiTd>
-              {{ item.size_kb }}
+            <td *tuiCell="'size'" tuiTd>
+              {{ item.size }}
+            </td>
+            <td *tuiCell="'touch'" tuiTd>
+              {{ item.touch }}
             </td>
             <td *tuiCell="'actions'" tuiTd>
               <button

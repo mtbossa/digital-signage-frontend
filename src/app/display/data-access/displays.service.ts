@@ -6,17 +6,17 @@ import { environment } from "src/environments/environment";
 
 export interface Display {
   id: number;
-  description: string;
-  type: string;
-  size_kb: number;
-  filename: string;
-  extension: string;
-  path: string;
+  name: string;
+  observation: string;
+  width: number;
+  height: number;
+  size: string;
+  touch: boolean;
   created_at: string;
   updated_at: string;
 }
 
-export type Key = "id" | "description" | "type" | "size_kb" | "filename";
+export type Key = "id" | "name" | "width" | "height" | "size" | "touch";
 
 @Injectable({
   providedIn: "root",
