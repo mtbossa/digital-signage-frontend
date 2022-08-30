@@ -1,24 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, take } from "rxjs";
+import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
 import { environment } from "src/environments/environment";
 
-import { MediaForm } from "../feature/media-form/media-form.component";
-
-interface PaginatedResponse<T> {
-  current_page: number;
-  data: Array<T>;
-  first_page_url: string;
-  from: number;
-  last_page: number;
-  last_page_url: string;
-  next_page_url: string;
-  path: string;
-  per_page: number;
-  prev_page_url: null;
-  to: number;
-  total: number;
-}
 export interface Media {
   id: number;
   description: string;
