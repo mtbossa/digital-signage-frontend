@@ -7,7 +7,7 @@ import {
   OnDestroy,
   OnInit,
 } from "@angular/core";
-import { ActivatedRoute, Route, Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { TuiTableModule, TuiTablePaginationModule } from "@taiga-ui/addon-table";
 import { tuiIsPresent, TuiLetModule } from "@taiga-ui/cdk";
 import {
@@ -16,7 +16,6 @@ import {
   TuiLoaderModule,
   TuiNotification,
 } from "@taiga-ui/core";
-import { TUI_ARROW } from "@taiga-ui/kit";
 import {
   BehaviorSubject,
   combineLatest,
@@ -28,11 +27,9 @@ import {
   startWith,
   Subscription,
   switchMap,
-  tap,
 } from "rxjs";
 
 import { Key, Media, MediasService } from "../../data-access/medias.service";
-import { MediasListService } from "../../data-access/medias-list.service";
 
 @Component({
   selector: "app-media-list",
@@ -53,21 +50,54 @@ export class MediaListComponent implements OnInit, OnDestroy {
   columns = ["id", "description", "type", "filename", "size_kb", "actions"];
   medias: Media[] = [];
 
+  private readonly page$ = new BehaviorSubject(1);
+  private readonly size$ = new BehaviorSubject(10);
+  private refresh$ = new BehaviorSubject<boolean>(false);
+  readonly direction$ = new BehaviorSubject<-1 | 1>(-1);
+  readonly sorter$ = new BehaviorSubject<Key>(`id`);
+  search = ``;
+
+  readonly request$ = combineLatest([
+    this.sorter$,
+    this.direction$,
+    this.page$,
+    this.size$,
+    this.refresh$,
+  ]).pipe(
+    // zero time debounce for a case when both key and direction change
+    debounceTime(0),
+    switchMap(([sorter, direction, page, size]) =>
+      this.mediasService.fetchIndex(sorter, direction, page, size).pipe(startWith(null))
+    ),
+    share()
+  );
+
+  readonly loading$ = this.request$.pipe(map((value) => !value));
+
+  readonly total$ = this.request$.pipe(
+    filter(tuiIsPresent),
+    map(({ total }) => total),
+    startWith(1)
+  );
+
+  readonly data$: Observable<Media[]> = this.request$.pipe(
+    filter(tuiIsPresent),
+    map((mediasResponse) => mediasResponse.data.filter(tuiIsPresent)),
+    startWith([])
+  );
+
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
     private cdr: ChangeDetectorRef,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private mediasService: MediasService,
-    public mediasListService: MediasListService
+    private mediasService: MediasService
   ) {}
 
   private subscriptions: Subscription[] = [];
 
   ngOnInit() {
-    const subscription = this.mediasListService.data$.subscribe(
-      (res) => (this.medias = res)
-    );
+    const subscription = this.data$.subscribe((res) => (this.medias = res));
     this.subscriptions = [subscription, ...this.subscriptions];
   }
 
@@ -75,12 +105,14 @@ export class MediaListComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  onPage(page: number): void {
-    this.mediasListService.changePage(page);
+  changePage(page: number): void {
+    this.page$.next(page + 1);
   }
-
-  onSize(size: number): void {
-    this.mediasListService.changeSize(size);
+  changeSize(size: number): void {
+    this.size$.next(size);
+  }
+  refresh() {
+    this.refresh$.next(true);
   }
 
   goTo(where: string) {
