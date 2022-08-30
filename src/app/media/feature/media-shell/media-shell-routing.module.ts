@@ -12,6 +12,11 @@ const routes: Routes = [
     loadComponent: () =>
       import("../media-form/media-form.component").then((m) => m.MediaFormComponent),
   },
+  {
+    path: ":id/editar",
+    loadComponent: () =>
+      import("../media-form/media-form.component").then((m) => m.MediaFormComponent),
+  },
 ];
 
 @NgModule({

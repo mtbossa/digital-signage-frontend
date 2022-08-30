@@ -47,11 +47,21 @@
                 tuiIconButton
                 appearance="flat"
                 size="s"
+                icon="tuiIconDraft"
+                title="Editar"
+                shape="rounded"
+                class="edit"
+                (click)="edit(item.id)"
+              ></button>
+              <button
+                tuiIconButton
+                appearance="flat"
+                size="s"
                 icon="tuiIconTrash"
                 title="Remove"
                 shape="rounded"
                 class="remove"
-                (click)="remove(item)"
+                (click)="remove(item.id)"
               ></button>
             </td>
           </tr>

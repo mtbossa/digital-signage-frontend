@@ -119,15 +119,19 @@ export class MediaListComponent implements OnInit, OnDestroy {
     this.router.navigate([where], { relativeTo: this.activatedRoute });
   }
 
-  remove(item: Media): void {
-    this.mediasService.remove(item.id).subscribe({
+  remove(mediaId: number): void {
+    this.mediasService.remove(mediaId).subscribe({
       next: () => {
-        this.medias = this.medias.filter((media) => media.id !== item.id);
+        this.medias = this.medias.filter((media) => media.id !== mediaId);
         this.alertService
           .open(`Mídia removida com sucesso!`, { status: TuiNotification.Success })
           .subscribe();
         this.cdr.markForCheck();
       },
     });
+  }
+
+  edit(mediaId: number): void {
+    this.router.navigate([mediaId, "editar"], { relativeTo: this.activatedRoute });
   }
 }
