@@ -4,6 +4,8 @@ import { BehaviorSubject, take } from "rxjs";
 import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
 import { environment } from "src/environments/environment";
 
+import { ValidDisplayForm } from "../feature/display-form/display-form.component";
+
 export interface Display {
   id: number;
   name: string;
@@ -12,6 +14,7 @@ export interface Display {
   height: number;
   size: string;
   touch: boolean;
+  store_id: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -39,7 +42,7 @@ export class DisplaysService {
   }
 
   // Needs to be FormData since we need to upload the file
-  public create(data: FormData) {
+  public create(data: ValidDisplayForm) {
     return this.http.post(`${environment.apiUrl}/api/displays`, data).pipe(take(1));
   }
 
@@ -50,7 +53,7 @@ export class DisplaysService {
   }
 
   // Can only update display description
-  public update(displayId: number, data: { description: string }) {
+  public update(displayId: number, data: ValidDisplayForm) {
     return this.http
       .patch(`${environment.apiUrl}/api/displays/${displayId}`, data)
       .pipe(take(1));

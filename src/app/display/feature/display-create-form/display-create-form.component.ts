@@ -7,8 +7,8 @@ import { environment } from "src/environments/environment";
 
 import { DisplaysService } from "../../data-access/displays.service";
 import {
-  DisplayForm,
   DisplayFormComponent,
+  ValidDisplayForm,
 } from "../display-form/display-form.component";
 
 @Component({
@@ -25,20 +25,12 @@ export class DisplayCreateFormComponent {
     private displaysService: DisplaysService
   ) {}
 
-  createDisplay($event: DisplayForm) {
-    const formData = new FormData();
-    Object.entries($event).forEach(([key, value]) => {
-      console.log(value);
-      // We can assert that a file exists because the display-form component already
-      // did this check for us, since it'll only emit the formSubmitted event when the
-      // form is valid
-      formData.append(key, value!);
-    });
-    this.displaysService.create(formData).subscribe({
+  createDisplay($event: ValidDisplayForm) {
+    this.displaysService.create($event).subscribe({
       next: (res) => {
-        this.route.navigate(["../midias"]);
+        this.route.navigate(["../displays"]);
         this.alertService
-          .open(`Mídia criada com sucesso!`, { status: TuiNotification.Success })
+          .open(`Display criado com sucesso!`, { status: TuiNotification.Success })
           .subscribe();
       },
     });

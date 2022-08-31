@@ -2,12 +2,12 @@ import { CommonModule } from "@angular/common";
 import { Component, Inject, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TuiAlertService, TuiNotification } from "@taiga-ui/core";
-import { delay, Observable, switchMap } from "rxjs";
+import { delay, map, Observable, switchMap } from "rxjs";
 
 import { Display, DisplaysService } from "../../data-access/displays.service";
 import {
-  DisplayForm,
   DisplayFormComponent,
+  ValidDisplayForm,
 } from "../display-form/display-form.component";
 
 @Component({
@@ -19,7 +19,7 @@ import {
 })
 export class DisplayUpdateFormComponent implements OnInit {
   loading = true;
-  display$!: Observable<Display>;
+  display$!: Observable<ValidDisplayForm>;
   selectedId!: number;
 
   constructor(
@@ -32,18 +32,28 @@ export class DisplayUpdateFormComponent implements OnInit {
     this.display$ = this.activatedRoute.paramMap.pipe(
       switchMap((params) => {
         this.selectedId = Number(params.get("id"));
-        return this.displayService.show(this.selectedId);
+        return this.displayService.show(this.selectedId).pipe(
+          map((display) => {
+            const { name, width, height, size, touch, store_id } = display;
+            return {
+              name,
+              width,
+              height,
+              size: Number(size),
+              touch,
+              store_id,
+            };
+          })
+        );
       })
     );
   }
 
-  updateDisplay($event: DisplayForm) {
-    this.displayService
-      .update(this.selectedId, { description: $event.description })
-      .subscribe(() => {
-        this.alertService
-          .open(`Mídia atualizada com sucesso!`, { status: TuiNotification.Success })
-          .subscribe();
-      });
+  updateDisplay($event: ValidDisplayForm) {
+    this.displayService.update(this.selectedId, $event).subscribe(() => {
+      this.alertService
+        .open(`Mídia atualizada com sucesso!`, { status: TuiNotification.Success })
+        .subscribe();
+    });
   }
 }
