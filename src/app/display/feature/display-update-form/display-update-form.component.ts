@@ -52,7 +52,7 @@ export class DisplayUpdateFormComponent implements OnInit {
   updateDisplay($event: ValidDisplayForm) {
     this.displayService.update(this.selectedId, $event).subscribe(() => {
       this.alertService
-        .open(`Mídia atualizada com sucesso!`, { status: TuiNotification.Success })
+        .open(`Display atualizado com sucesso!`, { status: TuiNotification.Success })
         .subscribe();
     });
   }
