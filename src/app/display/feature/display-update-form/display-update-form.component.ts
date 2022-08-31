@@ -34,13 +34,12 @@ export class DisplayUpdateFormComponent implements OnInit {
         this.selectedId = Number(params.get("id"));
         return this.displayService.show(this.selectedId).pipe(
           map((display) => {
-            const { name, width, height, size, touch, store_id } = display;
+            const { name, width, height, size, store_id } = display;
             return {
               name,
               width,
               height,
               size: Number(size),
-              touch,
               store_id,
             };
           })

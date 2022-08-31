@@ -1,42 +1,26 @@
 import { CommonModule } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
-  Type,
 } from "@angular/core";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from "@angular/forms";
-import { Router } from "@angular/router";
-import {
-  TuiAlertService,
   TuiButtonModule,
   TuiErrorModule,
-  TuiNotification,
   TuiTextfieldControllerModule,
 } from "@taiga-ui/core";
 import {
   TUI_VALIDATION_ERRORS,
-  TuiFieldErrorModule,
   TuiFieldErrorPipeModule,
   TuiInputCountModule,
-  TuiInputFilesModule,
   TuiInputModule,
 } from "@taiga-ui/kit";
+import { isEqual } from "lodash";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
-import { environment } from "src/environments/environment";
-
-import { Display } from "../../data-access/displays.service";
 
 export type ValidDisplayForm = {
   name: string;
@@ -56,7 +40,6 @@ export type ValidDisplayForm = {
     CommonModule,
     ReactiveFormsModule,
     TuiFieldErrorPipeModule,
-    TuiFieldErrorModule,
     TuiTextfieldControllerModule,
     TuiErrorModule,
     TuiButtonModule,
@@ -105,9 +88,21 @@ export class DisplayFormComponent implements OnInit {
 
   private configureUpdate(displayData: ValidDisplayForm) {
     this.displayForm.patchValue(displayData);
+    this.formDisabled = true;
+
+    this.displayForm.valueChanges.subscribe((newFormData) => {
+      const hasChanged = !isEqual(newFormData, this.displayData);
+      if (hasChanged) {
+        this.formDisabled = false;
+      } else {
+        this.formDisabled = true;
+      }
+    });
   }
 
   private handleUpdate(formData: ValidDisplayForm) {
+    this.displayData = formData;
+    this.formDisabled = true;
     this.formSubmitted.emit(formData);
   }
 
