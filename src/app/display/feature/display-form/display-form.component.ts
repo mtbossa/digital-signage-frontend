@@ -20,6 +20,7 @@ import {
   TuiInputModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
+import { map } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
 export type ValidDisplayForm = {
@@ -90,14 +91,15 @@ export class DisplayFormComponent implements OnInit {
     this.displayForm.patchValue(displayData);
     this.formDisabled = true;
 
-    this.displayForm.valueChanges.subscribe((newFormData) => {
-      const hasChanged = !isEqual(newFormData, this.displayData);
-      if (hasChanged) {
-        this.formDisabled = false;
-      } else {
-        this.formDisabled = true;
-      }
-    });
+    this.displayForm.valueChanges
+      .pipe(map((newFormData) => isEqual(newFormData, this.displayData)))
+      .subscribe((isEqual) => {
+        if (!isEqual) {
+          this.formDisabled = false;
+        } else {
+          this.formDisabled = true;
+        }
+      });
   }
 
   private handleUpdate(formData: ValidDisplayForm) {
