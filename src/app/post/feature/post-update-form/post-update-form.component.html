@@ -1,0 +1,5 @@
+<ng-container *ngIf="post$ | async as post; else loading">
+  <app-post-form (formSubmitted)="updatePost($event)" [postData]="post"> </app-post-form>
+</ng-container>
+
+<ng-template #loading> loading </ng-template>
