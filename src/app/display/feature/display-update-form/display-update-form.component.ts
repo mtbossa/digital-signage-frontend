@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, Inject, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TuiAlertService, TuiNotification } from "@taiga-ui/core";
+import { omit, pick, toFloat } from "radash";
 import { delay, map, Observable, switchMap } from "rxjs";
 
 import { Display, DisplaysService } from "../../data-access/displays.service";
@@ -34,13 +35,16 @@ export class DisplayUpdateFormComponent implements OnInit {
         this.selectedId = Number(params.get("id"));
         return this.displayService.show(this.selectedId).pipe(
           map((display) => {
-            const { name, width, height, size, store_id } = display;
+            const displayFormData = pick(display, [
+              "name",
+              "height",
+              "width",
+              "size",
+              "store_id",
+            ]);
             return {
-              name,
-              width,
-              height,
-              size: Number(size),
-              store_id,
+              ...displayFormData,
+              size: toFloat(displayFormData.size),
             };
           })
         );
