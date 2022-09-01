@@ -27,26 +27,26 @@ export class PostUpdateFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.post$ = this.activatedRoute.paramMap.pipe(
-      switchMap((params) => {
-        this.selectedId = Number(params.get("id"));
-        return this.postService.show(this.selectedId).pipe(
-          map((post) => {
-            const postFormData = pick(post, [
-              "name",
-              "height",
-              "width",
-              "size",
-              "store_id",
-            ]);
-            return {
-              ...postFormData,
-              size: toFloat(postFormData.size),
-            };
-          })
-        );
-      })
-    );
+    // this.post$ = this.activatedRoute.paramMap.pipe(
+    //   switchMap((params) => {
+    //     this.selectedId = Number(params.get("id"));
+    //     return this.postService.show(this.selectedId).pipe(
+    //       map((post) => {
+    //         const postFormData = pick(post, [
+    //           "name",
+    //           "height",
+    //           "width",
+    //           "size",
+    //           "store_id",
+    //         ]);
+    //         return {
+    //           ...postFormData,
+    //           size: toFloat(postFormData.size),
+    //         };
+    //       })
+    //     );
+    //   })
+    // );
   }
 
   updatePost($event: ValidPostForm) {

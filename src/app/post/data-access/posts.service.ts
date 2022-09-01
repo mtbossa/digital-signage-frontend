@@ -8,32 +8,27 @@ import { ValidPostForm } from "../feature/post-form/post-form.component";
 
 export interface Post {
   id: number;
-  name: string;
-  observation: string;
-  width: number;
-  height: number;
-  size: string;
-  touch: boolean;
-  store_id: number | null;
+  description: string;
+  showing: boolean;
+  start_date: string;
+  end_date: string;
+  start_time: string;
+  end_time: boolean;
+  media_id: number;
+  expose_time: number | null;
+  recurrence_id: number | null;
   created_at: string;
   updated_at: string;
-  token?: Token;
 }
 
-interface Token {
-  accessToken: {
-    abilities: Array<string>;
-    created_at: string;
-    id: number;
-    name: string;
-    tokenable_id: number;
-    tokenable_type: string;
-    updated_at: string;
-  };
-  plainTextToken: string;
-}
-
-export type Key = "id" | "name" | "width" | "height" | "size" | "touch";
+export type Key =
+  | "id"
+  | "description"
+  | "start_date"
+  | "end_date"
+  | "start_time"
+  | "end_time"
+  | "expose_time";
 
 @Injectable({
   providedIn: "root",

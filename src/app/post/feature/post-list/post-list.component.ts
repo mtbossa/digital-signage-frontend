@@ -48,7 +48,16 @@ import { Key, Post, PostsService } from "../../data-access/posts.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostListComponent implements OnInit, OnDestroy {
-  columns = ["id", "name", "width", "height", "size", "touch", "actions"];
+  columns = [
+    "id",
+    "description",
+    "start_date",
+    "end_date",
+    "start_time",
+    "end_time",
+    "expose_time",
+    "actions",
+  ];
   posts: Post[] = [];
 
   private readonly page$ = new BehaviorSubject(1);
@@ -118,6 +127,11 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   goTo(where: string) {
     this.router.navigate([where], { relativeTo: this.activatedRoute });
+  }
+
+  test(item: any) {
+    console.log(item);
+    return item.id;
   }
 
   remove(postId: number): void {
