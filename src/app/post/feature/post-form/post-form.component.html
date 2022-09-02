@@ -6,47 +6,19 @@
         <div class="tui-col_8">
           <h3 class="tui-form__header tui-form__header_margin-top_none">Informações</h3>
           <div class="tui-form__row">
-            <tui-input tuiTextfieldExampleText="Nome do post" formControlName="name">
-              Nome
+            <tui-input
+              tuiTextfieldExampleText="Descrição do post"
+              formControlName="description"
+            >
+              Descrição
               <span class="tui-required"></span>
             </tui-input>
             <tui-error
-              formControlName="name"
+              formControlName="description"
               [error]="[] | tuiFieldError | async"
             ></tui-error>
           </div>
-          <div class="tui-form__row tui-form__row_multi-fields">
-            <div class="tui-form__multi-field">
-              <tui-input-count formControlName="width" [max]="200000">
-                Largura (pixels)
-                <input tuiTextfield placeholder="Largura do post (pixels)" />
-              </tui-input-count>
-              <tui-error
-                formControlName="width"
-                [error]="[] | tuiFieldError | async"
-              ></tui-error>
-            </div>
-            <div class="tui-form__multi-field">
-              <tui-input-count formControlName="height" [max]="200000">
-                Altura (pixels)
-                <input tuiTextfield placeholder="Altura do post (pixels)" />
-              </tui-input-count>
-              <tui-error
-                formControlName="height"
-                [error]="[] | tuiFieldError | async"
-              ></tui-error>
-            </div>
-            <div class="tui-form__multi-field">
-              <tui-input-count formControlName="size" [max]="1000">
-                Tamanho (polegadas)
-                <input tuiTextfield placeholder="Tamanho do post (polegadas)" />
-              </tui-input-count>
-              <tui-error
-                formControlName="size"
-                [error]="[] | tuiFieldError | async"
-              ></tui-error>
-            </div>
-          </div>
+          <div class="tui-form__row tui-form__row_multi-fields"></div>
           <div class="tui-form__buttons">
             <button
               tuiButton

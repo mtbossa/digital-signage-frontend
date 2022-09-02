@@ -24,11 +24,13 @@ import { map } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
 export type ValidPostForm = {
-  name: string;
-  size: number;
-  width: number;
-  height: number;
-  store_id?: number | null;
+  description: string;
+  start_date: string;
+  end_date: string;
+  start_time: string;
+  end_time: string;
+  media_id: number;
+  expose_time: number | null;
 };
 
 @Component({
@@ -62,23 +64,33 @@ export class PostFormComponent implements OnInit {
 
   formDisabled = false;
   postForm = new FormGroup({
-    name: new FormControl("", {
+    description: new FormControl("", {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(100)],
     }),
-    size: new FormControl(0, {
+    start_date: new FormControl("", {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(1000)],
+      validators: [Validators.required],
     }),
-    width: new FormControl(0, {
+    end_date: new FormControl("", {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(20000)],
+      validators: [Validators.required],
     }),
-    height: new FormControl(0, {
+    start_time: new FormControl("", {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(20000)],
+      validators: [Validators.required],
     }),
-    store_id: new FormControl<number | null>(null),
+    end_time: new FormControl("", {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    expose_time: new FormControl<number | null>(null, {
+      validators: [Validators.min(1000)],
+    }),
+    media_id: new FormControl<number | null>(null, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
   ngOnInit() {
@@ -113,7 +125,7 @@ export class PostFormComponent implements OnInit {
 
     if (this.postForm.invalid) return;
 
-    const formRawData = this.postForm.getRawValue();
+    const formRawData = this.postForm.getRawValue() as ValidPostForm;
 
     if (this.postData) {
       this.handleUpdate(formRawData);
