@@ -93,7 +93,7 @@ export class PostFormComponent implements OnInit {
 
   // If postData, means it's an update
   @Input() postData?: ValidPostForm;
-  @Input() medias$: Observable<MediaOption[] | null> = of([]);
+  @Input() medias$: Observable<MediaOption[]> = of([]);
 
   constructor(private post: PostsService) {}
 
