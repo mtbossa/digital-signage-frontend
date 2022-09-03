@@ -7,11 +7,26 @@ import {
   OnInit,
   Output,
 } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { TuiDay, TuiTime } from "@taiga-ui/cdk";
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import {
+  TuiContextWithImplicit,
+  TuiDay,
+  TuiLetModule,
+  tuiPure,
+  TuiStringHandler,
+  TuiTime,
+} from "@taiga-ui/cdk";
 import {
   TuiButtonModule,
+  TuiDataListModule,
   TuiErrorModule,
+  TuiLoaderModule,
   TuiTextfieldControllerModule,
 } from "@taiga-ui/core";
 import {
@@ -21,11 +36,15 @@ import {
   TuiInputDateModule,
   TuiInputModule,
   TuiInputTimeModule,
+  TuiSelectModule,
   TuiUnfinishedValidatorModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
-import { map } from "rxjs";
+import { delay, map, Observable, of } from "rxjs";
+import { Media, MediasService } from "src/app/media/data-access/medias.service";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
+
+import { MediaOption, PostsService } from "../../data-access/posts.service";
 
 export type ValidPostForm = {
   description: string;
@@ -45,6 +64,7 @@ export type ValidPostForm = {
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     TuiFieldErrorPipeModule,
     TuiTextfieldControllerModule,
@@ -55,6 +75,10 @@ export type ValidPostForm = {
     TuiInputDateModule,
     TuiUnfinishedValidatorModule,
     TuiInputTimeModule,
+    TuiSelectModule,
+    TuiDataListModule,
+    TuiLoaderModule,
+    TuiLetModule,
   ],
   providers: [
     {
@@ -64,10 +88,14 @@ export type ValidPostForm = {
   ],
 })
 export class PostFormComponent implements OnInit {
+  // Server request for items imitation
   @Output() formSubmitted = new EventEmitter<ValidPostForm>();
 
   // If postData, means it's an update
   @Input() postData?: ValidPostForm;
+  @Input() medias$: Observable<MediaOption[] | null> = of([]);
+
+  constructor(private post: PostsService) {}
 
   minStartDate = TuiDay.currentLocal();
 
@@ -106,6 +134,15 @@ export class PostFormComponent implements OnInit {
     if (this.postData) {
       this.configureUpdate(this.postData);
     }
+  }
+
+  @tuiPure
+  stringify(items: MediaOption[]): TuiStringHandler<TuiContextWithImplicit<number>> {
+    const map = new Map(
+      items.map(({ id, description }) => [id, description] as [number, string])
+    );
+
+    return ({ $implicit }: TuiContextWithImplicit<number>) => map.get($implicit) || ``;
   }
 
   private configureUpdate(postData: ValidPostForm) {

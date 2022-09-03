@@ -16,6 +16,8 @@ import { PostFormComponent, ValidPostForm } from "../post-form/post-form.compone
   styleUrls: ["./post-create-form.component.scss"],
 })
 export class PostCreateFormComponent {
+  medias$ = this.postsService.getMediaOptions();
+
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
     @Inject(TuiDialogService)

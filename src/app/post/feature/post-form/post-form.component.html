@@ -57,6 +57,30 @@
               ></tui-error>
             </div>
           </div>
+
+          <!-- Media -->
+          <div class="tui-form__row">
+            <tui-select
+              *tuiLet="medias$ | async as items"
+              class="b-form"
+              [tuiTextfieldLabelOutside]="true"
+              [valueContent]="items ? stringify(items) : loading"
+              formControlName="media_id"
+            >
+              Selecione a mídia
+              <ng-template tuiDataList>
+                <tui-data-list *ngIf="items; else loading">
+                  <button *ngFor="let item of items" tuiOption [value]="item.id">
+                    {{ item.description }}
+                  </button>
+                </tui-data-list>
+              </ng-template>
+              <ng-template #loading>
+                <tui-loader class="tui-space_vertical-3 loader"></tui-loader>
+              </ng-template>
+            </tui-select>
+          </div>
+
           <div class="tui-form__buttons">
             <button
               tuiButton
