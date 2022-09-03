@@ -58,6 +58,6 @@ export class MediasService {
   }
 
   public remove(mediaId: number) {
-    return this.http.delete(`${environment.apiUrl}/api/medias/${mediaId}`);
+    return this.http.delete(`${environment.apiUrl}/api/medias/${mediaId}`).pipe(take(1));
   }
 }
