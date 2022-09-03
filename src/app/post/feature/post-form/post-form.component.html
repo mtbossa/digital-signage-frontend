@@ -18,7 +18,26 @@
               [error]="[] | tuiFieldError | async"
             ></tui-error>
           </div>
-          <div class="tui-form__row tui-form__row_multi-fields"></div>
+          <div class="tui-form__row tui-form__row_multi-fields">
+            <div class="tui-form__multi-field">
+              <tui-input-date [min]="minStartDate" formControlName="start_date">
+                Data de início
+              </tui-input-date>
+              <tui-error
+                formControlName="start_date"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+            <div class="tui-form__multi-field">
+              <tui-input-date [min]="getMinEndDate()" formControlName="end_date">
+                Data de fim
+              </tui-input-date>
+              <tui-error
+                formControlName="end_date"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+          </div>
           <div class="tui-form__buttons">
             <button
               tuiButton

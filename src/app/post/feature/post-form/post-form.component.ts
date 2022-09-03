@@ -8,6 +8,7 @@ import {
   Output,
 } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { TuiDay } from "@taiga-ui/cdk";
 import {
   TuiButtonModule,
   TuiErrorModule,
@@ -17,7 +18,9 @@ import {
   TUI_VALIDATION_ERRORS,
   TuiFieldErrorPipeModule,
   TuiInputCountModule,
+  TuiInputDateModule,
   TuiInputModule,
+  TuiUnfinishedValidatorModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
 import { map } from "rxjs";
@@ -48,6 +51,8 @@ export type ValidPostForm = {
     TuiButtonModule,
     TuiInputModule,
     TuiInputCountModule,
+    TuiInputDateModule,
+    TuiUnfinishedValidatorModule,
   ],
   providers: [
     {
@@ -62,17 +67,19 @@ export class PostFormComponent implements OnInit {
   // If postData, means it's an update
   @Input() postData?: ValidPostForm;
 
+  minStartDate = TuiDay.currentLocal();
+
   formDisabled = false;
   postForm = new FormGroup({
     description: new FormControl("", {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(100)],
     }),
-    start_date: new FormControl("", {
+    start_date: new FormControl<null | TuiDay>(null, {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    end_date: new FormControl("", {
+    end_date: new FormControl<null | TuiDay>(null, {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -100,7 +107,7 @@ export class PostFormComponent implements OnInit {
   }
 
   private configureUpdate(postData: ValidPostForm) {
-    this.postForm.patchValue(postData);
+    // this.postForm.patchValue(postData);
     this.formDisabled = true;
 
     this.postForm.valueChanges
@@ -125,12 +132,23 @@ export class PostFormComponent implements OnInit {
 
     if (this.postForm.invalid) return;
 
-    const formRawData = this.postForm.getRawValue() as ValidPostForm;
+    const formRawData = this.postForm.getRawValue();
+    const validFormData = {
+      ...formRawData,
+      start_date: formRawData.start_date!.toJSON(),
+      end_date: formRawData.end_date!.toJSON(),
+    } as ValidPostForm;
 
     if (this.postData) {
-      this.handleUpdate(formRawData);
+      this.handleUpdate(validFormData);
     } else {
-      this.formSubmitted.emit(formRawData);
+      this.formSubmitted.emit(validFormData);
     }
+  }
+
+  getMinEndDate() {
+    const currentStartDate = this.postForm.get("start_date")?.value;
+    if (!currentStartDate) return TuiDay.currentLocal();
+    return currentStartDate;
   }
 }
