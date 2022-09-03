@@ -8,7 +8,7 @@ import {
   Output,
 } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { TuiDay } from "@taiga-ui/cdk";
+import { TuiDay, TuiTime } from "@taiga-ui/cdk";
 import {
   TuiButtonModule,
   TuiErrorModule,
@@ -20,6 +20,7 @@ import {
   TuiInputCountModule,
   TuiInputDateModule,
   TuiInputModule,
+  TuiInputTimeModule,
   TuiUnfinishedValidatorModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
@@ -53,6 +54,7 @@ export type ValidPostForm = {
     TuiInputCountModule,
     TuiInputDateModule,
     TuiUnfinishedValidatorModule,
+    TuiInputTimeModule,
   ],
   providers: [
     {
@@ -83,11 +85,11 @@ export class PostFormComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    start_time: new FormControl("", {
+    start_time: new FormControl<TuiTime | null>(null, {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    end_time: new FormControl("", {
+    end_time: new FormControl<TuiTime | null>(null, {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -137,6 +139,8 @@ export class PostFormComponent implements OnInit {
       ...formRawData,
       start_date: formRawData.start_date!.toJSON(),
       end_date: formRawData.end_date!.toJSON(),
+      start_time: `${formRawData.start_time!.toString()}:00`,
+      end_time: `${formRawData.end_time!.toString()}:00`,
     } as ValidPostForm;
 
     if (this.postData) {

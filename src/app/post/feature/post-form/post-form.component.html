@@ -18,6 +18,7 @@
               [error]="[] | tuiFieldError | async"
             ></tui-error>
           </div>
+          <!-- Start and end date -->
           <div class="tui-form__row tui-form__row_multi-fields">
             <div class="tui-form__multi-field">
               <tui-input-date [min]="minStartDate" formControlName="start_date">
@@ -34,6 +35,23 @@
               </tui-input-date>
               <tui-error
                 formControlName="end_date"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+          </div>
+          <!-- Start and end time -->
+          <div class="tui-form__row tui-form__row_multi-fields">
+            <div class="tui-form__multi-field">
+              <tui-input-time formControlName="start_time">Hora de início</tui-input-time>
+              <tui-error
+                formControlName="start_time"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+            <div class="tui-form__multi-field">
+              <tui-input-time formControlName="end_time">Hora de fim</tui-input-time>
+              <tui-error
+                formControlName="end_time"
                 [error]="[] | tuiFieldError | async"
               ></tui-error>
             </div>
