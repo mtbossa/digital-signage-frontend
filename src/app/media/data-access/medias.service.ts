@@ -7,7 +7,7 @@ import { environment } from "src/environments/environment";
 export interface Media {
   id: number;
   description: string;
-  type: string;
+  type: "image" | "video";
   size_kb: number;
   filename: string;
   extension: string;

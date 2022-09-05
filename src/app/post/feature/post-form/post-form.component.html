@@ -18,7 +18,11 @@
               [error]="[] | tuiFieldError | async"
             ></tui-error>
             <div class="tui-form__row">
-              <tui-input-count formControlName="expose_time" [max]="200000">
+              <tui-input-count
+                formControlName="expose_time"
+                [min]="1000"
+                [max]="86400000"
+              >
                 Tempo de exposição
                 <input tuiTextfield placeholder="Tempo de exposição" />
               </tui-input-count>
@@ -82,7 +86,12 @@
               Selecione a mídia
               <ng-template tuiDataList>
                 <tui-data-list *ngIf="items; else loading">
-                  <button *ngFor="let item of items" tuiOption [value]="item.id">
+                  <button
+                    *ngFor="let item of items"
+                    tuiOption
+                    [value]="item.id"
+                    (click)="onMediaChanged(item.type)"
+                  >
                     {{ item.description }}
                   </button>
                 </tui-data-list>

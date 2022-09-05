@@ -23,7 +23,7 @@ export interface Post {
   updated_at: string;
 }
 
-export type MediaOption = Pick<Media, "id" | "path" | "description">;
+export type MediaOption = Pick<Media, "id" | "path" | "description" | "type">;
 export type DisplayOption = Pick<Display, "id" | "name">;
 
 export type Key =

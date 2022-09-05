@@ -156,7 +156,8 @@ export class PostFormComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    expose_time: new FormControl<number | null>(null, {
+    expose_time: new FormControl<number | null>(1000, {
+      nonNullable: true,
       validators: [Validators.min(1000)],
     }),
     media_id: new FormControl<number | null>(null, {
@@ -235,5 +236,16 @@ export class PostFormComponent implements OnInit {
 
   onSearchChange(searchQuery: string | null): void {
     this.search$.next(searchQuery || "");
+  }
+
+  onMediaChanged(mediaType: "image" | "video") {
+    const exposeTimeControl = this.postForm.get("expose_time");
+    if (mediaType === "video") {
+      exposeTimeControl?.setValue(null);
+      exposeTimeControl?.disable();
+    } else {
+      exposeTimeControl?.enable();
+      exposeTimeControl?.reset();
+    }
   }
 }
