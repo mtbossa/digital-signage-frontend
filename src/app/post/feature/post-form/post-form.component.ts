@@ -186,8 +186,28 @@ export class PostFormComponent implements OnInit {
     return ({ $implicit }: TuiContextWithImplicit<number>) => map.get($implicit) || ``;
   }
 
+  transformDateToTuiDay(date: string) {
+    const [year, month, day] = date.split("-");
+    console.log({ year, month, day });
+    return new TuiDay(Number(year), Number(month), Number(day));
+  }
+
+  transformTimeToTuiTime(time: string) {
+    const [hours, minutes, seconds] = time.split(":");
+    console.log({ hours, minutes, seconds });
+    return new TuiTime(Number(hours), Number(minutes), Number(seconds));
+  }
+
   private configureUpdate(postData: ValidPostForm) {
-    // this.postForm.patchValue(postData);
+    const updatedData = {
+      ...postData,
+      start_date: this.transformDateToTuiDay(postData.start_date),
+      end_date: this.transformDateToTuiDay(postData.end_date),
+      start_time: this.transformTimeToTuiTime(postData.start_time),
+      end_time: this.transformTimeToTuiTime(postData.end_time),
+    };
+
+    this.postForm.patchValue(updatedData);
     this.formDisabled = true;
 
     this.postForm.valueChanges

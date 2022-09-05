@@ -15,8 +15,9 @@ export interface Post {
   start_date: string;
   end_date: string;
   start_time: string;
-  end_time: boolean;
+  end_time: string;
   media_id: number;
+  displays_ids: Array<number>;
   expose_time: number | null;
   recurrence_id: number | null;
   created_at: string;
