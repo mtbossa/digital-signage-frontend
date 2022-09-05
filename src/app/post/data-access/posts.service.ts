@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, take } from "rxjs";
+import { BehaviorSubject, Observable, take, tap } from "rxjs";
+import { Display } from "src/app/display/data-access/displays.service";
 import { Media } from "src/app/media/data-access/medias.service";
 import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
 import { environment } from "src/environments/environment";
@@ -23,6 +24,7 @@ export interface Post {
 }
 
 export type MediaOption = Pick<Media, "id" | "path" | "description">;
+export type DisplayOption = Pick<Display, "id" | "name">;
 
 export type Key =
   | "id"
@@ -79,6 +81,12 @@ export class PostsService {
   public getMediaOptions() {
     return this.http
       .get<MediaOption[]>(`${environment.apiUrl}/api/posts/medias/options`)
+      .pipe(take(1));
+  }
+
+  public getDisplayOptions() {
+    return this.http
+      .get<DisplayOption[]>(`${environment.apiUrl}/api/posts/displays/options`)
       .pipe(take(1));
   }
 }

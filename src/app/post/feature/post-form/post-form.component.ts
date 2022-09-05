@@ -15,8 +15,11 @@ import {
   Validators,
 } from "@angular/forms";
 import {
+  TUI_DEFAULT_MATCHER,
   TuiContextWithImplicit,
   TuiDay,
+  TuiHandler,
+  tuiIsNumber,
   TuiLetModule,
   tuiPure,
   TuiStringHandler,
@@ -31,20 +34,39 @@ import {
 } from "@taiga-ui/core";
 import {
   TUI_VALIDATION_ERRORS,
+  TuiDataListWrapperModule,
   TuiFieldErrorPipeModule,
   TuiInputCountModule,
   TuiInputDateModule,
   TuiInputModule,
   TuiInputTimeModule,
+  TuiMultiSelectModule,
   TuiSelectModule,
   TuiUnfinishedValidatorModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
-import { delay, map, Observable, of } from "rxjs";
+import {
+  BehaviorSubject,
+  combineLatest,
+  delay,
+  filter,
+  map,
+  Observable,
+  of,
+  share,
+  startWith,
+  Subject,
+  switchMap,
+} from "rxjs";
+import { Display, DisplaysService } from "src/app/display/data-access/displays.service";
 import { Media, MediasService } from "src/app/media/data-access/medias.service";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
-import { MediaOption, PostsService } from "../../data-access/posts.service";
+import {
+  DisplayOption,
+  MediaOption,
+  PostsService,
+} from "../../data-access/posts.service";
 
 export type ValidPostForm = {
   description: string;
@@ -54,6 +76,7 @@ export type ValidPostForm = {
   end_time: string;
   media_id: number;
   expose_time: number | null;
+  displays_ids: Array<number>;
 };
 
 @Component({
@@ -79,6 +102,8 @@ export type ValidPostForm = {
     TuiDataListModule,
     TuiLoaderModule,
     TuiLetModule,
+    TuiMultiSelectModule,
+    TuiDataListWrapperModule,
   ],
   providers: [
     {
@@ -95,10 +120,38 @@ export class PostFormComponent implements OnInit {
   @Input() postData?: ValidPostForm;
   @Input() medias$: Observable<MediaOption[]> = of([]);
 
-  constructor(private post: PostsService) {}
+  readonly search$ = new BehaviorSubject<string>("");
+
+  // Items only hold IDs
+  readonly displays$ = this.search$.pipe(
+    startWith(``),
+    switchMap((search) =>
+      this.post
+        .getDisplayOptions()
+        .pipe(
+          map((items) =>
+            items
+              .filter(({ name }) => TUI_DEFAULT_MATCHER(name, search))
+              .map(({ id }) => id)
+          )
+        )
+    ),
+    startWith(null) // <-- loading
+  );
+
+  // Stringify mapper that turns IDs to names
+  readonly stringify$: Observable<
+    TuiHandler<number | TuiContextWithImplicit<number>, string>
+  > = this.post.getDisplayOptions().pipe(
+    map((items) => new Map(items.map<[number, string]>(({ id, name }) => [id, name]))),
+    startWith(new Map()),
+    map(
+      (map) => (id: number | TuiContextWithImplicit<number>) =>
+        (tuiIsNumber(id) ? map.get(id) : map.get(id.$implicit)) || `Loading...`
+    )
+  );
 
   minStartDate = TuiDay.currentLocal();
-
   formDisabled = false;
   postForm = new FormGroup({
     description: new FormControl("", {
@@ -128,7 +181,13 @@ export class PostFormComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
+    displays_ids: new FormControl<Array<number> | null>(null, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
+
+  constructor(private post: PostsService) {}
 
   ngOnInit() {
     if (this.postData) {
@@ -191,5 +250,9 @@ export class PostFormComponent implements OnInit {
     const currentStartDate = this.postForm.get("start_date")?.value;
     if (!currentStartDate) return TuiDay.currentLocal();
     return currentStartDate;
+  }
+
+  onSearchChange(searchQuery: string | null): void {
+    this.search$.next(searchQuery || "");
   }
 }
