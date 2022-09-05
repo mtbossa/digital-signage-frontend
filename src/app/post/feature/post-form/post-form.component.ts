@@ -45,28 +45,10 @@ import {
   TuiUnfinishedValidatorModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
-import {
-  BehaviorSubject,
-  combineLatest,
-  delay,
-  filter,
-  map,
-  Observable,
-  of,
-  share,
-  startWith,
-  Subject,
-  switchMap,
-} from "rxjs";
-import { Display, DisplaysService } from "src/app/display/data-access/displays.service";
-import { Media, MediasService } from "src/app/media/data-access/medias.service";
+import { BehaviorSubject, map, Observable, of, startWith, switchMap } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
-import {
-  DisplayOption,
-  MediaOption,
-  PostsService,
-} from "../../data-access/posts.service";
+import { MediaOption, PostsService } from "../../data-access/posts.service";
 
 export type ValidPostForm = {
   description: string;
@@ -183,7 +165,6 @@ export class PostFormComponent implements OnInit {
     }),
     displays_ids: new FormControl<Array<number> | null>(null, {
       nonNullable: true,
-      validators: [Validators.required],
     }),
   });
 
