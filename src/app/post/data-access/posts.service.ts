@@ -60,8 +60,14 @@ export class PostsService {
     return this.http.post<Post>(`${environment.apiUrl}/api/posts`, data).pipe(take(1));
   }
 
-  public show(postId: number) {
-    return this.http.get<Post>(`${environment.apiUrl}/api/posts/${postId}`).pipe(take(1));
+  public show(postId: number, withDisplaysIds = false) {
+    return this.http
+      .get<Post>(`${environment.apiUrl}/api/posts/${postId}`, {
+        params: {
+          withDisplaysIds,
+        },
+      })
+      .pipe(take(1));
   }
 
   // Can only update post description
