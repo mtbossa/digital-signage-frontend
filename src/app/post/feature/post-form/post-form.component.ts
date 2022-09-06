@@ -170,10 +170,14 @@ export class PostFormComponent implements OnInit {
     }),
   });
 
+  get exposeTimeFormControl() {
+    return this.postForm.get("expose_time");
+  }
+
   constructor(private post: PostsService) {}
 
   ngOnInit() {
-    this.postForm.get("expose_time")?.disable();
+    this.exposeTimeFormControl?.disable();
     if (this.postData) {
       this.configureUpdate(this.postData);
     }
@@ -211,13 +215,12 @@ export class PostFormComponent implements OnInit {
   }
 
   onMediaChanged(mediaType: "image" | "video") {
-    const exposeTimeControl = this.postForm.get("expose_time");
     if (mediaType === "video") {
-      exposeTimeControl?.setValue(null);
-      exposeTimeControl?.disable();
+      this.exposeTimeFormControl?.setValue(null);
+      this.exposeTimeFormControl?.disable();
     } else {
-      exposeTimeControl?.enable();
-      exposeTimeControl?.reset();
+      this.exposeTimeFormControl?.enable();
+      this.exposeTimeFormControl?.reset();
     }
   }
 
