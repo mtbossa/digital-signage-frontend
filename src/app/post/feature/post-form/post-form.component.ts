@@ -266,12 +266,12 @@ export class PostFormComponent implements OnInit {
   }
 
   private transformDateToTuiDay(date: string) {
-    const [year, month, day] = date.split("-");
-    return new TuiDay(Number(year), Number(month), Number(day));
+    const [year, month, day] = date.split("-").map(Number);
+    return new TuiDay(year, month, day);
   }
 
   private transformTimeToTuiTime(time: string) {
-    const [hours, minutes, seconds] = time.split(":");
-    return new TuiTime(Number(hours), Number(minutes), Number(seconds));
+    const [hours, minutes, seconds] = time.split(":").map(Number);
+    return new TuiTime(hours, minutes, seconds);
   }
 }
