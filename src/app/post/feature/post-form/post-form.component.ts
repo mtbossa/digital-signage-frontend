@@ -45,10 +45,23 @@ import {
   TuiUnfinishedValidatorModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
-import { BehaviorSubject, map, Observable, of, startWith, switchMap } from "rxjs";
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
-import { MediaOption, PostsService } from "../../data-access/posts.service";
+import {
+  DisplayOption,
+  MediaOption,
+  PostsService,
+} from "../../data-access/posts.service";
 
 export type ValidPostForm = {
   description: string;
@@ -103,6 +116,23 @@ export class PostFormComponent implements OnInit {
   @Input() medias$: Observable<MediaOption[]> = of([]);
 
   readonly search$ = new BehaviorSubject<string>("");
+  displayOptions$ = new BehaviorSubject<DisplayOption[] | null>(null);
+
+  request$ = combineLatest([this.search$]).pipe(
+    switchMap(([search]) => this.post.getDisplayOptions()),
+    tap((res) => this.displayOptions$.next(res))
+  );
+
+  ids$ = this.displayOptions$.pipe(map((items) => items?.map(({ id }) => id) ?? null));
+  strings$ = this.displayOptions$.pipe(
+    map(
+      (items) => new Map(items?.map<[number, string]>(({ id, name }) => [id, name]) ?? [])
+    ),
+    map(
+      (map) => (id: number | TuiContextWithImplicit<number>) =>
+        (tuiIsNumber(id) ? map.get(id) : map.get(id.$implicit)) || `Loading...`
+    )
+  );
 
   // Items only hold IDs
   readonly displays$ = this.search$.pipe(

@@ -109,8 +109,8 @@
           <!-- Displays -->
           <h3 class="tui-form__header tui-form__header_margin-top_1">Displays</h3>
           <tui-multi-select
-            *tuiLet="displays$ | async as displays"
-            [stringify]="(stringify$ | async)!"
+            *tuiLet="request$ | async"
+            [stringify]="(strings$ | async)!"
             #component
             placeholder="Find by ..."
             class="control"
@@ -123,8 +123,8 @@
             <tui-data-list-wrapper
               *tuiDataList
               tuiMultiSelectGroup
-              [items]="displays"
-              [itemContent]="(stringify$ | async)!"
+              [items]="ids$ | async"
+              [itemContent]="(strings$ | async)!"
             ></tui-data-list-wrapper>
           </tui-multi-select>
 
