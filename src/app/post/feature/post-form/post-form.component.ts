@@ -56,7 +56,11 @@ import {
 } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
-import { MediaOption, PostsService } from "../../data-access/posts.service";
+import {
+  DisplayOption,
+  MediaOption,
+  PostsService,
+} from "../../data-access/posts.service";
 
 export type ValidPostForm = {
   description: string;
@@ -103,27 +107,24 @@ export type ValidPostForm = {
   ],
 })
 export class PostFormComponent implements OnInit {
-  // Server request for items imitation
   @Output() formSubmitted = new EventEmitter<ValidPostForm>();
 
   // If postData, means it's an update
   @Input() postData?: ValidPostForm;
   @Input() medias$: Observable<MediaOption[]> = of([]);
 
-  private readonly search$ = new BehaviorSubject<string>("");
-
-  request$ = combineLatest([this.search$]).pipe(
+  private readonly displaySearch$ = new BehaviorSubject<string>("");
+  readonly displaysOptionsRequest$ = combineLatest([this.displaySearch$]).pipe(
     switchMap(([search]) => this.post.getDisplayOptions()),
     startWith(null),
     shareReplay(1)
   );
-
-  readonly displaysIds$ = this.request$.pipe(
+  readonly displaysIds$ = this.displaysOptionsRequest$.pipe(
     map((items) => items?.map(({ id }) => id) ?? null)
   );
   readonly displaysStringify$: Observable<
     TuiHandler<number | TuiContextWithImplicit<number>, string>
-  > = this.request$.pipe(
+  > = this.displaysOptionsRequest$.pipe(
     map(
       (items) => new Map(items?.map<[number, string]>(({ id, name }) => [id, name]) ?? [])
     ),
@@ -178,25 +179,57 @@ export class PostFormComponent implements OnInit {
     }
   }
 
+  onSubmit() {
+    this.postForm.markAllAsTouched();
+
+    if (this.postForm.invalid) return;
+
+    const formRawData = this.postForm.getRawValue();
+    const validFormData = {
+      ...formRawData,
+      start_date: formRawData.start_date!.toJSON(),
+      end_date: formRawData.end_date!.toJSON(),
+      start_time: `${formRawData.start_time!.toString()}:00`,
+      end_time: `${formRawData.end_time!.toString()}:00`,
+    } as ValidPostForm;
+
+    if (this.postData) {
+      this.handleUpdate(validFormData);
+    } else {
+      this.formSubmitted.emit(validFormData);
+    }
+  }
+
+  getMinEndDate() {
+    const currentStartDate = this.postForm.get("start_date")?.value;
+    if (!currentStartDate) return TuiDay.currentLocal();
+    return currentStartDate;
+  }
+
+  onSearchChange(searchQuery: string | null): void {
+    this.displaySearch$.next(searchQuery || "");
+  }
+
+  onMediaChanged(mediaType: "image" | "video") {
+    const exposeTimeControl = this.postForm.get("expose_time");
+    if (mediaType === "video") {
+      exposeTimeControl?.setValue(null);
+      exposeTimeControl?.disable();
+    } else {
+      exposeTimeControl?.enable();
+      exposeTimeControl?.reset();
+    }
+  }
+
   @tuiPure
-  stringify(items: MediaOption[]): TuiStringHandler<TuiContextWithImplicit<number>> {
+  stringifyMediasOptions(
+    items: MediaOption[]
+  ): TuiStringHandler<TuiContextWithImplicit<number>> {
     const map = new Map(
       items.map(({ id, description }) => [id, description] as [number, string])
     );
 
     return ({ $implicit }: TuiContextWithImplicit<number>) => map.get($implicit) || ``;
-  }
-
-  transformDateToTuiDay(date: string) {
-    const [year, month, day] = date.split("-");
-    console.log({ year, month, day });
-    return new TuiDay(Number(year), Number(month), Number(day));
-  }
-
-  transformTimeToTuiTime(time: string) {
-    const [hours, minutes, seconds] = time.split(":");
-    console.log({ hours, minutes, seconds });
-    return new TuiTime(Number(hours), Number(minutes), Number(seconds));
   }
 
   private configureUpdate(postData: ValidPostForm) {
@@ -232,45 +265,13 @@ export class PostFormComponent implements OnInit {
     this.formSubmitted.emit(formData);
   }
 
-  onSubmit() {
-    this.postForm.markAllAsTouched();
-
-    if (this.postForm.invalid) return;
-
-    const formRawData = this.postForm.getRawValue();
-    const validFormData = {
-      ...formRawData,
-      start_date: formRawData.start_date!.toJSON(),
-      end_date: formRawData.end_date!.toJSON(),
-      start_time: `${formRawData.start_time!.toString()}:00`,
-      end_time: `${formRawData.end_time!.toString()}:00`,
-    } as ValidPostForm;
-
-    if (this.postData) {
-      this.handleUpdate(validFormData);
-    } else {
-      this.formSubmitted.emit(validFormData);
-    }
+  private transformDateToTuiDay(date: string) {
+    const [year, month, day] = date.split("-");
+    return new TuiDay(Number(year), Number(month), Number(day));
   }
 
-  getMinEndDate() {
-    const currentStartDate = this.postForm.get("start_date")?.value;
-    if (!currentStartDate) return TuiDay.currentLocal();
-    return currentStartDate;
-  }
-
-  onSearchChange(searchQuery: string | null): void {
-    this.search$.next(searchQuery || "");
-  }
-
-  onMediaChanged(mediaType: "image" | "video") {
-    const exposeTimeControl = this.postForm.get("expose_time");
-    if (mediaType === "video") {
-      exposeTimeControl?.setValue(null);
-      exposeTimeControl?.disable();
-    } else {
-      exposeTimeControl?.enable();
-      exposeTimeControl?.reset();
-    }
+  private transformTimeToTuiTime(time: string) {
+    const [hours, minutes, seconds] = time.split(":");
+    return new TuiTime(Number(hours), Number(minutes), Number(seconds));
   }
 }

@@ -80,7 +80,7 @@
             <tui-select
               *tuiLet="medias$ | async as items"
               [tuiTextfieldLabelOutside]="true"
-              [valueContent]="items ? stringify(items) : loading"
+              [valueContent]="items ? stringifyMediasOptions(items) : loading"
               formControlName="media_id"
             >
               Selecione a mídia
@@ -109,7 +109,7 @@
           <!-- Displays -->
           <h3 class="tui-form__header tui-form__header_margin-top_1">Displays</h3>
           <tui-multi-select
-            *tuiLet="request$ | async"
+            *tuiLet="displaysOptionsRequest$ | async"
             [stringify]="(displaysStringify$ | async)!"
             [tuiTextfieldLabelOutside]="true"
             [expandable]="false"
