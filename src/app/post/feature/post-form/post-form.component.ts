@@ -15,7 +15,6 @@ import {
   Validators,
 } from "@angular/forms";
 import {
-  TUI_DEFAULT_MATCHER,
   TuiContextWithImplicit,
   TuiDay,
   TuiHandler,
@@ -51,17 +50,13 @@ import {
   map,
   Observable,
   of,
+  shareReplay,
   startWith,
   switchMap,
-  tap,
 } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
-import {
-  DisplayOption,
-  MediaOption,
-  PostsService,
-} from "../../data-access/posts.service";
+import { MediaOption, PostsService } from "../../data-access/posts.service";
 
 export type ValidPostForm = {
   description: string;
@@ -115,48 +110,23 @@ export class PostFormComponent implements OnInit {
   @Input() postData?: ValidPostForm;
   @Input() medias$: Observable<MediaOption[]> = of([]);
 
-  readonly search$ = new BehaviorSubject<string>("");
-  displayOptions$ = new BehaviorSubject<DisplayOption[] | null>(null);
+  private readonly search$ = new BehaviorSubject<string>("");
 
   request$ = combineLatest([this.search$]).pipe(
     switchMap(([search]) => this.post.getDisplayOptions()),
-    tap((res) => this.displayOptions$.next(res))
+    startWith(null),
+    shareReplay(1)
   );
 
-  ids$ = this.displayOptions$.pipe(map((items) => items?.map(({ id }) => id) ?? null));
-  strings$ = this.displayOptions$.pipe(
+  readonly displaysIds$ = this.request$.pipe(
+    map((items) => items?.map(({ id }) => id) ?? null)
+  );
+  readonly displaysStringify$: Observable<
+    TuiHandler<number | TuiContextWithImplicit<number>, string>
+  > = this.request$.pipe(
     map(
       (items) => new Map(items?.map<[number, string]>(({ id, name }) => [id, name]) ?? [])
     ),
-    map(
-      (map) => (id: number | TuiContextWithImplicit<number>) =>
-        (tuiIsNumber(id) ? map.get(id) : map.get(id.$implicit)) || `Loading...`
-    )
-  );
-
-  // Items only hold IDs
-  readonly displays$ = this.search$.pipe(
-    startWith(``),
-    switchMap((search) =>
-      this.post
-        .getDisplayOptions()
-        .pipe(
-          map((items) =>
-            items
-              .filter(({ name }) => TUI_DEFAULT_MATCHER(name, search))
-              .map(({ id }) => id)
-          )
-        )
-    ),
-    startWith(null) // <-- loading
-  );
-
-  // Stringify mapper that turns IDs to names
-  readonly stringify$: Observable<
-    TuiHandler<number | TuiContextWithImplicit<number>, string>
-  > = this.post.getDisplayOptions().pipe(
-    map((items) => new Map(items.map<[number, string]>(({ id, name }) => [id, name]))),
-    startWith(new Map()),
     map(
       (map) => (id: number | TuiContextWithImplicit<number>) =>
         (tuiIsNumber(id) ? map.get(id) : map.get(id.$implicit)) || `Loading...`

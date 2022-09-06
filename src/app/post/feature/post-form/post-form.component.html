@@ -110,10 +110,7 @@
           <h3 class="tui-form__header tui-form__header_margin-top_1">Displays</h3>
           <tui-multi-select
             *tuiLet="request$ | async"
-            [stringify]="(strings$ | async)!"
-            #component
-            placeholder="Find by ..."
-            class="control"
+            [stringify]="(displaysStringify$ | async)!"
             [tuiTextfieldLabelOutside]="true"
             [expandable]="false"
             (searchChange)="onSearchChange($event)"
@@ -123,8 +120,8 @@
             <tui-data-list-wrapper
               *tuiDataList
               tuiMultiSelectGroup
-              [items]="ids$ | async"
-              [itemContent]="(strings$ | async)!"
+              [items]="displaysIds$ | async"
+              [itemContent]="(displaysStringify$ | async)!"
             ></tui-data-list-wrapper>
           </tui-multi-select>
 
