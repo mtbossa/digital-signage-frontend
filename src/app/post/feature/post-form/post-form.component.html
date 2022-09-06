@@ -17,7 +17,7 @@
               formControlName="description"
               [error]="[] | tuiFieldError | async"
             ></tui-error>
-            <div class="tui-form__row">
+            <div class="tui-form__row" *ngIf="exposeTimeFormControl?.value !== null">
               <tui-input-count
                 formControlName="expose_time"
                 [min]="1000"

@@ -177,7 +177,6 @@ export class PostFormComponent implements OnInit {
   constructor(private post: PostsService) {}
 
   ngOnInit() {
-    this.exposeTimeFormControl?.disable();
     if (this.postData) {
       this.configureUpdate(this.postData);
     }
