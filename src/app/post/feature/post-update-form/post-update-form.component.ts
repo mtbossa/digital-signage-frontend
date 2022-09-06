@@ -18,19 +18,20 @@ import { PostFormComponent, ValidPostForm } from "../post-form/post-form.compone
 export class PostUpdateFormComponent implements OnInit {
   loading = true;
   post$!: Observable<ValidPostForm>;
+  medias$ = this.postsService.getMediaOptions();
   selectedId!: number;
 
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
     private activatedRoute: ActivatedRoute,
-    private postService: PostsService
+    private postsService: PostsService
   ) {}
 
   ngOnInit(): void {
     this.post$ = this.activatedRoute.paramMap.pipe(
       switchMap((params) => {
         this.selectedId = Number(params.get("id"));
-        return this.postService.show(this.selectedId).pipe(
+        return this.postsService.show(this.selectedId).pipe(
           map((post) => {
             const postFormData = pick(post, [
               "description",
@@ -52,7 +53,7 @@ export class PostUpdateFormComponent implements OnInit {
   }
 
   updatePost($event: ValidPostForm) {
-    this.postService.update(this.selectedId, $event).subscribe(() => {
+    this.postsService.update(this.selectedId, $event).subscribe(() => {
       this.alertService
         .open(`Post atualizado com sucesso!`, { status: TuiNotification.Success })
         .subscribe();

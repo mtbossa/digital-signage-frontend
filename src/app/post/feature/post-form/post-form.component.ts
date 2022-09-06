@@ -172,6 +172,7 @@ export class PostFormComponent implements OnInit {
   constructor(private post: PostsService) {}
 
   ngOnInit() {
+    this.postForm.get("expose_time")?.disable();
     if (this.postData) {
       this.configureUpdate(this.postData);
     }
@@ -199,17 +200,21 @@ export class PostFormComponent implements OnInit {
   }
 
   private configureUpdate(postData: ValidPostForm) {
-    const updatedData = {
+    // Disables all fields but description, since description is the only one which can be updated
+    Object.keys(this.postForm.controls).forEach((key) => {
+      if (key === "description") return;
+      this.postForm.get(key)?.disable();
+    });
+
+    this.postForm.patchValue({
       ...postData,
       start_date: this.transformDateToTuiDay(postData.start_date),
       end_date: this.transformDateToTuiDay(postData.end_date),
       start_time: this.transformTimeToTuiTime(postData.start_time),
       end_time: this.transformTimeToTuiTime(postData.end_time),
-    };
+    });
 
-    this.postForm.patchValue(updatedData);
     this.formDisabled = true;
-
     this.postForm.valueChanges
       .pipe(map((newFormData) => isEqual(newFormData, this.postData)))
       .subscribe((isEqual) => {
