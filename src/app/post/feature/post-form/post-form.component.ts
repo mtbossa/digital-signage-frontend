@@ -134,6 +134,7 @@ export class PostFormComponent implements OnInit {
     )
   );
 
+  latestExposeTime?: number | null;
   minStartDate = TuiDay.currentLocal();
   formDisabled = false;
   postForm = new FormGroup({
@@ -214,12 +215,17 @@ export class PostFormComponent implements OnInit {
   }
 
   onMediaChanged(mediaType: "image" | "video") {
+    this.latestExposeTime = this.exposeTimeFormControl?.value;
     if (mediaType === "video") {
       this.exposeTimeFormControl?.setValue(null);
       this.exposeTimeFormControl?.disable();
     } else {
       this.exposeTimeFormControl?.enable();
-      this.exposeTimeFormControl?.reset();
+      if (this.latestExposeTime) {
+        this.exposeTimeFormControl?.setValue(this.latestExposeTime);
+      } else {
+        this.exposeTimeFormControl?.reset();
+      }
     }
   }
 
