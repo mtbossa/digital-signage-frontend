@@ -1,0 +1,93 @@
+<div>
+  <h1>Posts</h1>
+  <div class="buttons-header tui-space_vertical-8">
+    <button tuiButton icon="tuiIconPlus" size="m" (click)="goTo('criar')">Criar</button>
+  </div>
+  <div>
+    <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
+      <table
+        class="table"
+        *tuiLet="posts as data"
+        [columns]="columns"
+        [direction]="(direction$ | async) || 1"
+        [tuiSortBy]="sorter$ | async"
+        (tuiSortByChange)="sorter$.next($event!)"
+        (directionChange)="direction$.next($event)"
+        tuiTable
+      >
+        <thead>
+          <tr tuiThGroup>
+            <th *tuiHead="'id'" tuiTh tuiSortable>ID</th>
+            <th *tuiHead="'description'" tuiTh tuiSortable>Descrição</th>
+            <th *tuiHead="'start_date'" tuiTh tuiSortable>Data de início</th>
+            <th *tuiHead="'end_date'" tuiTh tuiSortable>Data de fim</th>
+            <th *tuiHead="'start_time'" tuiTh tuiSortable>Hora de início</th>
+            <th *tuiHead="'end_time'" tuiTh tuiSortable>Hora de fim</th>
+            <th *tuiHead="'expose_time'" tuiTh tuiSortable>Tempo de exposição</th>
+            <th *tuiHead="'actions'" tuiTh [sorter]="null"></th>
+          </tr>
+        </thead>
+        <tbody tuiTbody [data]="data">
+          <tr *tuiRow="let item of data" tuiTr>
+            <td *tuiCell="'id'" tuiTd>
+              {{ item.id }}
+            </td>
+            <td *tuiCell="'description'" tuiTd>
+              {{ item.description }}
+            </td>
+            <td *tuiCell="'start_date'" tuiTd>
+              {{ item.start_date }}
+            </td>
+            <td *tuiCell="'end_date'" tuiTd>
+              {{ item.end_date }}
+            </td>
+            <td *tuiCell="'start_time'" tuiTd>
+              {{ item.start_time }}
+            </td>
+            <td *tuiCell="'end_time'" tuiTd>
+              {{ item.end_time }}
+            </td>
+            <td *tuiCell="'expose_time'" tuiTd>
+              {{ item.expose_time }}
+            </td>
+            <td *tuiCell="'actions'" tuiTd>
+              <button
+                tuiIconButton
+                appearance="flat"
+                size="s"
+                icon="tuiIconDraft"
+                title="Editar"
+                shape="rounded"
+                class="edit"
+                (click)="edit(item.id)"
+              ></button>
+              <button
+                tuiIconButton
+                appearance="flat"
+                size="s"
+                icon="tuiIconTrash"
+                title="Remove"
+                shape="rounded"
+                class="remove"
+                (click)="remove(item.id)"
+              ></button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td [colSpan]="columns.length">
+              <tui-table-pagination
+                class="tui-space_top-2"
+                [items]="[10, 25, 50, 100]"
+                [total]="(total$ | async) || 0"
+                (pageChange)="changePage($event)"
+                (sizeChange)="changeSize($event)"
+              ></tui-table-pagination>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </tui-loader>
+  </div>
+</div>

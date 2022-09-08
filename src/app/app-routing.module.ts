@@ -31,6 +31,13 @@ const routes: Routes = [
             (m) => m.DisplayShellModule
           ),
       },
+      {
+        path: "posts",
+        loadChildren: () =>
+          import("./post/feature/post-shell/post-shell.module").then(
+            (m) => m.PostShellModule
+          ),
+      },
     ],
   },
   {

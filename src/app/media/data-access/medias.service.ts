@@ -7,7 +7,7 @@ import { environment } from "src/environments/environment";
 export interface Media {
   id: number;
   description: string;
-  type: string;
+  type: "image" | "video";
   size_kb: number;
   filename: string;
   extension: string;
@@ -58,6 +58,6 @@ export class MediasService {
   }
 
   public remove(mediaId: number) {
-    return this.http.delete(`${environment.apiUrl}/api/medias/${mediaId}`);
+    return this.http.delete(`${environment.apiUrl}/api/medias/${mediaId}`).pipe(take(1));
   }
 }

@@ -32,7 +32,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(req.clone({ withCredentials: true })).pipe(
       catchError((err: HttpErrorResponse) => {
-        if (err.status === HttpStatusCode.Unauthorized) {
+        if (err.status === HttpStatusCode.Unauthorized || err.status == 419) {
           this.authService.setLoggedUser(null);
           this.router.navigateByUrl("/login");
         }
