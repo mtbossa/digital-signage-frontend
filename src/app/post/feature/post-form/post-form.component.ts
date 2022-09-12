@@ -188,6 +188,8 @@ export class PostFormComponent implements OnInit {
 
     if (this.postForm.invalid) return;
 
+    this.postForm.disable();
+
     const formRawData = this.postForm.getRawValue();
     const validFormData = {
       ...formRawData,
@@ -255,21 +257,21 @@ export class PostFormComponent implements OnInit {
       end_time: this.transformTimeToTuiTime(postData.end_time),
     });
 
-    this.formDisabled = true;
+    this.postForm.disable();
     this.postForm.valueChanges
       .pipe(map((newFormData) => isEqual(newFormData, this.postData)))
       .subscribe((isEqual) => {
         if (!isEqual) {
-          this.formDisabled = false;
+          this.postForm.disable();
         } else {
-          this.formDisabled = true;
+          this.postForm.disable();
         }
       });
   }
 
   private handleUpdate(formData: ValidPostForm) {
     this.postData = formData;
-    this.formDisabled = true;
+    this.postForm.disable();
     this.formSubmitted.emit(formData);
   }
 
