@@ -44,6 +44,7 @@ import {
   TuiUnfinishedValidatorModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
+import { pick } from "radash";
 import {
   BehaviorSubject,
   combineLatest,
@@ -188,7 +189,7 @@ export class PostFormComponent implements OnInit {
 
     if (this.postForm.invalid) return;
 
-    this.postForm.disable();
+    this.formDisabled = true;
 
     const formRawData = this.postForm.getRawValue();
     const validFormData = {
@@ -243,11 +244,14 @@ export class PostFormComponent implements OnInit {
   }
 
   private configureUpdate(postData: ValidPostForm) {
+    this.formDisabled = true;
+
     // Disables all fields but description, since description is the only one which can be updated
-    Object.keys(this.postForm.controls).forEach((key) => {
-      if (key === "description") return;
-      this.postForm.get(key)?.disable();
-    });
+    Object.keys(this.postForm.controls)
+      .filter((key) => key !== "description" && key !== "displays_ids")
+      .forEach((key) => {
+        this.postForm.get(key)?.disable();
+      });
 
     this.postForm.patchValue({
       ...postData,
@@ -257,21 +261,24 @@ export class PostFormComponent implements OnInit {
       end_time: this.transformTimeToTuiTime(postData.end_time),
     });
 
-    this.postForm.disable();
     this.postForm.valueChanges
-      .pipe(map((newFormData) => isEqual(newFormData, this.postData)))
+      .pipe(
+        map((newFormData) =>
+          isEqual(newFormData, pick(this.postData!, ["description", "displays_ids"]))
+        )
+      )
       .subscribe((isEqual) => {
         if (!isEqual) {
-          this.postForm.disable();
+          this.formDisabled = false;
         } else {
-          this.postForm.disable();
+          this.formDisabled = true;
         }
       });
   }
 
   private handleUpdate(formData: ValidPostForm) {
     this.postData = formData;
-    this.postForm.disable();
+    this.formDisabled = true;
     this.formSubmitted.emit(formData);
   }
 
