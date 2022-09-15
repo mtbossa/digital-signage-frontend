@@ -4,7 +4,7 @@
 
 export const environment = {
   production: true,
-  apiUrl: "http://api-staging.revendahost.inf.br",
+  apiUrl: "https://api-staging.revendahost.inf.br",
 };
 
 /*
