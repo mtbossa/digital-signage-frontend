@@ -4,7 +4,7 @@
 
 export const environment = {
   production: true,
-  apiUrl: "https://intus-backend-staging.herokuapp.com",
+  apiUrl: "http://api-staging.revendahost.inf.br",
 };
 
 /*
