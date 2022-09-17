@@ -38,6 +38,13 @@ const routes: Routes = [
             (m) => m.PostShellModule
           ),
       },
+      {
+        path: "convites",
+        loadChildren: () =>
+          import("./invitation/feature/invitation-shell/invitation-shell.module").then(
+            (m) => m.InvitationShellModule
+          ),
+      },
     ],
   },
   {
