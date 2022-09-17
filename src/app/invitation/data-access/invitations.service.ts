@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable, take } from "rxjs";
 import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
 import { environment } from "src/environments/environment";
 
+import { ValidInvitationForm } from "../feature/invitation-form/invitation-form.component";
+
 export interface Invitation {
   id: number;
   email: string;
@@ -46,6 +48,12 @@ export class InvitationsService {
   public show(invitationId: number) {
     return this.http
       .get<Invitation>(`${environment.apiUrl}/api/invitations/${invitationId}`)
+      .pipe(take(1));
+  }
+
+  public create(data: ValidInvitationForm) {
+    return this.http
+      .post<Invitation>(`${environment.apiUrl}/api/invitations`, data)
       .pipe(take(1));
   }
 

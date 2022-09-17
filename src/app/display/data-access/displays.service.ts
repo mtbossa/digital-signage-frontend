@@ -54,7 +54,6 @@ export class DisplaysService {
       .pipe(take(1));
   }
 
-  // Needs to be FormData since we need to upload the file
   public create(data: ValidDisplayForm) {
     return this.http
       .post<Display>(`${environment.apiUrl}/api/displays`, data)

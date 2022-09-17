@@ -9,6 +9,13 @@ const routes: Routes = [
         (m) => m.InvitationListComponent
       ),
   },
+  {
+    path: "criar",
+    loadComponent: () =>
+      import("../invitation-create-form/invitation-create-form.component").then(
+        (m) => m.InvitationCreateFormComponent
+      ),
+  },
 ];
 
 @NgModule({
