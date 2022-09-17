@@ -9,49 +9,22 @@ import { LoginGuard } from "./user/feature/login/guards/login.guard";
 const routes: Routes = [
   {
     path: "",
-    component: AppLayoutComponent,
-    // canActivateChild: [AuthGuard],
-    children: [
-      {
-        path: "",
-        loadChildren: () =>
-          import("./dashboard/feature/dashboard.module").then((m) => m.DashboardModule),
-      },
-      {
-        path: "midias",
-        loadChildren: () =>
-          import("./media/feature/media-shell/media-shell.module").then(
-            (m) => m.MediaShellModule
-          ),
-      },
-      {
-        path: "displays",
-        loadChildren: () =>
-          import("./display/feature/display-shell/display-shell.module").then(
-            (m) => m.DisplayShellModule
-          ),
-      },
-      {
-        path: "posts",
-        loadChildren: () =>
-          import("./post/feature/post-shell/post-shell.module").then(
-            (m) => m.PostShellModule
-          ),
-      },
-      {
-        path: "convites",
-        loadChildren: () =>
-          import("./invitation/feature/invitation-shell/invitation-shell.module").then(
-            (m) => m.InvitationShellModule
-          ),
-      },
-    ],
+    canActivateChild: [AuthGuard],
+    loadChildren: () => import("./system/system.module").then((m) => m.SystemModule),
   },
   {
     path: "login",
-    // canActivateChild: [LoginGuard],
+    canActivateChild: [LoginGuard],
     loadChildren: () =>
       import("./user/feature/login/login.module").then((m) => m.LoginModule),
+  },
+  {
+    path: "convites/:invitationToken/aceitar",
+    canActivateChild: [LoginGuard],
+    loadChildren: () =>
+      import(
+        "./invitation/feature/invitation-accept-form/invitation-accept-form-routing.module"
+      ).then((m) => m.InvitationAcceptRoutingModule),
   },
   { path: "notfound", component: NotfoundComponent },
   { path: "**", redirectTo: "notfound" },

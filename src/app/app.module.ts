@@ -1,4 +1,4 @@
-import { HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { APP_INITIALIZER, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -9,7 +9,7 @@ import { of } from "rxjs";
 
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
-import { httpInterceptorProviders } from "./shared/data-access/interceptors";
+import { CSRFInterceptor } from "./shared/data-access/interceptors/csrf.interceptor";
 import { AuthService } from "./shared/data-access/services/auth.service";
 import { AppLayoutModule } from "./shared/feature/app-layout/app-layout.module";
 
@@ -28,6 +28,7 @@ function tryToGetUser(authService: AuthService) {
     });
   };
 }
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -42,16 +43,16 @@ function tryToGetUser(authService: AuthService) {
     AppRoutingModule,
   ],
   providers: [
-    httpInterceptorProviders,
-    {
-      provide: TUI_LANGUAGE,
-      useValue: of(TUI_PORTUGUESE_LANGUAGE),
-    },
     {
       provide: APP_INITIALIZER,
       useFactory: tryToGetUser,
       deps: [AuthService],
       multi: true,
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: CSRFInterceptor, multi: true },
+    {
+      provide: TUI_LANGUAGE,
+      useValue: of(TUI_PORTUGUESE_LANGUAGE),
     },
   ],
   bootstrap: [AppComponent],

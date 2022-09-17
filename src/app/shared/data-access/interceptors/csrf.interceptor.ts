@@ -13,20 +13,23 @@ import { catchError, Observable, throwError } from "rxjs";
 import { AuthService } from "src/app/shared/data-access/services/auth.service";
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private authService: AuthService) {}
+export class CSRFInterceptor implements HttpInterceptor {
+  constructor(
+    private router: Router,
+    private cookieService: CookieService,
+    private authService: AuthService
+  ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(req.clone({ withCredentials: true })).pipe(
-      catchError((err: HttpErrorResponse) => {
-        if (err.status === HttpStatusCode.Unauthorized || err.status == 419) {
-          this.authService.setLoggedUser(null);
-          this.router.navigateByUrl("/login");
-        }
+    const token = this.cookieService.get("XSRF-TOKEN");
 
-        return throwError(() => err);
-      })
-    );
+    if (token) {
+      req = req.clone({
+        setHeaders: { "X-XSRF-TOKEN": token },
+      });
+    }
+
+    return next.handle(req.clone({ withCredentials: true }));
   }
 }
