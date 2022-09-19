@@ -1,0 +1,59 @@
+<article class="tui-container tui-container_adaptive">
+  <h1>Cria conta</h1>
+  <form [formGroup]="invitationAcceptForm" (ngSubmit)="onSubmit()">
+    <div class="tui-row tui-row_sme">
+      <div class="tui-col_8">
+        <h3 class="tui-form__header tui-form__header_margin-top_none">Informações</h3>
+        <!-- Email -->
+        <div class="tui-form__row">
+          <tui-input
+            tuiTextfieldExampleText="Email"
+            formControlName="email"
+            [disabled]="true"
+          >
+            Email do usuário
+            <span class="tui-required"></span>
+          </tui-input>
+          <tui-error
+            formControlName="email"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+        <!-- Nome -->
+        <div class="tui-form__row">
+          <tui-input tuiTextfieldExampleText="Nome" formControlName="name">
+            Nome Completo
+            <span class="tui-required"></span>
+          </tui-input>
+          <tui-error
+            formControlName="name"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+        <!-- Password -->
+        <div class="tui-form__row">
+          <tui-input tuiTextfieldExampleText="Senha" formControlName="password">
+            Senha
+            <span class="tui-required"></span>
+          </tui-input>
+          <tui-error
+            formControlName="password"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+
+        <div class="tui-form__buttons">
+          <button
+            tuiButton
+            size="l"
+            type="submit"
+            class="tui-form__button"
+            [disabled]="formDisabled"
+          >
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</article>

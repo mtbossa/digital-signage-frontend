@@ -45,9 +45,9 @@ export class InvitationsService {
       .pipe(take(1));
   }
 
-  public show(invitationId: number) {
+  public show(invitationToken: string) {
     return this.http
-      .get<Invitation>(`${environment.apiUrl}/api/invitations/${invitationId}`)
+      .get<Invitation>(`${environment.apiUrl}/api/invitations/${invitationToken}`)
       .pipe(take(1));
   }
 

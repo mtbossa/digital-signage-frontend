@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { InvitationFormComponent } from "./invitation-form.component";
+import { InvitationFormComponent } from "./invitation-accept-form.component";
 
 describe("InvitationFormComponent", () => {
   let component: InvitationFormComponent;

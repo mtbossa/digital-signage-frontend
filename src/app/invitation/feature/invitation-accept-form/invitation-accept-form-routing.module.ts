@@ -6,7 +6,9 @@ const routes: Routes = [
   {
     path: "",
     loadComponent: () =>
-      import("./invitation-form.component").then((m) => m.InvitationFormComponent),
+      import("./invitation-accept-form.component").then(
+        (m) => m.InvitationAcceptFormComponent
+      ),
   },
 ];
 
