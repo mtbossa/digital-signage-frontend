@@ -16,7 +16,6 @@ import {
   TuiInputModule,
   TuiInputPasswordModule,
 } from "@taiga-ui/kit";
-import { map, switchMap, tap } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
 import { InvitationsService } from "../../data-access/invitations.service";
@@ -83,19 +82,11 @@ export class InvitationAcceptFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.params
-      .pipe(
-        map(({ invitationToken }) => invitationToken),
-        tap((invitationToken) => (this.token = invitationToken)),
-        switchMap((invitationToken: string) =>
-          this.invitationsService.show(invitationToken)
-        )
-      )
-      .subscribe((invitation) => {
-        const emailControl = this.invitationAcceptForm.get("email");
-        emailControl?.setValue(invitation.email);
-        emailControl?.disable();
-      });
+    this.activatedRoute.data.subscribe(({ invitation }) => {
+      const emailControl = this.invitationAcceptForm.get("email");
+      emailControl?.setValue(invitation.email);
+      emailControl?.disable();
+    });
   }
 
   onSubmit() {
