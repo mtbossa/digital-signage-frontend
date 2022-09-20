@@ -1,16 +1,12 @@
 import { CommonModule } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import {
+  TuiAlertService,
   TuiButtonModule,
   TuiErrorModule,
+  TuiNotification,
   TuiTextfieldControllerModule,
 } from "@taiga-ui/core";
 import {
@@ -18,15 +14,18 @@ import {
   TuiFieldErrorPipeModule,
   TuiInputCountModule,
   TuiInputModule,
+  TuiInputPasswordModule,
 } from "@taiga-ui/kit";
-import { isEqual } from "lodash";
-import { map } from "rxjs";
+import { map, switchMap, tap } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
-export type ValidInvitationForm = {
+import { InvitationsService } from "../../data-access/invitations.service";
+
+export type ValidInvitationAcceptForm = {
   email: string;
-  is_admin: boolean;
-  store_id: number | null;
+  name: string;
+  password: string;
+  password_confirmation: string;
 };
 
 @Component({
@@ -44,6 +43,7 @@ export type ValidInvitationForm = {
     TuiButtonModule,
     TuiInputModule,
     TuiInputCountModule,
+    TuiInputPasswordModule,
   ],
   providers: [
     {
@@ -53,8 +53,9 @@ export type ValidInvitationForm = {
   ],
 })
 export class InvitationAcceptFormComponent implements OnInit {
-  formDisabled = false;
+  private token: string | null = null;
 
+  formDisabled = false;
   invitationAcceptForm = new FormGroup({
     email: new FormControl("", {
       nonNullable: true,
@@ -68,11 +69,35 @@ export class InvitationAcceptFormComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
+    password_confirmation: new FormControl("", {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
+  constructor(
+    @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
+    private route: Router,
+    private activatedRoute: ActivatedRoute,
+    private invitationsService: InvitationsService
+  ) {}
+
   ngOnInit() {
-    console.log("test");
+    this.activatedRoute.params
+      .pipe(
+        map(({ invitationToken }) => invitationToken),
+        tap((invitationToken) => (this.token = invitationToken)),
+        switchMap((invitationToken: string) =>
+          this.invitationsService.show(invitationToken)
+        )
+      )
+      .subscribe((invitation) => {
+        const emailControl = this.invitationAcceptForm.get("email");
+        emailControl?.setValue(invitation.email);
+        emailControl?.disable();
+      });
   }
+
   onSubmit() {
     this.invitationAcceptForm.markAllAsTouched();
 
@@ -80,6 +105,12 @@ export class InvitationAcceptFormComponent implements OnInit {
 
     const formRawData = this.invitationAcceptForm.getRawValue();
 
-    console.log(formRawData);
+    this.invitationsService.update(this.token!, formRawData).subscribe((res) => {
+      console.log(res);
+      this.route.navigateByUrl("/login");
+      this.alertService
+        .open(`Conta criada com sucesso!`, { status: TuiNotification.Success })
+        .subscribe();
+    });
   }
 }

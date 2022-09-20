@@ -9,6 +9,7 @@ import { of } from "rxjs";
 
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
+import { appHttpInterceptorProviders } from "./shared/data-access/interceptors";
 import { CSRFInterceptor } from "./shared/data-access/interceptors/csrf.interceptor";
 import { AuthService } from "./shared/data-access/services/auth.service";
 import { AppLayoutModule } from "./shared/feature/app-layout/app-layout.module";
@@ -49,11 +50,11 @@ function tryToGetUser(authService: AuthService) {
       deps: [AuthService],
       multi: true,
     },
-    { provide: HTTP_INTERCEPTORS, useClass: CSRFInterceptor, multi: true },
     {
       provide: TUI_LANGUAGE,
       useValue: of(TUI_PORTUGUESE_LANGUAGE),
     },
+    appHttpInterceptorProviders,
   ],
   bootstrap: [AppComponent],
 })

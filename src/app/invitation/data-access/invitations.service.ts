@@ -2,8 +2,10 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, take } from "rxjs";
 import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
+import { User } from "src/app/shared/data-access/services/auth.service";
 import { environment } from "src/environments/environment";
 
+import { ValidInvitationAcceptForm } from "../feature/invitation-accept-form/invitation-accept-form.component";
 import { ValidInvitationForm } from "../feature/invitation-form/invitation-form.component";
 
 export interface Invitation {
@@ -48,6 +50,12 @@ export class InvitationsService {
   public show(invitationToken: string) {
     return this.http
       .get<Invitation>(`${environment.apiUrl}/api/invitations/${invitationToken}`)
+      .pipe(take(1));
+  }
+
+  public update(invitationToken: string, data: ValidInvitationAcceptForm) {
+    return this.http
+      .patch<User>(`${environment.apiUrl}/api/invitations/${invitationToken}`, data)
       .pipe(take(1));
   }
 
