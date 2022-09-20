@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Data, Router } from "@angular/router";
 import {
   TuiAlertService,
   TuiButtonModule,
@@ -18,7 +18,7 @@ import {
 } from "@taiga-ui/kit";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
-import { InvitationsService } from "../../data-access/invitations.service";
+import { Invitation, InvitationsService } from "../../data-access/invitations.service";
 
 export type ValidInvitationAcceptForm = {
   email: string;
@@ -74,6 +74,10 @@ export class InvitationAcceptFormComponent implements OnInit {
     }),
   });
 
+  get emailControl() {
+    return this.invitationAcceptForm.get("email");
+  }
+
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
     private route: Router,
@@ -82,10 +86,12 @@ export class InvitationAcceptFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.data.subscribe(({ invitation }) => {
-      const emailControl = this.invitationAcceptForm.get("email");
-      emailControl?.setValue(invitation.email);
-      emailControl?.disable();
+    this.activatedRoute.data.subscribe((data: Data) => {
+      const invitation = data["invitation"] as Invitation;
+
+      this.token = invitation.token;
+      this.emailControl?.setValue(invitation.email);
+      this.emailControl?.disable();
     });
   }
 
