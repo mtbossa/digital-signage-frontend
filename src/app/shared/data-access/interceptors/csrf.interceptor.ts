@@ -14,11 +14,7 @@ import { AuthService } from "src/app/shared/data-access/services/auth.service";
 
 @Injectable()
 export class CSRFInterceptor implements HttpInterceptor {
-  constructor(
-    private router: Router,
-    private cookieService: CookieService,
-    private authService: AuthService
-  ) {}
+  constructor(private router: Router, private cookieService: CookieService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

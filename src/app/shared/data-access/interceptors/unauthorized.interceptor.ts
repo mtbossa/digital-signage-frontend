@@ -8,12 +8,11 @@ import {
 } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { CookieService } from "ngx-cookie";
 import { catchError, Observable, throwError } from "rxjs";
 import { AuthService } from "src/app/shared/data-access/services/auth.service";
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+export class UnauthorizedInterceptor implements HttpInterceptor {
   constructor(private router: Router, private authService: AuthService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
