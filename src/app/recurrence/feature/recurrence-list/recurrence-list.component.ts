@@ -52,7 +52,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecurrenceListComponent implements OnInit, OnDestroy {
-  columns = ["id", "name", "width", "height", "size", "touch", "actions"];
+  columns = ["id", "description", "isoweekday", "day", "month"];
   recurrences: Recurrence[] = [];
 
   private readonly page$ = new BehaviorSubject(1);

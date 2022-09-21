@@ -24,11 +24,10 @@ import { map } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
 export type ValidRecurrenceForm = {
-  name: string;
-  size: number;
-  width: number;
-  height: number;
-  store_id?: number | null;
+  description: string;
+  isoweekday: number | null;
+  day: number | null;
+  month: number | null;
 };
 
 @Component({
@@ -62,23 +61,22 @@ export class RecurrenceFormComponent implements OnInit {
 
   formDisabled = false;
   recurrenceForm = new FormGroup({
-    name: new FormControl("", {
+    description: new FormControl("", {
       nonNullable: true,
-      validators: [Validators.required, Validators.maxLength(100)],
+      validators: [Validators.required, Validators.maxLength(50)],
     }),
-    size: new FormControl(0, {
+    isoweekday: new FormControl<number | null>(null, {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(1000)],
+      validators: [Validators.max(7)],
     }),
-    width: new FormControl(0, {
+    day: new FormControl<number | null>(null, {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(20000)],
+      validators: [Validators.max(31)],
     }),
-    height: new FormControl(0, {
+    month: new FormControl<number | null>(null, {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(20000)],
+      validators: [Validators.max(12)],
     }),
-    store_id: new FormControl<number | null>(null),
   });
 
   ngOnInit() {

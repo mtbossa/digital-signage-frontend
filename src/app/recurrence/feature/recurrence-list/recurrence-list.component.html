@@ -1,5 +1,5 @@
 <div>
-  <h1>Displays</h1>
+  <h1>Recorrências</h1>
   <div class="buttons-header tui-space_vertical-8">
     <button tuiButton icon="tuiIconPlus" size="m" (click)="goTo('criar')">Criar</button>
   </div>
@@ -18,11 +18,10 @@
         <thead>
           <tr tuiThGroup>
             <th *tuiHead="'id'" tuiTh tuiSortable>ID</th>
-            <th *tuiHead="'name'" tuiTh tuiSortable>Nome</th>
-            <th *tuiHead="'width'" tuiTh tuiSortable>Largura</th>
-            <th *tuiHead="'height'" tuiTh tuiSortable>Altura</th>
-            <th *tuiHead="'size'" tuiTh tuiSortable>Polegadas</th>
-            <th *tuiHead="'touch'" tuiTh tuiSortable>Touch</th>
+            <th *tuiHead="'description'" tuiTh tuiSortable>Descrição</th>
+            <th *tuiHead="'isoweekday'" tuiTh tuiSortable>Dia da Semana</th>
+            <th *tuiHead="'day'" tuiTh tuiSortable>Dia do mês</th>
+            <th *tuiHead="'month'" tuiTh tuiSortable>Mês</th>
             <th *tuiHead="'actions'" tuiTh [sorter]="null"></th>
           </tr>
         </thead>
@@ -31,20 +30,17 @@
             <td *tuiCell="'id'" tuiTd>
               {{ item.id }}
             </td>
-            <td *tuiCell="'name'" tuiTd>
-              {{ item.name }}
+            <td *tuiCell="'description'" tuiTd>
+              {{ item.description }}
             </td>
-            <td *tuiCell="'width'" tuiTd>
-              {{ item.width }}
+            <td *tuiCell="'isoweekday'" tuiTd>
+              {{ item.isoweekday }}
             </td>
-            <td *tuiCell="'height'" tuiTd>
-              {{ item.height }}
+            <td *tuiCell="'day'" tuiTd>
+              {{ item.day }}
             </td>
-            <td *tuiCell="'size'" tuiTd>
-              {{ item.size }}
-            </td>
-            <td *tuiCell="'touch'" tuiTd>
-              {{ item.touch }}
+            <td *tuiCell="'month'" tuiTd>
+              {{ item.month }}
             </td>
             <td *tuiCell="'actions'" tuiTd>
               <button

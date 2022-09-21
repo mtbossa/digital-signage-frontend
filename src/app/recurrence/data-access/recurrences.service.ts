@@ -8,18 +8,13 @@ import { ValidRecurrenceForm } from "../feature/recurrence-form/recurrence-form.
 
 export interface Recurrence {
   id: number;
-  name: string;
-  observation: string;
-  width: number;
-  height: number;
-  size: string;
-  touch: boolean;
-  store_id: number | null;
-  created_at: string;
-  updated_at: string;
+  description: string;
+  isoweekday: string;
+  day: string;
+  month: string;
 }
 
-export type Key = "id" | "name" | "width" | "height" | "size" | "touch";
+export type Key = "id" | "description" | "isoweekday" | "day" | "month";
 
 @Injectable({
   providedIn: "root",
