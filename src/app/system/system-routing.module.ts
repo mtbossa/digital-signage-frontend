@@ -41,6 +41,13 @@ const routes: Routes = [
             (m) => m.InvitationShellModule
           ),
       },
+      {
+        path: "recorrencias",
+        loadChildren: () =>
+          import("../recurrence/feature/recurrence-shell/recurrence-shell.module").then(
+            (m) => m.RecurrenceShellModule
+          ),
+      },
     ],
   },
 ];
