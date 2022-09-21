@@ -48,12 +48,14 @@ import { pick } from "radash";
 import {
   BehaviorSubject,
   combineLatest,
+  delay,
   map,
   Observable,
   of,
   shareReplay,
   startWith,
   switchMap,
+  tap,
 } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
@@ -118,6 +120,7 @@ export class PostFormComponent implements OnInit {
   readonly displaysOptionsRequest$ = combineLatest([this.displaySearch$]).pipe(
     switchMap(([search]) => this.post.getDisplayOptions()),
     startWith(null),
+    tap((options) => options && this.postForm.get("displays_ids")?.enable()),
     shareReplay(1)
   );
   readonly displaysIds$ = this.displaysOptionsRequest$.pipe(
@@ -248,7 +251,7 @@ export class PostFormComponent implements OnInit {
 
     // Disables all fields but description, since description is the only one which can be updated
     Object.keys(this.postForm.controls)
-      .filter((key) => key !== "description" && key !== "displays_ids")
+      .filter((key) => key !== "description")
       .forEach((key) => {
         this.postForm.get(key)?.disable();
       });
