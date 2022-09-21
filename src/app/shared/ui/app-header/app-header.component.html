@@ -1,6 +1,6 @@
 <header class="tui-text_h6 tui-container_fullwidth header">
   INTUS
-  <div *ngIf="user$ | async as user">
+  <div *ngIf="user">
     <span (tuiActiveZoneChange)="onActiveZone($event)">
       <a
         tuiLink

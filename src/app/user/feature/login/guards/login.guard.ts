@@ -6,7 +6,7 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from "@angular/router";
-import { map, Observable, tap } from "rxjs";
+import { catchError, map, Observable, of, tap } from "rxjs";
 import { AuthService } from "src/app/shared/data-access/services/auth.service";
 
 @Injectable({
@@ -21,13 +21,20 @@ export class LoginGuard implements CanActivateChild {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     state: RouterStateSnapshot
   ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.authService.getLoggedUser().pipe(
-      map((user) => (user ? false : true)),
-      tap((canActivate) => {
-        if (!canActivate) {
-          this.router.navigateByUrl("/");
-        }
-      })
-    );
+    const loggedUser = this.authService.getLoggedUserStorage();
+
+    if (loggedUser) {
+      return this.router.createUrlTree([""]);
+    } else {
+      return true;
+    }
+
+    // return this.authService.fetchLoggedUser().pipe(
+    //   tap((user) => this.authService.setLoggedUser(user)),
+    //   map((user) => this.router.createUrlTree(["/"])),
+    //   catchError((err) => {
+    //     return of(err).pipe(map(() => true));
+    //   })
+    // );
   }
 }

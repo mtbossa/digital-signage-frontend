@@ -1,8 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { BehaviorSubject, map, mergeMap, take, tap } from "rxjs";
+import { BehaviorSubject, catchError, map, mergeMap, of, take, tap } from "rxjs";
 import { environment } from "src/environments/environment";
+
+const LOGGED_USER_STORAGE_KEY = "loggedUser";
 
 // TODO create logged-user route and return a new UserLogged API Resource
 export interface User {
@@ -16,16 +18,6 @@ export interface User {
 export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
-  private loggedUser$ = new BehaviorSubject<User | null>(null);
-
-  public getLoggedUser() {
-    return this.loggedUser$.asObservable();
-  }
-
-  public setLoggedUser(value: User | null) {
-    this.loggedUser$.next(value);
-  }
-
   public logIn(loginData: { email: string; password: string; remember: boolean }) {
     this.http
       .get(`${environment.apiUrl}/sanctum/csrf-cookie`)
@@ -38,19 +30,31 @@ export class AuthService {
         tap(() => this.router.navigate(["/"]))
       )
       .subscribe((user: User) => {
-        this.setLoggedUser(user);
+        this.setLoggedUserStorage(user);
       });
   }
 
   public fetchLoggedUser() {
     return this.http.get<{ data: User }>(`${environment.apiUrl}/api/user`).pipe(
       take(1),
-      map((userData) => userData.data)
+      map((userData) => userData.data),
+      tap((user) => {
+        this.setLoggedUserStorage(user);
+      })
     );
   }
 
-  public isLogged() {
-    return this.getLoggedUser().pipe(map((userOrNull) => (userOrNull ? true : false)));
+  public getLoggedUserStorage(): User | null {
+    const user = localStorage.getItem(LOGGED_USER_STORAGE_KEY);
+    return user ? JSON.parse(user) : null;
+  }
+
+  public setLoggedUserStorage(value: User | null) {
+    if (value) {
+      localStorage.setItem(LOGGED_USER_STORAGE_KEY, JSON.stringify(value));
+    } else {
+      localStorage.removeItem(LOGGED_USER_STORAGE_KEY);
+    }
   }
 
   public logOut() {
@@ -58,7 +62,7 @@ export class AuthService {
       .post(`${environment.apiUrl}/logout`, {})
       .pipe(take(1))
       .subscribe(() => {
-        this.setLoggedUser(null);
+        this.setLoggedUserStorage(null);
         this.router.navigateByUrl("/login");
       });
   }
