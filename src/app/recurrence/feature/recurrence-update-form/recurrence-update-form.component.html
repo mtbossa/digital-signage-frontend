@@ -1,0 +1,9 @@
+<ng-container *ngIf="recurrence$ | async as recurrence; else loading">
+  <app-recurrence-form
+    (formSubmitted)="updateRecurrence($event)"
+    [recurrenceData]="recurrence"
+  >
+  </app-recurrence-form>
+</ng-container>
+
+<ng-template #loading> loading </ng-template>
