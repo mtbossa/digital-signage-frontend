@@ -22,9 +22,9 @@
           <!-- Isoweekday -->
           <div class="tui-form__row">
             <tui-select
-              *tuiLet="WEEK_DAYS as weekDays"
+              *tuiLet="recurrencesService.WEEK_DAYS as weekDays"
               [tuiTextfieldLabelOutside]="false"
-              [valueContent]="stringifyIsoweekday(weekDays)"
+              [valueContent]="recurrencesService.stringifyIsoweekday(weekDays)"
               [tuiTextfieldCleaner]="true"
               formControlName="isoweekday"
             >
@@ -64,9 +64,9 @@
           <!-- Month -->
           <div class="tui-form__row">
             <tui-select
-              *tuiLet="MONTHS as months"
+              *tuiLet="recurrencesService.MONTHS as months"
               [tuiTextfieldLabelOutside]="false"
-              [valueContent]="stringifyMonth(months)"
+              [valueContent]="recurrencesService.stringifyMonth(months)"
               [tuiTextfieldCleaner]="true"
               formControlName="month"
             >

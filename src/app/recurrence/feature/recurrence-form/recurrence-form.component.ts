@@ -38,22 +38,14 @@ import { camelCase, isEqual, startCase } from "lodash";
 import { map } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
+import { RecurrencesService } from "../../data-access/recurrences.service";
+
 export type ValidRecurrenceForm = {
   description: string;
   isoweekday: number | null;
   day: number | null;
   month: number | null;
 };
-
-interface IsoWeekday {
-  isoweekday: number;
-  name: string;
-}
-
-interface Month {
-  month: number;
-  name: string;
-}
 
 @Component({
   selector: `app-recurrence-form`,
@@ -88,22 +80,6 @@ export class RecurrenceFormComponent implements OnInit {
   // If recurrenceData, means it's an update
   @Input() recurrenceData?: ValidRecurrenceForm;
 
-  WEEK_DAYS: readonly IsoWeekday[] = [
-    { isoweekday: 1, name: "Segunda" },
-    { isoweekday: 2, name: "Terça" },
-    { isoweekday: 3, name: "Quarta" },
-    { isoweekday: 4, name: "Quinta" },
-    { isoweekday: 5, name: "Sexta" },
-    { isoweekday: 6, name: "Sábado" },
-    { isoweekday: 7, name: "Domingo" },
-  ];
-
-  MONTHS: readonly Month[] = getLocaleMonthNames(
-    "pt-BR",
-    FormStyle.Format,
-    TranslationWidth.Wide
-  ).map((month, index) => ({ month: index + 1, name: startCase(month) }));
-
   formDisabled = false;
   recurrenceForm = new FormGroup({
     description: new FormControl("", {
@@ -123,6 +99,8 @@ export class RecurrenceFormComponent implements OnInit {
       validators: [Validators.max(12)],
     }),
   });
+
+  constructor(public recurrencesService: RecurrencesService) {}
 
   ngOnInit() {
     if (this.recurrenceData) {
@@ -163,27 +141,5 @@ export class RecurrenceFormComponent implements OnInit {
     } else {
       this.formSubmitted.emit(formRawData);
     }
-  }
-
-  @tuiPure
-  stringifyIsoweekday(
-    items: readonly IsoWeekday[]
-  ): TuiStringHandler<TuiContextWithImplicit<number>> {
-    const map = new Map(
-      items.map(({ isoweekday, name }) => [isoweekday, name] as [number, string])
-    );
-
-    return ({ $implicit }: TuiContextWithImplicit<number>) => map.get($implicit) || ``;
-  }
-
-  @tuiPure
-  stringifyMonth(
-    items: readonly Month[]
-  ): TuiStringHandler<TuiContextWithImplicit<number>> {
-    const map = new Map(
-      items.map(({ month, name }) => [month, name] as [number, string])
-    );
-
-    return ({ $implicit }: TuiContextWithImplicit<number>) => map.get($implicit) || ``;
   }
 }

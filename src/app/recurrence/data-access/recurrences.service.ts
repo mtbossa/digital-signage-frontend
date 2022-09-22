@@ -1,5 +1,8 @@
+import { FormStyle, getLocaleMonthNames, TranslationWidth } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { TuiContextWithImplicit, tuiPure, TuiStringHandler } from "@taiga-ui/cdk";
+import { startCase } from "lodash";
 import { BehaviorSubject, Observable, take } from "rxjs";
 import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
 import { environment } from "src/environments/environment";
@@ -14,6 +17,16 @@ export interface Recurrence {
   month: number;
 }
 
+export interface IsoWeekday {
+  isoweekday: number;
+  name: string;
+}
+
+export interface Month {
+  month: number;
+  name: string;
+}
+
 export type Key = "id" | "description" | "isoweekday" | "day" | "month";
 
 @Injectable({
@@ -21,6 +34,22 @@ export type Key = "id" | "description" | "isoweekday" | "day" | "month";
 })
 export class RecurrencesService {
   constructor(private http: HttpClient) {}
+
+  WEEK_DAYS: readonly IsoWeekday[] = [
+    { isoweekday: 1, name: "Segunda" },
+    { isoweekday: 2, name: "Terça" },
+    { isoweekday: 3, name: "Quarta" },
+    { isoweekday: 4, name: "Quinta" },
+    { isoweekday: 5, name: "Sexta" },
+    { isoweekday: 6, name: "Sábado" },
+    { isoweekday: 7, name: "Domingo" },
+  ];
+
+  MONTHS: readonly Month[] = getLocaleMonthNames(
+    "pt-BR",
+    FormStyle.Format,
+    TranslationWidth.Wide
+  ).map((month, index) => ({ month: index + 1, name: startCase(month) }));
 
   private recurrences$ = new BehaviorSubject<Recurrence[] | null>(null);
 
@@ -62,5 +91,27 @@ export class RecurrencesService {
     return this.http
       .delete(`${environment.apiUrl}/api/recurrences/${recurrenceId}`)
       .pipe(take(1));
+  }
+
+  @tuiPure
+  stringifyIsoweekday(
+    items: readonly IsoWeekday[]
+  ): TuiStringHandler<TuiContextWithImplicit<number>> {
+    const map = new Map(
+      items.map(({ isoweekday, name }) => [isoweekday, name] as [number, string])
+    );
+
+    return ({ $implicit }: TuiContextWithImplicit<number>) => map.get($implicit) || ``;
+  }
+
+  @tuiPure
+  stringifyMonth(
+    items: readonly Month[]
+  ): TuiStringHandler<TuiContextWithImplicit<number>> {
+    const map = new Map(
+      items.map(({ month, name }) => [month, name] as [number, string])
+    );
+
+    return ({ $implicit }: TuiContextWithImplicit<number>) => map.get($implicit) || ``;
   }
 }
