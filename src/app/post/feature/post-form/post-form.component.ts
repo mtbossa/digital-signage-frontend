@@ -183,7 +183,7 @@ export class PostFormComponent implements OnInit {
     }),
   });
 
-  isRecurrent = new FormControl<boolean>(true);
+  isRecurrent = new FormControl<boolean>(false, { nonNullable: true });
 
   get exposeTimeFormControl() {
     return this.postForm.get("expose_time");
@@ -193,22 +193,9 @@ export class PostFormComponent implements OnInit {
 
   ngOnInit() {
     this.isRecurrent.valueChanges.subscribe((isRecurrent) => {
-      if (isRecurrent) {
-        this.postForm.get("recurrence_id")?.enable();
-        this.postForm.get("recurrence_id")?.addValidators([Validators.required]);
-        this.postForm.get("start_date")?.disable();
-        this.postForm.get("start_date")?.removeValidators([Validators.required]);
-        this.postForm.get("end_date")?.disable();
-        this.postForm.get("end_date")?.removeValidators([Validators.required]);
-      } else {
-        this.postForm.get("recurrence_id")?.disable();
-        this.postForm.get("recurrence_id")?.removeValidators([Validators.required]);
-        this.postForm.get("start_date")?.enable();
-        this.postForm.get("start_date")?.addValidators([Validators.required]);
-        this.postForm.get("end_date")?.enable();
-        this.postForm.get("end_date")?.addValidators([Validators.required]);
-      }
+      this.configureIsRecurrent(isRecurrent);
     });
+
     if (this.postData) {
       this.configureUpdate(this.postData);
     }
@@ -333,5 +320,23 @@ export class PostFormComponent implements OnInit {
   private transformTimeToTuiTime(time: string) {
     const [hours, minutes, seconds] = time.split(":").map(Number);
     return new TuiTime(hours, minutes, seconds);
+  }
+
+  private configureIsRecurrent(isRecurrent: boolean) {
+    const correctStateBasedIfIsRecurrent = {
+      start_date: !isRecurrent,
+      end_date: !isRecurrent,
+      recurrence_id: isRecurrent,
+    };
+
+    Object.entries(correctStateBasedIfIsRecurrent).forEach(([controlName, enable]) => {
+      if (enable) {
+        this.postForm.get(controlName)?.enable();
+        this.postForm.get(controlName)?.addValidators([Validators.required]);
+      } else {
+        this.postForm.get(controlName)?.disable();
+        this.postForm.get(controlName)?.removeValidators([Validators.required]);
+      }
+    });
   }
 }
