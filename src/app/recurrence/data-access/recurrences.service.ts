@@ -114,4 +114,22 @@ export class RecurrencesService {
 
     return ({ $implicit }: TuiContextWithImplicit<number>) => map.get($implicit) || ``;
   }
+
+  @tuiPure
+  getIsoWeekdayName(isoweekday: number) {
+    const map = new Map(
+      this.WEEK_DAYS.map(({ isoweekday, name }) => [isoweekday, name] as [number, string])
+    );
+
+    return map.get(isoweekday);
+  }
+
+  @tuiPure
+  getMonthName(month: number) {
+    const map = new Map(
+      this.MONTHS.map(({ month, name }) => [month, name] as [number, string])
+    );
+
+    return map.get(month);
+  }
 }

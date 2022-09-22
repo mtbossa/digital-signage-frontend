@@ -98,7 +98,7 @@ export class RecurrenceListComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private recurrencesService: RecurrencesService
+    public recurrencesService: RecurrencesService
   ) {}
 
   private subscriptions: Subscription[] = [];

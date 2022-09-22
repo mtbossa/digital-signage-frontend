@@ -34,13 +34,13 @@
               {{ item.description }}
             </td>
             <td *tuiCell="'isoweekday'" tuiTd>
-              {{ item.isoweekday }}
+              {{ recurrencesService.getIsoWeekdayName(item.isoweekday) }}
             </td>
             <td *tuiCell="'day'" tuiTd>
               {{ item.day }}
             </td>
             <td *tuiCell="'month'" tuiTd>
-              {{ item.month }}
+              {{ recurrencesService.getMonthName(item.month) }}
             </td>
             <td *tuiCell="'actions'" tuiTd>
               <button
