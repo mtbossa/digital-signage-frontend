@@ -17,6 +17,7 @@ import { PostFormComponent, ValidPostForm } from "../post-form/post-form.compone
 })
 export class PostCreateFormComponent {
   medias$ = this.postsService.getMediaOptions();
+  recurrences$ = this.postsService.getRecurrenceOptions();
 
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,

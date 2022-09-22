@@ -66,6 +66,7 @@ import {
   DisplayOption,
   MediaOption,
   PostsService,
+  RecurrenceOption,
 } from "../../data-access/posts.service";
 
 export type ValidPostForm = {
@@ -121,6 +122,7 @@ export class PostFormComponent implements OnInit {
   // If postData, means it's an update
   @Input() postData?: ValidPostForm;
   @Input() medias$: Observable<MediaOption[]> = of([]);
+  @Input() recurrences$: Observable<RecurrenceOption[]> = of([]);
 
   private readonly displaySearch$ = new BehaviorSubject<string>("");
   readonly displaysOptionsRequest$ = combineLatest([this.displaySearch$]).pipe(
@@ -252,8 +254,8 @@ export class PostFormComponent implements OnInit {
   }
 
   @tuiPure
-  stringifyMediasOptions(
-    items: MediaOption[]
+  stringifyOptions(
+    items: MediaOption[] | RecurrenceOption[]
   ): TuiStringHandler<TuiContextWithImplicit<number>> {
     const map = new Map(
       items.map(({ id, description }) => [id, description] as [number, string])

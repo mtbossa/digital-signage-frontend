@@ -19,6 +19,7 @@ export class PostUpdateFormComponent implements OnInit {
   loading = true;
   post$!: Observable<ValidPostForm>;
   medias$ = this.postsService.getMediaOptions();
+  recurrences$ = this.postsService.getRecurrenceOptions();
   selectedId!: number;
 
   constructor(

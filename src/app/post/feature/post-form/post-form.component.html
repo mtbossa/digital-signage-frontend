@@ -47,20 +47,15 @@
             <tui-expand [expanded]="isRecurrent.value">
               <div class="tui-form__row">
                 <tui-select
-                  *tuiLet="medias$ | async as items"
+                  *tuiLet="recurrences$ | async as items"
                   [tuiTextfieldLabelOutside]="true"
-                  [valueContent]="items ? stringifyMediasOptions(items) : loading"
-                  formControlName="media_id"
+                  [valueContent]="items ? stringifyOptions(items) : loading"
+                  formControlName="recurrence_id"
                 >
-                  Selecione a mídia
+                  Selecione a recorrência
                   <ng-template tuiDataList>
                     <tui-data-list *ngIf="items; else loading">
-                      <button
-                        *ngFor="let item of items"
-                        tuiOption
-                        [value]="item.id"
-                        (click)="onMediaChanged(item.type)"
-                      >
+                      <button *ngFor="let item of items" tuiOption [value]="item.id">
                         {{ item.description }}
                       </button>
                     </tui-data-list>
@@ -119,7 +114,7 @@
             <tui-select
               *tuiLet="medias$ | async as items"
               [tuiTextfieldLabelOutside]="true"
-              [valueContent]="items ? stringifyMediasOptions(items) : loading"
+              [valueContent]="items ? stringifyOptions(items) : loading"
               formControlName="media_id"
             >
               Selecione a mídia

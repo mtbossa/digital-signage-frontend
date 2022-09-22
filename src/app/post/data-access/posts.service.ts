@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, take, tap } from "rxjs";
 import { Display } from "src/app/display/data-access/displays.service";
 import { Media } from "src/app/media/data-access/medias.service";
+import { Recurrence } from "src/app/recurrence/data-access/recurrences.service";
 import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
 import { environment } from "src/environments/environment";
 
@@ -25,6 +26,7 @@ export interface Post {
 }
 
 export type MediaOption = Pick<Media, "id" | "path" | "description" | "type">;
+export type RecurrenceOption = Pick<Recurrence, "id" | "description">;
 export type DisplayOption = Pick<Display, "id" | "name">;
 
 export type Key =
@@ -88,6 +90,12 @@ export class PostsService {
   public getMediaOptions() {
     return this.http
       .get<MediaOption[]>(`${environment.apiUrl}/api/posts/medias/options`)
+      .pipe(take(1));
+  }
+
+  public getRecurrenceOptions() {
+    return this.http
+      .get<RecurrenceOption[]>(`${environment.apiUrl}/api/posts/recurrences/options`)
       .pipe(take(1));
   }
 
