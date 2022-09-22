@@ -42,7 +42,7 @@
             >
           </div>
 
-          <!-- Start and end date -->
+          <!-- Recurrence -->
           <div class="tui-form__row">
             <tui-expand [expanded]="isRecurrent.value">
               <div class="tui-form__row">
@@ -71,6 +71,7 @@
                 </tui-select>
               </div>
             </tui-expand>
+            <!-- Start and end date -->
             <tui-expand [expanded]="!isRecurrent.value">
               <div class="tui-form__row tui-form__row_multi-fields">
                 <div class="tui-form__multi-field">
@@ -94,7 +95,6 @@
               </div>
             </tui-expand>
           </div>
-
           <!-- Start and end time -->
           <div class="tui-form__row tui-form__row_multi-fields">
             <div class="tui-form__multi-field">
