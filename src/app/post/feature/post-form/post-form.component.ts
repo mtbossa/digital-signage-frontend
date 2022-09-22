@@ -28,11 +28,13 @@ import {
   TuiButtonModule,
   TuiDataListModule,
   TuiErrorModule,
+  TuiExpandModule,
   TuiLoaderModule,
   TuiTextfieldControllerModule,
 } from "@taiga-ui/core";
 import {
   TUI_VALIDATION_ERRORS,
+  TuiCheckboxLabeledModule,
   TuiDataListWrapperModule,
   TuiFieldErrorPipeModule,
   TuiInputCountModule,
@@ -72,6 +74,7 @@ export type ValidPostForm = {
   start_time: string;
   end_time: string;
   media_id: number;
+  recurrence_id: number | null;
   expose_time: number | null;
   displays_ids: Array<number>;
 };
@@ -101,6 +104,8 @@ export type ValidPostForm = {
     TuiLetModule,
     TuiMultiSelectModule,
     TuiDataListWrapperModule,
+    TuiCheckboxLabeledModule,
+    TuiExpandModule,
   ],
   providers: [
     {
@@ -170,9 +175,16 @@ export class PostFormComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
+    recurrence_id: new FormControl<number | null>(null, {
+      nonNullable: true,
+    }),
     displays_ids: new FormControl<Array<number> | null>(null, {
       nonNullable: true,
     }),
+  });
+
+  isRecurrent = new FormControl<boolean>(true, {
+    nonNullable: true,
   });
 
   get exposeTimeFormControl() {
@@ -184,6 +196,10 @@ export class PostFormComponent implements OnInit {
   ngOnInit() {
     if (this.postData) {
       this.configureUpdate(this.postData);
+    } else {
+      this.isRecurrent.valueChanges.subscribe((changedValue) => {
+        console.log(changedValue);
+      });
     }
   }
 

@@ -34,26 +34,62 @@
           </div>
 
           <h3 class="tui-form__header tui-form__header_margin-top_1">Agendamento</h3>
+          <div class="tui-form__row">
+            <tui-checkbox-labeled [formControl]="isRecurrent"
+              >É recorrente</tui-checkbox-labeled
+            >
+          </div>
           <!-- Start and end date -->
-          <div class="tui-form__row tui-form__row_multi-fields">
-            <div class="tui-form__multi-field">
-              <tui-input-date [min]="minStartDate" formControlName="start_date">
-                Data de início
-              </tui-input-date>
-              <tui-error
-                formControlName="start_date"
-                [error]="[] | tuiFieldError | async"
-              ></tui-error>
-            </div>
-            <div class="tui-form__multi-field">
-              <tui-input-date [min]="getMinEndDate()" formControlName="end_date">
-                Data de fim
-              </tui-input-date>
-              <tui-error
-                formControlName="end_date"
-                [error]="[] | tuiFieldError | async"
-              ></tui-error>
-            </div>
+          <div class="tui-form__row">
+            <tui-expand [expanded]="isRecurrent.value">
+              <div class="tui-form__row">
+                <tui-select
+                  *tuiLet="medias$ | async as items"
+                  [tuiTextfieldLabelOutside]="true"
+                  [valueContent]="items ? stringifyMediasOptions(items) : loading"
+                  formControlName="media_id"
+                >
+                  Selecione a mídia
+                  <ng-template tuiDataList>
+                    <tui-data-list *ngIf="items; else loading">
+                      <button
+                        *ngFor="let item of items"
+                        tuiOption
+                        [value]="item.id"
+                        (click)="onMediaChanged(item.type)"
+                      >
+                        {{ item.description }}
+                      </button>
+                    </tui-data-list>
+                  </ng-template>
+                  <ng-template #loading>
+                    <tui-loader class="tui-space_vertical-3 loader"></tui-loader>
+                  </ng-template>
+                </tui-select>
+              </div>
+            </tui-expand>
+            <tui-expand [expanded]="!isRecurrent.value">
+              <div class="tui-form__row tui-form__row_multi-fields">
+                <div class="tui-form__multi-field">
+                  <tui-input-date [min]="minStartDate" formControlName="start_date">
+                    Data de início
+                  </tui-input-date>
+                  <tui-error
+                    formControlName="start_date"
+                    [error]="[] | tuiFieldError | async"
+                  ></tui-error>
+                </div>
+                <div class="tui-form__multi-field">
+                  <tui-input-date [min]="getMinEndDate()" formControlName="end_date">
+                    Data de fim
+                  </tui-input-date>
+                  <tui-error
+                    formControlName="end_date"
+                    [error]="[] | tuiFieldError | async"
+                  ></tui-error>
+                </div>
+              </div>
+            </tui-expand>
           </div>
 
           <!-- Start and end time -->
