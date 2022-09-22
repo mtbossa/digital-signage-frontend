@@ -5,48 +5,54 @@
       <div class="tui-row tui-row_sme">
         <div class="tui-col_8">
           <h3 class="tui-form__header tui-form__header_margin-top_none">Informações</h3>
+          <!-- Description -->
           <div class="tui-form__row">
-            <tui-input tuiTextfieldExampleText="Nome do display" formControlName="name">
-              Nome
+            <tui-input
+              tuiTextfieldExampleText="Descrição da recorrência"
+              formControlName="description"
+            >
+              Descrição
               <span class="tui-required"></span>
             </tui-input>
             <tui-error
-              formControlName="name"
+              formControlName="description"
               [error]="[] | tuiFieldError | async"
             ></tui-error>
           </div>
-          <div class="tui-form__row tui-form__row_multi-fields">
-            <div class="tui-form__multi-field">
-              <tui-input-count formControlName="width" [max]="200000">
-                Largura (pixels)
-                <input tuiTextfield placeholder="Largura do display (pixels)" />
-              </tui-input-count>
-              <tui-error
-                formControlName="width"
-                [error]="[] | tuiFieldError | async"
-              ></tui-error>
-            </div>
-            <div class="tui-form__multi-field">
-              <tui-input-count formControlName="height" [max]="200000">
-                Altura (pixels)
-                <input tuiTextfield placeholder="Altura do display (pixels)" />
-              </tui-input-count>
-              <tui-error
-                formControlName="height"
-                [error]="[] | tuiFieldError | async"
-              ></tui-error>
-            </div>
-            <div class="tui-form__multi-field">
-              <tui-input-count formControlName="size" [max]="1000">
-                Tamanho (polegadas)
-                <input tuiTextfield placeholder="Tamanho do display (polegadas)" />
-              </tui-input-count>
-              <tui-error
-                formControlName="size"
-                [error]="[] | tuiFieldError | async"
-              ></tui-error>
-            </div>
+          <!-- Isoweekday -->
+          <div class="tui-form__row">
+            <tui-input-count formControlName="isoweekday" [max]="7">
+              Dia da semana
+              <input tuiTextfield placeholder="Dia da semana" />
+            </tui-input-count>
+            <tui-error
+              formControlName="isoweekday"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
           </div>
+          <!-- Day -->
+          <div class="tui-form__row">
+            <tui-input-count formControlName="day" [max]="31">
+              Dia
+              <input tuiTextfield placeholder="Dia" />
+            </tui-input-count>
+            <tui-error
+              formControlName="day"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
+          </div>
+          <!-- Month -->
+          <div class="tui-form__row">
+            <tui-input-count formControlName="month" [max]="12">
+              Mês
+              <input tuiTextfield placeholder="Mês" />
+            </tui-input-count>
+            <tui-error
+              formControlName="month"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
+          </div>
+
           <div class="tui-form__buttons">
             <button
               tuiButton

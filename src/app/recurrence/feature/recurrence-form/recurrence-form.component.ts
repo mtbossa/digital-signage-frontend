@@ -18,6 +18,7 @@ import {
   TuiFieldErrorPipeModule,
   TuiInputCountModule,
   TuiInputModule,
+  TuiInputMonthModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
 import { map } from "rxjs";
@@ -45,6 +46,7 @@ export type ValidRecurrenceForm = {
     TuiButtonModule,
     TuiInputModule,
     TuiInputCountModule,
+    TuiInputMonthModule,
   ],
   providers: [
     {

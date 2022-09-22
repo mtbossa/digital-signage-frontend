@@ -33,21 +33,7 @@ export class RecurrenceUpdateFormComponent implements OnInit {
     this.recurrence$ = this.activatedRoute.paramMap.pipe(
       switchMap((params) => {
         this.selectedId = Number(params.get("id"));
-        return this.recurrenceService.show(this.selectedId).pipe(
-          map((recurrence) => {
-            const recurrenceFormData = pick(recurrence, [
-              "name",
-              "height",
-              "width",
-              "size",
-              "store_id",
-            ]);
-            return {
-              ...recurrenceFormData,
-              size: toFloat(recurrenceFormData.size),
-            };
-          })
-        );
+        return this.recurrenceService.show(this.selectedId);
       })
     );
   }
@@ -55,7 +41,7 @@ export class RecurrenceUpdateFormComponent implements OnInit {
   updateRecurrence($event: ValidRecurrenceForm) {
     this.recurrenceService.update(this.selectedId, $event).subscribe(() => {
       this.alertService
-        .open(`Recurrence atualizado com sucesso!`, { status: TuiNotification.Success })
+        .open(`Recorrência atualizada com sucesso!`, { status: TuiNotification.Success })
         .subscribe();
     });
   }

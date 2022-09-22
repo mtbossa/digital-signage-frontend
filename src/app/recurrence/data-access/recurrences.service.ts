@@ -9,9 +9,9 @@ import { ValidRecurrenceForm } from "../feature/recurrence-form/recurrence-form.
 export interface Recurrence {
   id: number;
   description: string;
-  isoweekday: string;
-  day: string;
-  month: string;
+  isoweekday: number;
+  day: number;
+  month: number;
 }
 
 export type Key = "id" | "description" | "isoweekday" | "day" | "month";
