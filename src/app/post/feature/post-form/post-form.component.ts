@@ -46,7 +46,7 @@ import {
   TuiUnfinishedValidatorModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
-import { pick } from "radash";
+import { omit, pick } from "radash";
 import {
   BehaviorSubject,
   combineLatest,
@@ -60,6 +60,7 @@ import {
   tap,
 } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
+import { disableAllFormControlsBut } from "src/app/shared/utils/form-functions";
 
 import {
   DisplayOption,
@@ -69,12 +70,12 @@ import {
 
 export type ValidPostForm = {
   description: string;
-  start_date: string;
-  end_date: string;
+  start_date?: string;
+  end_date?: string;
   start_time: string;
   end_time: string;
   media_id: number;
-  recurrence_id: number | null;
+  recurrence_id?: number | null;
   expose_time: number | null;
   displays_ids: Array<number>;
 };
@@ -125,7 +126,6 @@ export class PostFormComponent implements OnInit {
   readonly displaysOptionsRequest$ = combineLatest([this.displaySearch$]).pipe(
     switchMap(([search]) => this.post.getDisplayOptions()),
     startWith(null),
-    tap((options) => options && this.postForm.get("displays_ids")?.enable()),
     shareReplay(1)
   );
   readonly displaysIds$ = this.displaysOptionsRequest$.pipe(
@@ -183,9 +183,7 @@ export class PostFormComponent implements OnInit {
     }),
   });
 
-  isRecurrent = new FormControl<boolean>(true, {
-    nonNullable: true,
-  });
+  isRecurrent = new FormControl<boolean>(true);
 
   get exposeTimeFormControl() {
     return this.postForm.get("expose_time");
@@ -211,13 +209,19 @@ export class PostFormComponent implements OnInit {
     this.formDisabled = true;
 
     const formRawData = this.postForm.getRawValue();
-    const validFormData = {
+    let validFormData = {
       ...formRawData,
       start_date: formRawData.start_date!.toJSON(),
       end_date: formRawData.end_date!.toJSON(),
       start_time: `${formRawData.start_time!.toString()}:00`,
       end_time: `${formRawData.end_time!.toString()}:00`,
     } as ValidPostForm;
+
+    if (formRawData.recurrence_id) {
+      validFormData = omit(validFormData, ["start_date", "end_date"]);
+    } else {
+      validFormData = omit(validFormData, ["recurrence_id"]);
+    }
 
     if (this.postData) {
       this.handleUpdate(validFormData);
@@ -265,20 +269,26 @@ export class PostFormComponent implements OnInit {
   private configureUpdate(postData: ValidPostForm) {
     this.formDisabled = true;
 
-    // Disables all fields but description, since description is the only one which can be updated
-    Object.keys(this.postForm.controls)
-      .filter((key) => key !== "description")
-      .forEach((key) => {
-        this.postForm.get(key)?.disable();
-      });
+    disableAllFormControlsBut(["description", "displays_ids"], this.postForm);
 
-    this.postForm.patchValue({
-      ...postData,
-      start_date: this.transformDateToTuiDay(postData.start_date),
-      end_date: this.transformDateToTuiDay(postData.end_date),
-      start_time: this.transformTimeToTuiTime(postData.start_time),
-      end_time: this.transformTimeToTuiTime(postData.end_time),
-    });
+    this.isRecurrent.setValue(!!postData.recurrence_id);
+    this.isRecurrent.disable();
+
+    if (!postData.recurrence_id) {
+      this.postForm.patchValue({
+        ...postData,
+        start_date: this.transformDateToTuiDay(postData.start_date!),
+        end_date: this.transformDateToTuiDay(postData.end_date!),
+        start_time: this.transformTimeToTuiTime(postData.start_time),
+        end_time: this.transformTimeToTuiTime(postData.end_time),
+      });
+    } else {
+      this.postForm.patchValue({
+        ...omit(postData, ["start_date", "end_date"]),
+        start_time: this.transformTimeToTuiTime(postData.start_time),
+        end_time: this.transformTimeToTuiTime(postData.end_time),
+      });
+    }
 
     this.postForm.valueChanges
       .pipe(
