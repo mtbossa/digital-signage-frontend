@@ -28,6 +28,10 @@ export class ServerErrorInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req.clone({ withCredentials: true })).pipe(
       catchError((err: HttpErrorResponse) => {
+        if (err.status === HttpStatusCode.TooManyRequests) {
+          this.router.navigateByUrl("/not-found");
+          return throwError(() => err);
+        }
         if (err.status !== HttpStatusCode.Unauthorized && err.status !== 419) {
           const errors = err.error.errors as LaravelError;
 
