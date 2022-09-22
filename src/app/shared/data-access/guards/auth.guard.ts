@@ -21,7 +21,10 @@ export class AuthGuard implements CanLoad {
     route: Route,
     segments: UrlSegment[]
   ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    console.log("Auth guard");
+    const currentUser = this.authService.getLoggedUserStorage();
+
+    if (currentUser) return true;
+
     return this.authService.fetchLoggedUser().pipe(
       tap((user) => this.authService.setLoggedUserStorage(user)),
       map(() => true),
