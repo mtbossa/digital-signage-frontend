@@ -48,7 +48,7 @@ import { Display, DisplaysService, Key } from "../../data-access/displays.servic
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisplayListComponent implements OnInit, OnDestroy {
-  columns = ["id", "name", "width", "height", "size", "touch", "actions"];
+  columns = ["id", "name", "width", "height", "size", "actions"];
   displays: Display[] = [];
 
   private readonly page$ = new BehaviorSubject(1);
