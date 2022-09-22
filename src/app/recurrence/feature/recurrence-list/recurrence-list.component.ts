@@ -133,7 +133,7 @@ export class RecurrenceListComponent implements OnInit, OnDestroy {
           (recurrence) => recurrence.id !== recurrenceId
         );
         this.alertService
-          .open(`Recurrence removido com sucesso!`, { status: TuiNotification.Success })
+          .open(`Recorrência removida com sucesso!`, { status: TuiNotification.Success })
           .subscribe();
         this.cdr.markForCheck();
       },
