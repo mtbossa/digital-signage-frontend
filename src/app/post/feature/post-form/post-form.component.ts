@@ -272,9 +272,11 @@ export class PostFormComponent implements OnInit {
 
   private configureUpdate(postData: ValidPostForm) {
     this.formDisabled = true;
+
+    // Since isRecurrent is not inside the main form, we need to do it manually here.
     this.isRecurrent.setValue(!!postData.recurrence_id);
     this.isRecurrent.disable();
-    disableAllFormControlsBut(["description", "displays_ids"], this.postForm);
+
     if (!postData.recurrence_id) {
       this.postForm.patchValue({
         ...postData,
@@ -290,6 +292,8 @@ export class PostFormComponent implements OnInit {
         end_time: this.transformTimeToTuiTime(postData.end_time),
       });
     }
+
+    disableAllFormControlsBut(["description", "displays_ids"], this.postForm);
 
     this.postForm.valueChanges
       .pipe(
