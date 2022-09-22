@@ -194,10 +194,6 @@ export class PostFormComponent implements OnInit {
   ngOnInit() {
     if (this.postData) {
       this.configureUpdate(this.postData);
-    } else {
-      this.isRecurrent.valueChanges.subscribe((changedValue) => {
-        console.log(changedValue);
-      });
     }
   }
 
