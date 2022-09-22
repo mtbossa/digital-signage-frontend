@@ -155,11 +155,9 @@ export class PostFormComponent implements OnInit {
     }),
     start_date: new FormControl<null | TuiDay>(null, {
       nonNullable: true,
-      validators: [Validators.required],
     }),
     end_date: new FormControl<null | TuiDay>(null, {
       nonNullable: true,
-      validators: [Validators.required],
     }),
     start_time: new FormControl<TuiTime | null>(null, {
       nonNullable: true,
@@ -194,6 +192,23 @@ export class PostFormComponent implements OnInit {
   constructor(private post: PostsService) {}
 
   ngOnInit() {
+    this.isRecurrent.valueChanges.subscribe((isRecurrent) => {
+      if (isRecurrent) {
+        this.postForm.get("recurrence_id")?.enable();
+        this.postForm.get("recurrence_id")?.addValidators([Validators.required]);
+        this.postForm.get("start_date")?.disable();
+        this.postForm.get("start_date")?.removeValidators([Validators.required]);
+        this.postForm.get("end_date")?.disable();
+        this.postForm.get("end_date")?.removeValidators([Validators.required]);
+      } else {
+        this.postForm.get("recurrence_id")?.disable();
+        this.postForm.get("recurrence_id")?.removeValidators([Validators.required]);
+        this.postForm.get("start_date")?.enable();
+        this.postForm.get("start_date")?.addValidators([Validators.required]);
+        this.postForm.get("end_date")?.enable();
+        this.postForm.get("end_date")?.addValidators([Validators.required]);
+      }
+    });
     if (this.postData) {
       this.configureUpdate(this.postData);
     }
@@ -207,18 +222,22 @@ export class PostFormComponent implements OnInit {
     this.formDisabled = true;
 
     const formRawData = this.postForm.getRawValue();
-    let validFormData = {
-      ...formRawData,
-      start_date: formRawData.start_date!.toJSON(),
-      end_date: formRawData.end_date!.toJSON(),
-      start_time: `${formRawData.start_time!.toString()}:00`,
-      end_time: `${formRawData.end_time!.toString()}:00`,
-    } as ValidPostForm;
+    let validFormData: ValidPostForm;
 
     if (formRawData.recurrence_id) {
-      validFormData = omit(validFormData, ["start_date", "end_date"]);
+      validFormData = {
+        ...omit(formRawData, ["start_date", "end_date"]),
+        start_time: `${formRawData.start_time!.toString()}:00`,
+        end_time: `${formRawData.end_time!.toString()}:00`,
+      } as ValidPostForm;
     } else {
-      validFormData = omit(validFormData, ["recurrence_id"]);
+      validFormData = {
+        ...omit(formRawData, ["recurrence_id"]),
+        start_date: formRawData.start_date!.toJSON(),
+        end_date: formRawData.end_date!.toJSON(),
+        start_time: `${formRawData.start_time!.toString()}:00`,
+        end_time: `${formRawData.end_time!.toString()}:00`,
+      } as ValidPostForm;
     }
 
     if (this.postData) {
@@ -266,12 +285,9 @@ export class PostFormComponent implements OnInit {
 
   private configureUpdate(postData: ValidPostForm) {
     this.formDisabled = true;
-
-    disableAllFormControlsBut(["description", "displays_ids"], this.postForm);
-
     this.isRecurrent.setValue(!!postData.recurrence_id);
     this.isRecurrent.disable();
-
+    disableAllFormControlsBut(["description", "displays_ids"], this.postForm);
     if (!postData.recurrence_id) {
       this.postForm.patchValue({
         ...postData,
