@@ -28,7 +28,7 @@ export class RecurrenceCreateFormComponent {
   createRecurrence($event: ValidRecurrenceForm) {
     this.recurrencesService.create($event).subscribe({
       next: (res) => {
-        this.route.navigate(["../recurrences"]);
+        this.route.navigate(["../recorrencias"]);
         this.alertService
           .open(`Recurrence criado com sucesso!`, { status: TuiNotification.Success })
           .subscribe();

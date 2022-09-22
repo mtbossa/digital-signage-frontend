@@ -1,5 +1,7 @@
+import { registerLocaleData } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
-import { NgModule } from "@angular/core";
+import localePt from "@angular/common/locales/pt";
+import { LOCALE_ID, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TuiAlertModule, TuiDialogModule, TuiRootModule } from "@taiga-ui/core";
@@ -11,6 +13,8 @@ import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { appHttpInterceptorProviders } from "./shared/data-access/interceptors";
 import { AppLayoutModule } from "./shared/feature/app-layout/app-layout.module";
+
+registerLocaleData(localePt);
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +34,7 @@ import { AppLayoutModule } from "./shared/feature/app-layout/app-layout.module";
       provide: TUI_LANGUAGE,
       useValue: of(TUI_PORTUGUESE_LANGUAGE),
     },
+    { provide: LOCALE_ID, useValue: "pt-BR" },
     appHttpInterceptorProviders,
   ],
   bootstrap: [AppComponent],
