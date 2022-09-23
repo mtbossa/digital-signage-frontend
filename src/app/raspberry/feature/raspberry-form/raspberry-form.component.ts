@@ -89,7 +89,7 @@ export class RaspberryFormComponent implements OnInit {
     this.raspberryForm.patchValue(raspberryData);
     this.isSubmitDisabled$ = merge(
       this.submitDisabledControl$.asObservable(),
-      isFormSameData<ValidRaspberryForm>(this.raspberryForm, this.raspberryData)
+      isFormSameData<ValidRaspberryForm>(this.raspberryForm, raspberryData)
     );
     this.submitDisabledControl$.next(true);
   }

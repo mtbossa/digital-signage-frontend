@@ -13,5 +13,5 @@ export const disableAllFormControlsBut = (
     });
 };
 
-export const isFormSameData = <T>(form: FormGroup, compareData: T | undefined) =>
+export const isFormSameData = <T>(form: FormGroup, compareData: T) =>
   form.valueChanges.pipe(map((newFormData) => isEqual(newFormData, compareData)));
