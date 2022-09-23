@@ -141,7 +141,7 @@ export class InvitationListComponent implements OnInit, OnDestroy {
           (invitation) => invitation.id !== invitationId
         );
         this.alertService
-          .open(`Invitation removido com sucesso!`, { status: TuiNotification.Success })
+          .open(`Convite removido com sucesso!`, { status: TuiNotification.Success })
           .subscribe();
         this.cdr.markForCheck();
       },
