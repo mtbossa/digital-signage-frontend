@@ -28,13 +28,5 @@ export class LoginGuard implements CanActivateChild {
     } else {
       return true;
     }
-
-    // return this.authService.fetchLoggedUser().pipe(
-    //   tap((user) => this.authService.setLoggedUser(user)),
-    //   map((user) => this.router.createUrlTree(["/"])),
-    //   catchError((err) => {
-    //     return of(err).pipe(map(() => true));
-    //   })
-    // );
   }
 }
