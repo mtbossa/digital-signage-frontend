@@ -1,28 +1,16 @@
 import { CommonModule } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
-  Type,
 } from "@angular/core";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from "@angular/forms";
-import { Router } from "@angular/router";
-import {
-  TuiAlertService,
   TuiButtonModule,
   TuiErrorModule,
-  TuiNotification,
   TuiTextfieldControllerModule,
 } from "@taiga-ui/core";
 import {
@@ -33,9 +21,6 @@ import {
   TuiInputModule,
 } from "@taiga-ui/kit";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
-import { environment } from "src/environments/environment";
-
-import { Media } from "../../data-access/medias.service";
 
 export type MediaForm = {
   description: string;
