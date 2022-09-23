@@ -46,11 +46,12 @@
           </div>
           <div class="tui-form__buttons">
             <button
+              *tuiLet="formDisabled$ | async as disabled"
               tuiButton
               size="l"
               type="submit"
               class="tui-form__button"
-              [disabled]="formDisabled"
+              [disabled]="disabled"
             >
               Enviar
             </button>
