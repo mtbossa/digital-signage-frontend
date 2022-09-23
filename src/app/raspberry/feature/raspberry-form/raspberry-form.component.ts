@@ -97,10 +97,10 @@ export class RaspberryFormComponent implements OnInit {
       });
   }
 
-  private handleUpdate(formData: ValidRaspberryForm) {
-    this.raspberryData = formData;
+  private handleUpdate(newFormData: ValidRaspberryForm) {
+    this.updateCurrentData(newFormData);
+    this.emitFormSubmitted(newFormData);
     this.formDisabled$.next(true);
-    this.formSubmitted.emit(formData);
   }
 
   onSubmit() {
@@ -113,7 +113,15 @@ export class RaspberryFormComponent implements OnInit {
     if (this.raspberryData) {
       this.handleUpdate(formRawData);
     } else {
-      this.formSubmitted.emit(formRawData);
+      this.emitFormSubmitted(formRawData);
     }
+  }
+
+  private updateCurrentData(newFormData: ValidRaspberryForm) {
+    this.raspberryData = newFormData;
+  }
+
+  private emitFormSubmitted(newFormData: ValidRaspberryForm) {
+    this.formSubmitted.emit(newFormData);
   }
 }
