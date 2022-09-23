@@ -44,9 +44,9 @@ export class RaspberriesService {
       .pipe(take(1));
   }
 
-  public show(invitationToken: string) {
+  public show(raspberryId: number) {
     return this.http
-      .get<Raspberry>(`${environment.apiUrl}/api/raspberries/${invitationToken}`)
+      .get<Raspberry>(`${environment.apiUrl}/api/raspberries/${raspberryId}`)
       .pipe(take(1));
   }
 

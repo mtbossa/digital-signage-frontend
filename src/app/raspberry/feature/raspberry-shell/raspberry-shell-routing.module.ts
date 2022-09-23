@@ -16,6 +16,13 @@ const routes: Routes = [
         (m) => m.RaspberryCreateFormComponent
       ),
   },
+  {
+    path: ":id/editar",
+    loadComponent: () =>
+      import("../raspberry-update-form/raspberry-update-form.component").then(
+        (m) => m.RaspberryUpdateFormComponent
+      ),
+  },
 ];
 
 @NgModule({
