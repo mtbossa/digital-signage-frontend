@@ -19,6 +19,7 @@ import {
   TuiFieldErrorPipeModule,
   TuiInputFilesModule,
   TuiInputModule,
+  TuiProgressModule,
 } from "@taiga-ui/kit";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
@@ -43,6 +44,7 @@ export type MediaForm = {
     TuiButtonModule,
     TuiInputModule,
     TuiInputFilesModule,
+    TuiProgressModule,
   ],
   providers: [
     {
@@ -54,6 +56,7 @@ export type MediaForm = {
 export class MediaFormComponent implements OnInit {
   @Output() formSubmitted = new EventEmitter<MediaForm>();
 
+  @Input() uploadProgress?: number;
   // If mediaData, means it's an update
   @Input() mediaData?: { description: string; path: string };
 
