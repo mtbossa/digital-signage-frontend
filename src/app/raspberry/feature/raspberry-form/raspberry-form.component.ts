@@ -21,7 +21,7 @@ import {
   TuiInputModule,
 } from "@taiga-ui/kit";
 import { isEqual } from "lodash";
-import { BehaviorSubject, map } from "rxjs";
+import { BehaviorSubject, combineLatest, concat, map, merge, share, tap } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 
 export type ValidRaspberryForm = {
@@ -60,7 +60,6 @@ export class RaspberryFormComponent implements OnInit {
   // If raspberryData, means it's an update
   @Input() raspberryData?: ValidRaspberryForm;
 
-  formDisabled$ = new BehaviorSubject(false);
   raspberryForm = new FormGroup({
     short_name: new FormControl("", {
       nonNullable: true,
@@ -76,6 +75,15 @@ export class RaspberryFormComponent implements OnInit {
     }),
   });
 
+  formChangesIsSameData$ = this.raspberryForm.valueChanges.pipe(
+    map((newFormData) => isEqual(newFormData, this.raspberryData))
+  );
+  submitDisabledControl$ = new BehaviorSubject(false);
+  isSubmitDisabled$ = merge(
+    this.submitDisabledControl$.asObservable(),
+    this.formChangesIsSameData$
+  );
+
   ngOnInit() {
     if (this.raspberryData) {
       this.configureUpdate(this.raspberryData);
@@ -84,23 +92,13 @@ export class RaspberryFormComponent implements OnInit {
 
   private configureUpdate(raspberryData: ValidRaspberryForm) {
     this.raspberryForm.patchValue(raspberryData);
-    this.formDisabled$.next(true);
-
-    this.raspberryForm.valueChanges
-      .pipe(map((newFormData) => isEqual(newFormData, this.raspberryData)))
-      .subscribe((isEqual) => {
-        if (!isEqual) {
-          this.formDisabled$.next(false);
-        } else {
-          this.formDisabled$.next(true);
-        }
-      });
+    this.submitDisabledControl$.next(true);
   }
 
   private handleUpdate(newFormData: ValidRaspberryForm) {
     this.updateCurrentData(newFormData);
     this.emitFormSubmitted(newFormData);
-    this.formDisabled$.next(true);
+    this.submitDisabledControl$.next(true);
   }
 
   onSubmit() {

@@ -2,7 +2,8 @@ import { CommonModule } from "@angular/common";
 import { Component, Inject, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TuiAlertService, TuiNotification } from "@taiga-ui/core";
-import { Observable, switchMap } from "rxjs";
+import { pick } from "radash";
+import { map, Observable, switchMap } from "rxjs";
 
 import { RaspberriesService } from "../../data-access/raspberry.service";
 import {
@@ -32,7 +33,13 @@ export class RaspberryUpdateFormComponent implements OnInit {
     this.raspberry$ = this.activatedRoute.paramMap.pipe(
       switchMap((params) => {
         this.selectedId = Number(params.get("id"));
-        return this.raspberriesService.show(this.selectedId);
+        return this.raspberriesService
+          .show(this.selectedId)
+          .pipe(
+            map((raspberry) =>
+              pick(raspberry, ["short_name", "mac_address", "serial_number"])
+            )
+          );
       })
     );
   }
