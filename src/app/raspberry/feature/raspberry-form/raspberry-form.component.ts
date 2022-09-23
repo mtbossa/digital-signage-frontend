@@ -23,6 +23,7 @@ import {
 import { isEqual } from "lodash";
 import { BehaviorSubject, combineLatest, concat, map, merge, share, tap } from "rxjs";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
+import { isFormSameData } from "src/app/shared/utils/form-functions";
 
 export type ValidRaspberryForm = {
   short_name: string;
@@ -75,14 +76,8 @@ export class RaspberryFormComponent implements OnInit {
     }),
   });
 
-  formChangesIsSameData$ = this.raspberryForm.valueChanges.pipe(
-    map((newFormData) => isEqual(newFormData, this.raspberryData))
-  );
   submitDisabledControl$ = new BehaviorSubject(false);
-  isSubmitDisabled$ = merge(
-    this.submitDisabledControl$.asObservable(),
-    this.formChangesIsSameData$
-  );
+  isSubmitDisabled$ = this.submitDisabledControl$.asObservable();
 
   ngOnInit() {
     if (this.raspberryData) {
@@ -92,6 +87,10 @@ export class RaspberryFormComponent implements OnInit {
 
   private configureUpdate(raspberryData: ValidRaspberryForm) {
     this.raspberryForm.patchValue(raspberryData);
+    this.isSubmitDisabled$ = merge(
+      this.submitDisabledControl$.asObservable(),
+      isFormSameData<ValidRaspberryForm>(this.raspberryForm, this.raspberryData)
+    );
     this.submitDisabledControl$.next(true);
   }
 
