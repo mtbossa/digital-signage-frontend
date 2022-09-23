@@ -44,6 +44,11 @@ export class AppSidebarComponent {
       icon: "tuiIconVideo",
     },
     {
+      title: "Raspberries",
+      path: "/raspberries",
+      icon: "tuiIconPin",
+    },
+    {
       title: "Convites",
       path: "/convites",
       icon: "tuiIconMail",

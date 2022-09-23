@@ -28,6 +28,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: "raspberries",
+        loadChildren: () =>
+          import("../raspberry/feature/raspberry-shell/raspberry-shell.module").then(
+            (m) => m.RaspberryShellModule
+          ),
+      },
+      {
         path: "posts",
         loadChildren: () =>
           import("../post/feature/post-shell/post-shell.module").then(
