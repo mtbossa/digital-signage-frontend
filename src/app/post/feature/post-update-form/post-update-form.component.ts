@@ -19,6 +19,7 @@ export class PostUpdateFormComponent implements OnInit {
   loading = true;
   post$!: Observable<ValidPostForm>;
   medias$ = this.postsService.getMediaOptions();
+  recurrences$ = this.postsService.getRecurrenceOptions();
   selectedId!: number;
 
   constructor(
@@ -31,23 +32,7 @@ export class PostUpdateFormComponent implements OnInit {
     this.post$ = this.activatedRoute.paramMap.pipe(
       switchMap((params) => {
         this.selectedId = Number(params.get("id"));
-        return this.postsService.show(this.selectedId).pipe(
-          map((post) => {
-            const postFormData = pick(post, [
-              "description",
-              "start_date",
-              "end_date",
-              "start_time",
-              "end_time",
-              "expose_time",
-              "media_id",
-              "displays_ids",
-            ]);
-            return {
-              ...postFormData,
-            };
-          })
-        );
+        return this.postsService.show(this.selectedId);
       })
     );
   }

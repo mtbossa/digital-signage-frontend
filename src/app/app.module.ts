@@ -1,5 +1,7 @@
+import { registerLocaleData } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
-import { APP_INITIALIZER, NgModule } from "@angular/core";
+import localePt from "@angular/common/locales/pt";
+import { LOCALE_ID, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TuiAlertModule, TuiDialogModule, TuiRootModule } from "@taiga-ui/core";
@@ -9,25 +11,11 @@ import { of } from "rxjs";
 
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
-import { httpInterceptorProviders } from "./shared/data-access/interceptors";
-import { AuthService } from "./shared/data-access/services/auth.service";
+import { appHttpInterceptorProviders } from "./shared/data-access/interceptors";
 import { AppLayoutModule } from "./shared/feature/app-layout/app-layout.module";
 
-function tryToGetUser(authService: AuthService) {
-  return () => {
-    return new Promise((resolve) => {
-      authService.fetchLoggedUser().subscribe({
-        next: (user) => {
-          authService.setLoggedUser(user);
-          resolve(user);
-        },
-        error: (err) => {
-          resolve(err);
-        },
-      });
-    });
-  };
-}
+registerLocaleData(localePt);
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -42,17 +30,12 @@ function tryToGetUser(authService: AuthService) {
     AppRoutingModule,
   ],
   providers: [
-    httpInterceptorProviders,
     {
       provide: TUI_LANGUAGE,
       useValue: of(TUI_PORTUGUESE_LANGUAGE),
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: tryToGetUser,
-      deps: [AuthService],
-      multi: true,
-    },
+    { provide: LOCALE_ID, useValue: "pt-BR" },
+    appHttpInterceptorProviders,
   ],
   bootstrap: [AppComponent],
 })

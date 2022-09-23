@@ -22,7 +22,6 @@
             <th *tuiHead="'width'" tuiTh tuiSortable>Largura</th>
             <th *tuiHead="'height'" tuiTh tuiSortable>Altura</th>
             <th *tuiHead="'size'" tuiTh tuiSortable>Polegadas</th>
-            <th *tuiHead="'touch'" tuiTh tuiSortable>Touch</th>
             <th *tuiHead="'actions'" tuiTh [sorter]="null"></th>
           </tr>
         </thead>
@@ -42,9 +41,6 @@
             </td>
             <td *tuiCell="'size'" tuiTd>
               {{ item.size }}
-            </td>
-            <td *tuiCell="'touch'" tuiTd>
-              {{ item.touch }}
             </td>
             <td *tuiCell="'actions'" tuiTd>
               <button

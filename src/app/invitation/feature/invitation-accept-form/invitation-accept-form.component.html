@@ -1,0 +1,66 @@
+<article class="tui-container tui-container_adaptive">
+  <form [formGroup]="invitationAcceptForm" (ngSubmit)="onSubmit()">
+    <div class="tui-row">
+      <div class="tui-col_12">
+        <h1>Cria conta</h1>
+        <h3 class="tui-form__header tui-form__header_margin-top_none">Informações</h3>
+        <!-- Email -->
+        <div class="tui-form__row">
+          <tui-input
+            tuiTextfieldExampleText="Email"
+            formControlName="email"
+            [disabled]="true"
+          >
+            Email do usuário
+            <span class="tui-required"></span>
+          </tui-input>
+          <tui-error
+            formControlName="email"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+        <!-- Nome -->
+        <div class="tui-form__row">
+          <tui-input tuiTextfieldExampleText="Nome" formControlName="name">
+            Nome Completo
+            <span class="tui-required"></span>
+          </tui-input>
+          <tui-error
+            formControlName="name"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+        <!-- Password -->
+        <div class="tui-form__row">
+          <tui-input-password formControlName="password">Senha</tui-input-password>
+          <tui-error
+            formControlName="password"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+        <!-- Password confirmation -->
+        <div class="tui-form__row">
+          <tui-input-password formControlName="password_confirmation"
+            >Confirmação da senha</tui-input-password
+          >
+          <tui-error
+            formControlName="password_confirmation"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+
+        <div class="tui-form__buttons">
+          <button
+            tuiButton
+            size="l"
+            type="submit"
+            class="tui-form__button"
+            [disabled]="formDisabled"
+          >
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</article>

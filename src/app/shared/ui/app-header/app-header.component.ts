@@ -14,11 +14,11 @@ import { AuthService, User } from "../../data-access/services/auth.service";
   styleUrls: ["./app-header.component.scss"],
 })
 export class AppHeaderComponent {
-  user$: Observable<User | null>;
+  user: User;
   open = false;
 
   constructor(private authService: AuthService) {
-    this.user$ = this.authService.getLoggedUser();
+    this.user = this.authService.getLoggedUserStorage()!;
   }
 
   onClick(): void {

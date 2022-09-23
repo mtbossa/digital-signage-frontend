@@ -13,28 +13,15 @@ import { catchError, Observable, throwError } from "rxjs";
 import { AuthService } from "src/app/shared/data-access/services/auth.service";
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  constructor(
-    private router: Router,
-    private cookieService: CookieService,
-    private authService: AuthService
-  ) {}
+export class NotFoundInterceptor implements HttpInterceptor {
+  constructor(private router: Router, private authService: AuthService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.cookieService.get("XSRF-TOKEN");
-
-    if (token) {
-      req = req.clone({
-        setHeaders: { "X-XSRF-TOKEN": token },
-      });
-    }
-
-    return next.handle(req.clone({ withCredentials: true })).pipe(
+    return next.handle(req).pipe(
       catchError((err: HttpErrorResponse) => {
-        if (err.status === HttpStatusCode.Unauthorized || err.status == 419) {
-          this.authService.setLoggedUser(null);
-          this.router.navigateByUrl("/login");
+        if (err.status === HttpStatusCode.NotFound) {
+          this.router.navigateByUrl("/not-found");
         }
 
         return throwError(() => err);

@@ -1,28 +1,16 @@
 import { CommonModule } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
-  Type,
 } from "@angular/core";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from "@angular/forms";
-import { Router } from "@angular/router";
-import {
-  TuiAlertService,
   TuiButtonModule,
   TuiErrorModule,
-  TuiNotification,
   TuiTextfieldControllerModule,
 } from "@taiga-ui/core";
 import {
@@ -31,11 +19,9 @@ import {
   TuiFieldErrorPipeModule,
   TuiInputFilesModule,
   TuiInputModule,
+  TuiProgressModule,
 } from "@taiga-ui/kit";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
-import { environment } from "src/environments/environment";
-
-import { Media } from "../../data-access/medias.service";
 
 export type MediaForm = {
   description: string;
@@ -58,6 +44,7 @@ export type MediaForm = {
     TuiButtonModule,
     TuiInputModule,
     TuiInputFilesModule,
+    TuiProgressModule,
   ],
   providers: [
     {
@@ -69,6 +56,7 @@ export type MediaForm = {
 export class MediaFormComponent implements OnInit {
   @Output() formSubmitted = new EventEmitter<MediaForm>();
 
+  @Input() uploadProgress?: number;
   // If mediaData, means it's an update
   @Input() mediaData?: { description: string; path: string };
 

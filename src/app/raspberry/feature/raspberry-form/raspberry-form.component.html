@@ -1,0 +1,63 @@
+<article>
+  <h1>Criar Raspberry</h1>
+  <div class="tui-container">
+    <form [formGroup]="raspberryForm" (ngSubmit)="onSubmit()">
+      <div class="tui-row tui-row_sme">
+        <div class="tui-col_8">
+          <h3 class="tui-form__header tui-form__header_margin-top_none">Informações</h3>
+          <div class="tui-form__row">
+            <tui-input
+              tuiTextfieldExampleText="Nome do raspberry"
+              formControlName="short_name"
+            >
+              Nome
+              <span class="tui-required"></span>
+            </tui-input>
+            <tui-error
+              formControlName="short_name"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
+          </div>
+          <div class="tui-form__row">
+            <tui-input
+              tuiTextfieldExampleText="Endereço MAC"
+              formControlName="mac_address"
+            >
+              Endereço MAC
+              <span class="tui-required"></span>
+            </tui-input>
+            <tui-error
+              formControlName="mac_address"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
+          </div>
+          <div class="tui-form__row">
+            <tui-input
+              tuiTextfieldExampleText="Número de Serial"
+              formControlName="serial_number"
+            >
+              Número de Serial
+              <span class="tui-required"></span>
+            </tui-input>
+            <tui-error
+              formControlName="serial_number"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
+          </div>
+          <div class="tui-form__buttons">
+            <button
+              *tuiLet="isSubmitDisabled$ | async as isSubmitDisabled"
+              tuiButton
+              size="l"
+              type="submit"
+              class="tui-form__button"
+              [disabled]="isSubmitDisabled"
+            >
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</article>

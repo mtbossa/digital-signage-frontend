@@ -1,0 +1,103 @@
+<article>
+  <h1>Criar Recorrência</h1>
+  <div class="tui-container">
+    <form [formGroup]="recurrenceForm" (ngSubmit)="onSubmit()">
+      <div class="tui-row tui-row_sme">
+        <div class="tui-col_8">
+          <h3 class="tui-form__header tui-form__header_margin-top_none">Informações</h3>
+          <!-- Description -->
+          <div class="tui-form__row">
+            <tui-input
+              tuiTextfieldExampleText="Descrição da recorrência"
+              formControlName="description"
+            >
+              Descrição
+              <span class="tui-required"></span>
+            </tui-input>
+            <tui-error
+              formControlName="description"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
+          </div>
+          <!-- Isoweekday -->
+          <div class="tui-form__row">
+            <tui-select
+              *tuiLet="recurrencesService.WEEK_DAYS as weekDays"
+              [tuiTextfieldLabelOutside]="false"
+              [valueContent]="recurrencesService.stringifyIsoweekday(weekDays)"
+              [tuiTextfieldCleaner]="true"
+              formControlName="isoweekday"
+            >
+              Dia da semana
+              <ng-template tuiDataList>
+                <tui-data-list>
+                  <button
+                    *ngFor="let item of weekDays"
+                    tuiOption
+                    [value]="item.isoweekday"
+                  >
+                    {{ item.name }}
+                  </button>
+                </tui-data-list>
+              </ng-template>
+            </tui-select>
+            <tui-error
+              formControlName="isoweekday"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
+          </div>
+          <!-- Day -->
+          <div class="tui-form__row">
+            <tui-input-number
+              [max]="31"
+              [tuiTextfieldCleaner]="true"
+              formControlName="day"
+            >
+              Dia
+              <input tuiTextfield placeholder="Dia" />
+            </tui-input-number>
+            <tui-error
+              formControlName="day"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
+          </div>
+          <!-- Month -->
+          <div class="tui-form__row">
+            <tui-select
+              *tuiLet="recurrencesService.MONTHS as months"
+              [tuiTextfieldLabelOutside]="false"
+              [valueContent]="recurrencesService.stringifyMonth(months)"
+              [tuiTextfieldCleaner]="true"
+              formControlName="month"
+            >
+              Mês
+              <ng-template tuiDataList>
+                <tui-data-list>
+                  <button *ngFor="let item of months" tuiOption [value]="item.month">
+                    {{ item.name }}
+                  </button>
+                </tui-data-list>
+              </ng-template>
+            </tui-select>
+            <tui-error
+              formControlName="month"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
+          </div>
+
+          <div class="tui-form__buttons">
+            <button
+              tuiButton
+              size="l"
+              type="submit"
+              class="tui-form__button"
+              [disabled]="formDisabled"
+            >
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</article>

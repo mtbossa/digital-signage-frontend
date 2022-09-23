@@ -35,8 +35,16 @@
                 *ngIf="fileControl!.valueChanges | async as file"
                 [file]="file"
                 (removed)="removeFile()"
-              ></tui-file>
+              >
+              </tui-file>
             </tui-files>
+            <progress
+              class="tui-space_top-2"
+              tuiProgressBar
+              max="100"
+              size="m"
+              [value]="uploadProgress"
+            ></progress>
             <p>Tipos de arquivos permitidos: .jpg, .png, .jpeg, .mp4, .avi</p>
             <tui-error
               formControlName="file"

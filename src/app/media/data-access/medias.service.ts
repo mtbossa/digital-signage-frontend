@@ -37,7 +37,10 @@ export class MediasService {
 
   // Needs to be FormData since we need to upload the file
   public create(data: FormData) {
-    return this.http.post(`${environment.apiUrl}/api/medias`, data).pipe(take(1));
+    return this.http.post(`${environment.apiUrl}/api/medias`, data, {
+      reportProgress: true,
+      observe: "events",
+    });
   }
 
   public show(mediaId: number) {
