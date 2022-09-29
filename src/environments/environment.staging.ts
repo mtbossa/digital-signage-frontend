@@ -4,7 +4,7 @@
 
 export const environment = {
   production: true,
-  apiUrl: "https://api-staging.revendahost.inf.br",
+  apiUrl: "https://mural.revendahost.inf.br",
 };
 
 /*
