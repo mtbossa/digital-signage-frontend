@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Component, Inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { TuiAlertService, TuiDialogService, TuiNotification } from "@taiga-ui/core";
+import { PostsService } from "src/app/post/data-access/posts.service";
 import { environment } from "src/environments/environment";
 
 import { RaspberriesService } from "../../data-access/raspberry.service";
@@ -19,12 +20,15 @@ import {
   styleUrls: ["./raspberry-create-form.component.scss"],
 })
 export class RaspberryCreateFormComponent {
+  displays$ = this.postsService.getDisplayOptions();
+
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
     @Inject(TuiDialogService)
     private readonly dialogService: TuiDialogService,
     private route: Router,
-    private raspberrysService: RaspberriesService
+    private raspberrysService: RaspberriesService,
+    private postsService: PostsService
   ) {}
 
   createRaspberry($event: ValidRaspberryForm) {

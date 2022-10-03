@@ -1,7 +1,8 @@
 <ng-container *ngIf="raspberry$ | async as raspberry; else loading">
   <app-raspberry-form
-    (formSubmitted)="updateRaspberry($event)"
+    [displays$]="displays$"
     [raspberryData]="raspberry"
+    (formSubmitted)="updateRaspberry($event)"
   >
   </app-raspberry-form>
 </ng-container>

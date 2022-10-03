@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { TuiAlertService, TuiNotification } from "@taiga-ui/core";
 import { pick } from "radash";
 import { map, Observable, switchMap } from "rxjs";
+import { PostsService } from "src/app/post/data-access/posts.service";
 
 import { RaspberriesService } from "../../data-access/raspberry.service";
 import {
@@ -21,12 +22,14 @@ import {
 export class RaspberryUpdateFormComponent implements OnInit {
   loading = true;
   raspberry$!: Observable<ValidRaspberryForm>;
+  displays$ = this.postsService.getDisplayOptions();
   selectedId!: number;
 
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
     private activatedRoute: ActivatedRoute,
-    private raspberriesService: RaspberriesService
+    private raspberriesService: RaspberriesService,
+    private postsService: PostsService
   ) {}
 
   ngOnInit(): void {
@@ -37,7 +40,12 @@ export class RaspberryUpdateFormComponent implements OnInit {
           .show(this.selectedId)
           .pipe(
             map((raspberry) =>
-              pick(raspberry, ["short_name", "mac_address", "serial_number"])
+              pick(raspberry, [
+                "short_name",
+                "mac_address",
+                "serial_number",
+                "display_id",
+              ])
             )
           );
       })

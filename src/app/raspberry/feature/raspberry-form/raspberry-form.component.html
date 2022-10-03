@@ -44,6 +44,34 @@
               [error]="[] | tuiFieldError | async"
             ></tui-error>
           </div>
+
+          <!-- Display -->
+          <div class="tui-form__row">
+            <tui-select
+              *tuiLet="displays$ | async as items"
+              [tuiTextfieldLabelOutside]="true"
+              [valueContent]="items ? stringifyOptions(items) : loading"
+              [tuiTextfieldCleaner]="true"
+              formControlName="display_id"
+            >
+              Está em qual Display?
+              <ng-template tuiDataList>
+                <tui-data-list *ngIf="items; else loading">
+                  <button *ngFor="let item of items" tuiOption [value]="item.id">
+                    {{ item.name }}
+                  </button>
+                </tui-data-list>
+              </ng-template>
+              <ng-template #loading>
+                <tui-loader class="tui-space_vertical-3 loader"></tui-loader>
+              </ng-template>
+            </tui-select>
+            <tui-error
+              formControlName="display_id"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
+          </div>
+
           <div class="tui-form__buttons">
             <button
               *tuiLet="isSubmitDisabled$ | async as isSubmitDisabled"
