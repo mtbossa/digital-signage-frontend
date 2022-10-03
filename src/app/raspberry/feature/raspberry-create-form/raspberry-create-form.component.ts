@@ -21,6 +21,8 @@ import {
 export class RaspberryCreateFormComponent {
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
+    @Inject(TuiDialogService)
+    private readonly dialogService: TuiDialogService,
     private route: Router,
     private raspberrysService: RaspberriesService
   ) {}
@@ -31,6 +33,13 @@ export class RaspberryCreateFormComponent {
         this.route.navigate(["../raspberries"]);
         this.alertService
           .open(`Raspberry criado com sucesso!`, { status: TuiNotification.Success })
+          .subscribe();
+        this.dialogService
+          .open(`Anote o token do Raspberry: ${res.token?.plainTextToken}`, {
+            label: `Token da API`,
+            size: `s`,
+            data: { button: `Fechar` },
+          })
           .subscribe();
       },
     });

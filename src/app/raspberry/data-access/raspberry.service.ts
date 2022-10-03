@@ -15,8 +15,22 @@ export interface Raspberry {
   last_boot: string | null;
   observation: string;
   display_id: number | null;
+  token?: Token;
   created_at: string;
   updated_at: string;
+}
+
+interface Token {
+  accessToken: {
+    abilities: Array<string>;
+    created_at: string;
+    id: number;
+    name: string;
+    tokenable_id: number;
+    tokenable_type: string;
+    updated_at: string;
+  };
+  plainTextToken: string;
 }
 
 export type Key =

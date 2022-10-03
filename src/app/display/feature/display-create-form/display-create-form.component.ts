@@ -21,8 +21,6 @@ import {
 export class DisplayCreateFormComponent {
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
-    @Inject(TuiDialogService)
-    private readonly dialogService: TuiDialogService,
     private route: Router,
     private displaysService: DisplaysService
   ) {}
@@ -33,13 +31,6 @@ export class DisplayCreateFormComponent {
         this.route.navigate(["../displays"]);
         this.alertService
           .open(`Display criado com sucesso!`, { status: TuiNotification.Success })
-          .subscribe();
-        this.dialogService
-          .open(`Anote o token do Display: ${res.token?.plainTextToken}`, {
-            label: `Token da API`,
-            size: `s`,
-            data: { button: `Fechar` },
-          })
           .subscribe();
       },
     });

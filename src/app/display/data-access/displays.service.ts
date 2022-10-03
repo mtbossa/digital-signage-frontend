@@ -17,20 +17,6 @@ export interface Display {
   store_id: number | null;
   created_at: string;
   updated_at: string;
-  token?: Token;
-}
-
-interface Token {
-  accessToken: {
-    abilities: Array<string>;
-    created_at: string;
-    id: number;
-    name: string;
-    tokenable_id: number;
-    tokenable_type: string;
-    updated_at: string;
-  };
-  plainTextToken: string;
 }
 
 export type Key = "id" | "name" | "width" | "height" | "size" | "touch";
