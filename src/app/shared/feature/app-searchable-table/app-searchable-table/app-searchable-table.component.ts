@@ -34,6 +34,25 @@ import {
 import { Key } from "src/app/raspberry/data-access/raspberry.service";
 import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
 
+export interface Column {
+  key: string;
+  title: string;
+}
+
+export interface Listable {
+  onDeleteMessage: string;
+  primaryKeyColumnName: string;
+
+  getPaginatedResponse: (
+    key: Key,
+    direction: -1 | 1,
+    page: number,
+    size: number
+  ) => Observable<PaginatedResponse<any>>;
+
+  remove: (id: string) => Observable<any>;
+}
+
 @Component({
   selector: "app-app-searchable-table",
   standalone: true,
@@ -48,48 +67,28 @@ import { PaginatedResponse } from "src/app/shared/data-access/interfaces/Paginat
   templateUrl: "./app-searchable-table.component.html",
   styleUrls: ["./app-searchable-table.component.scss"],
 })
-export class AppSearchableTableComponent<T> {
-  @Input() columns!: { key: keyof T; title: string }[];
-  @Input() getDataRequest$!: (
-    key: Key,
-    direction: -1 | 1,
-    page: number,
-    size: number
-  ) => Observable<PaginatedResponse<T>>;
-  @Input() deleteModelRequest$!: (modelKey: number | string) => Observable<any>;
-  @Input() modelPrimaryKey!: keyof T;
+export class AppSearchableTableComponent implements OnInit {
+  @Input() columns!: Column[];
+  @Input() listableService!: Listable;
 
+  private defaultColumns: Column[] = [
+    {
+      key: "actions",
+      title: "",
+    },
+  ];
   private readonly page$ = new BehaviorSubject(1);
   private readonly size$ = new BehaviorSubject(10);
   private refresh$ = new BehaviorSubject<boolean>(false);
   readonly direction$ = new BehaviorSubject<-1 | 1>(-1);
   readonly sorter$ = new BehaviorSubject<Key>(`id`);
-  data$ = new BehaviorSubject<T[]>([]);
+  data$ = new BehaviorSubject<any[]>([]);
   search = ``;
 
-  readonly request$ = combineLatest([
-    this.sorter$,
-    this.direction$,
-    this.page$,
-    this.size$,
-    this.refresh$,
-  ]).pipe(
-    // zero time debounce for a case when both key and direction change
-    debounceTime(0),
-    switchMap(([sorter, direction, page, size]) =>
-      this.getDataRequest$(sorter, direction, page, size).pipe(startWith(null))
-    ),
-    tap((res) => this.data$.next(res?.data.filter(tuiIsPresent) ?? [])),
-    share()
-  );
+  loading$: any;
+  total$: any;
 
-  readonly loading$ = this.request$.pipe(map((value) => !value));
-
-  readonly total$ = this.request$.pipe(
-    filter(tuiIsPresent),
-    map(({ total }) => total),
-    startWith(1)
-  );
+  request$!: Observable<any>;
 
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
@@ -98,7 +97,35 @@ export class AppSearchableTableComponent<T> {
     private activatedRoute: ActivatedRoute
   ) {}
 
-  private subscriptions: Subscription[] = [];
+  ngOnInit() {
+    this.request$ = combineLatest([
+      this.sorter$,
+      this.direction$,
+      this.page$,
+      this.size$,
+      this.refresh$,
+    ]).pipe(
+      // zero time debounce for a case when both key and direction change
+      debounceTime(0),
+      switchMap(([sorter, direction, page, size]) =>
+        this.listableService
+          .getPaginatedResponse(sorter, direction, page, size)
+          .pipe(startWith(null))
+      ),
+      tap((res) => this.data$.next(res?.data.filter(tuiIsPresent) ?? [])),
+      share()
+    );
+
+    this.loading$ = this.request$.pipe(map((value) => !value));
+
+    this.total$ = this.request$.pipe(
+      filter(tuiIsPresent),
+      map(({ total }) => total),
+      startWith(1)
+    );
+
+    this.columns = [...this.columns, ...this.defaultColumns];
+  }
 
   changePage(page: number): void {
     this.page$.next(page + 1);
@@ -114,33 +141,37 @@ export class AppSearchableTableComponent<T> {
     this.router.navigate([where], { relativeTo: this.activatedRoute });
   }
 
-  remove(model: T): void {
-    const primaryKey = model[this.modelPrimaryKey] as string | number;
+  remove(model: any): void {
+    const primaryKey = model[this.listableService.primaryKeyColumnName];
 
-    this.deleteModelRequest$(primaryKey).subscribe({
+    this.listableService.remove(primaryKey).subscribe({
       next: () => {
         this.data$.pipe(take(1)).subscribe((currentData) => {
           const dataWithoutRemoved = currentData.filter(
-            (data) => data[this.modelPrimaryKey as keyof T] !== primaryKey
+            (data) => data[this.listableService.primaryKeyColumnName] !== primaryKey
           );
           this.data$.next(dataWithoutRemoved);
+
           this.alertService
-            .open(`Raspberry removido com sucesso!`, { status: TuiNotification.Success })
+            .open(this.listableService.onDeleteMessage, {
+              status: TuiNotification.Success,
+            })
             .subscribe();
+
           this.cdr.markForCheck();
         });
       },
     });
   }
 
-  edit(model: T): void {
-    const primaryKey = model[this.modelPrimaryKey] as string | number;
+  edit(model: any): void {
+    const primaryKey = model[this.listableService.primaryKeyColumnName];
 
     this.router.navigate([primaryKey, "editar"], { relativeTo: this.activatedRoute });
   }
 
   @tuiPure
-  getColumNames(columns: { key: keyof T; title: string }[]): string[] {
+  getColumNames(columns: Column[]): string[] {
     const test = columns
       .filter((column) => typeof column.key === "string")
       .map((column) => column.key as string);

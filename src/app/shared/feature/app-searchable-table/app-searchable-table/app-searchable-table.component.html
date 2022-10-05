@@ -13,7 +13,7 @@
       <thead>
         <tr tuiThGroup>
           <ng-container *ngFor="let column of columns">
-            <th *[tuiHead]="column.key" tuiTh tuiSortable>{{ column.title }}</th>
+            <th *tuiHead="column.key" tuiTh tuiSortable>{{ column.title }}</th>
           </ng-container>
           <th *tuiHead="'actions'" tuiTh [sorter]="null"></th>
         </tr>
@@ -21,7 +21,7 @@
       <tbody tuiTbody [data]="data">
         <tr *tuiRow="let item of data" tuiTr>
           <ng-container *ngFor="let column of columns">
-            <td *[tuiCell]="column.key" tuiTd>
+            <td *tuiCell="column.key" tuiTd>
               {{ item[column.key] }}
             </td>
           </ng-container>

@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { take } from "rxjs";
 import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
 import { User } from "src/app/shared/data-access/services/auth.service";
+import { Listable } from "src/app/shared/feature/app-searchable-table/app-searchable-table/app-searchable-table.component";
 import { environment } from "src/environments/environment";
 
 import { ValidRaspberryForm } from "../feature/raspberry-form/raspberry-form.component";
@@ -44,10 +45,18 @@ export type Key =
 @Injectable({
   providedIn: "root",
 })
-export class RaspberriesService {
+export class RaspberriesService implements Listable {
+  onDeleteMessage = "Raspberry removido com sucesso!";
+  primaryKeyColumnName = "id";
+
   constructor(private http: HttpClient) {}
 
-  public fetchIndex(key: Key, direction: -1 | 1, page: number, size: number) {
+  getPaginatedResponse<Raspberry>(
+    key: Key,
+    direction: -1 | 1,
+    page: number,
+    size: number
+  ) {
     return this.http
       .get<PaginatedResponse<Raspberry>>(`${environment.apiUrl}/api/raspberries`, {
         params: {
@@ -76,9 +85,9 @@ export class RaspberriesService {
       .pipe(take(1));
   }
 
-  public remove(invitationId: number) {
+  remove(raspberryId: string) {
     return this.http
-      .delete(`${environment.apiUrl}/api/raspberries/${invitationId}`)
+      .delete(`${environment.apiUrl}/api/raspberries/${raspberryId}`)
       .pipe(take(1));
   }
 }
