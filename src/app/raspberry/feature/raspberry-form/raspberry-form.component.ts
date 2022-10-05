@@ -29,7 +29,7 @@ import {
   TuiSelectModule,
 } from "@taiga-ui/kit";
 import { BehaviorSubject, merge, Observable, of } from "rxjs";
-import { DisplayOption } from "src/app/post/data-access/posts.service";
+import { DisplayOption } from "src/app/display/data-access/displays.service";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 import { isFormSameData } from "src/app/shared/utils/form-functions";
 

@@ -59,6 +59,7 @@ import {
   switchMap,
   tap,
 } from "rxjs";
+import { DisplaysService } from "src/app/display/data-access/displays.service";
 import { MediaOption } from "src/app/media/data-access/medias.service";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 import { disableAllFormControlsBut } from "src/app/shared/utils/form-functions";
@@ -122,7 +123,7 @@ export class PostFormComponent implements OnInit {
 
   private readonly displaySearch$ = new BehaviorSubject<string>("");
   readonly displaysOptionsRequest$ = combineLatest([this.displaySearch$]).pipe(
-    switchMap(([search]) => this.post.getDisplayOptions()),
+    switchMap(([search]) => this.displayService.getDisplayOptions()),
     startWith(null),
     shareReplay(1)
   );
@@ -185,7 +186,10 @@ export class PostFormComponent implements OnInit {
     return this.postForm.get("expose_time");
   }
 
-  constructor(private post: PostsService) {}
+  constructor(
+    private postService: PostsService,
+    private displayService: DisplaysService
+  ) {}
 
   ngOnInit() {
     this.isRecurrent.valueChanges.subscribe((isRecurrent) => {

@@ -26,7 +26,6 @@ export interface Post {
 }
 
 export type RecurrenceOption = Pick<Recurrence, "id" | "description">;
-export type DisplayOption = Pick<Display, "id" | "name">;
 
 export type Key =
   | "id"
@@ -89,12 +88,6 @@ export class PostsService {
   public getRecurrenceOptions() {
     return this.http
       .get<RecurrenceOption[]>(`${environment.apiUrl}/api/posts/recurrences/options`)
-      .pipe(take(1));
-  }
-
-  public getDisplayOptions() {
-    return this.http
-      .get<DisplayOption[]>(`${environment.apiUrl}/api/posts/displays/options`)
       .pipe(take(1));
   }
 }

@@ -19,6 +19,8 @@ export interface Display {
   updated_at: string;
 }
 
+export type DisplayOption = Pick<Display, "id" | "name">;
+
 export type Key = "id" | "name" | "width" | "height" | "size" | "touch";
 
 @Injectable({
@@ -66,6 +68,12 @@ export class DisplaysService {
   public remove(displayId: number) {
     return this.http
       .delete(`${environment.apiUrl}/api/displays/${displayId}`)
+      .pipe(take(1));
+  }
+
+  public getDisplayOptions() {
+    return this.http
+      .get<DisplayOption[]>(`${environment.apiUrl}/api/displays/options`)
       .pipe(take(1));
   }
 }
