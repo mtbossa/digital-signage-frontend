@@ -55,9 +55,12 @@
               [tuiTextfieldCleaner]="true"
               formControlName="display_id"
             >
-              Está em qual Display?
+              Ligado no Display:
               <ng-template tuiDataList>
-                <tui-data-list *ngIf="items; else loading">
+                <tui-data-list
+                  *ngIf="items; else loading"
+                  [emptyContent]="'Nenhum Display disponível'"
+                >
                   <button *ngFor="let item of items" tuiOption [value]="item.id">
                     {{ item.name }}
                   </button>

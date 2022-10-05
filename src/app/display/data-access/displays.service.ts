@@ -20,6 +20,9 @@ export interface Display {
 }
 
 export type DisplayOption = Pick<Display, "id" | "name">;
+interface DisplayOptionParams {
+  whereDoesntHaveRaspberry?: boolean;
+}
 
 export type Key = "id" | "name" | "width" | "height" | "size" | "touch";
 
@@ -71,9 +74,13 @@ export class DisplaysService {
       .pipe(take(1));
   }
 
-  public getDisplayOptions() {
+  public getDisplayOptions(params?: DisplayOptionParams) {
     return this.http
-      .get<DisplayOption[]>(`${environment.apiUrl}/api/displays/options`)
+      .get<DisplayOption[]>(`${environment.apiUrl}/api/displays/options`, {
+        params: {
+          ...params,
+        },
+      })
       .pipe(take(1));
   }
 }

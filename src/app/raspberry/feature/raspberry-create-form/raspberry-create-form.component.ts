@@ -20,7 +20,7 @@ import {
   styleUrls: ["./raspberry-create-form.component.scss"],
 })
 export class RaspberryCreateFormComponent {
-  displays$ = this.displayService.getDisplayOptions();
+  displays$ = this.displayService.getDisplayOptions({ whereDoesntHaveRaspberry: true });
 
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
