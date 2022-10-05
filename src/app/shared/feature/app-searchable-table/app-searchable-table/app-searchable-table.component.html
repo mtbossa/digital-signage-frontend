@@ -5,15 +5,13 @@
       *tuiLet="data$ | async as data"
       [columns]="getColumNames(columns)"
       [direction]="(direction$ | async) || 1"
-      [tuiSortBy]="sorter$ | async"
-      (tuiSortByChange)="sorter$.next($event!)"
       (directionChange)="direction$.next($event)"
       tuiTable
     >
       <thead>
         <tr tuiThGroup>
           <ng-container *ngFor="let column of columns">
-            <th *tuiHead="column.key" tuiTh tuiSortable>{{ column.title }}</th>
+            <th *tuiHead="column.key" tuiTh [sorter]="null">{{ column.title }}</th>
           </ng-container>
           <th *tuiHead="'actions'" tuiTh [sorter]="null"></th>
         </tr>

@@ -31,7 +31,6 @@ import {
   take,
   tap,
 } from "rxjs";
-import { Key } from "src/app/raspberry/data-access/raspberry.service";
 import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
 
 export interface Column {
@@ -44,8 +43,6 @@ export interface Listable {
   primaryKeyColumnName: string;
 
   getPaginatedResponse: (
-    key: Key,
-    direction: -1 | 1,
     page: number,
     size: number
   ) => Observable<PaginatedResponse<any>>;
@@ -81,7 +78,6 @@ export class AppSearchableTableComponent implements OnInit {
   private readonly size$ = new BehaviorSubject(10);
   private refresh$ = new BehaviorSubject<boolean>(false);
   readonly direction$ = new BehaviorSubject<-1 | 1>(-1);
-  readonly sorter$ = new BehaviorSubject<Key>(`id`);
   data$ = new BehaviorSubject<any[]>([]);
   search = ``;
 
@@ -98,19 +94,11 @@ export class AppSearchableTableComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.request$ = combineLatest([
-      this.sorter$,
-      this.direction$,
-      this.page$,
-      this.size$,
-      this.refresh$,
-    ]).pipe(
+    this.request$ = combineLatest([this.page$, this.size$, this.refresh$]).pipe(
       // zero time debounce for a case when both key and direction change
       debounceTime(0),
-      switchMap(([sorter, direction, page, size]) =>
-        this.listableService
-          .getPaginatedResponse(sorter, direction, page, size)
-          .pipe(startWith(null))
+      switchMap(([page, size]) =>
+        this.listableService.getPaginatedResponse(page, size).pipe(startWith(null))
       ),
       tap((res) => this.data$.next(res?.data.filter(tuiIsPresent) ?? [])),
       share()
