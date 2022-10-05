@@ -74,17 +74,18 @@ export class AppSearchableTableComponent implements OnInit {
       title: "",
     },
   ];
+  data$ = new BehaviorSubject<any[]>([]);
+  search = ``;
+
+  loading$!: Observable<boolean>;
+  total$!: Observable<number>;
+
+  request$!: Observable<any>;
+
   private readonly page$ = new BehaviorSubject(1);
   private readonly size$ = new BehaviorSubject(10);
   private refresh$ = new BehaviorSubject<boolean>(false);
   readonly direction$ = new BehaviorSubject<-1 | 1>(-1);
-  data$ = new BehaviorSubject<any[]>([]);
-  search = ``;
-
-  loading$: any;
-  total$: any;
-
-  request$!: Observable<any>;
 
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
