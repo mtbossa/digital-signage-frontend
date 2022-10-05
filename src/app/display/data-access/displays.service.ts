@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams, HttpParamsOptions } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, take } from "rxjs";
 import { PaginatedResponse } from "src/app/shared/data-access/interfaces/PaginatedResponse.interface";
@@ -22,6 +22,7 @@ export interface Display {
 export type DisplayOption = Pick<Display, "id" | "name">;
 interface DisplayOptionParams {
   whereDoesntHaveRaspberry?: boolean;
+  withIds?: number[];
 }
 
 export type Key = "id" | "name" | "width" | "height" | "size" | "touch";
@@ -74,12 +75,21 @@ export class DisplaysService {
       .pipe(take(1));
   }
 
-  public getDisplayOptions(params?: DisplayOptionParams) {
+  public getDisplayOptions(displayOptionsParams?: DisplayOptionParams) {
+    const params = new HttpParams({
+      fromObject: {
+        ...(displayOptionsParams?.whereDoesntHaveRaspberry && {
+          whereDoesntHaveRaspberry: displayOptionsParams?.whereDoesntHaveRaspberry,
+        }),
+        ...(displayOptionsParams?.withIds && {
+          withIds: JSON.stringify(displayOptionsParams?.withIds),
+        }),
+      },
+    });
+
     return this.http
       .get<DisplayOption[]>(`${environment.apiUrl}/api/displays/options`, {
-        params: {
-          ...params,
-        },
+        params,
       })
       .pipe(take(1));
   }
