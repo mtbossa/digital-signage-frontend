@@ -25,8 +25,6 @@ export interface Post {
   updated_at: string;
 }
 
-export type RecurrenceOption = Pick<Recurrence, "id" | "description">;
-
 export type Key =
   | "id"
   | "description"
@@ -83,11 +81,5 @@ export class PostsService {
 
   public remove(postId: number) {
     return this.http.delete(`${environment.apiUrl}/api/posts/${postId}`).pipe(take(1));
-  }
-
-  public getRecurrenceOptions() {
-    return this.http
-      .get<RecurrenceOption[]>(`${environment.apiUrl}/api/posts/recurrences/options`)
-      .pipe(take(1));
   }
 }

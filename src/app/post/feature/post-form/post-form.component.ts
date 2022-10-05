@@ -61,10 +61,11 @@ import {
 } from "rxjs";
 import { DisplaysService } from "src/app/display/data-access/displays.service";
 import { MediaOption } from "src/app/media/data-access/medias.service";
+import { RecurrenceOption } from "src/app/recurrence/data-access/recurrences.service";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 import { disableAllFormControlsBut } from "src/app/shared/utils/form-functions";
 
-import { PostsService, RecurrenceOption } from "../../data-access/posts.service";
+import { PostsService } from "../../data-access/posts.service";
 
 export type ValidPostForm = {
   description: string;

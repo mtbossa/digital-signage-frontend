@@ -27,6 +27,8 @@ export interface Month {
   name: string;
 }
 
+export type RecurrenceOption = Pick<Recurrence, "id" | "description">;
+
 export type Key = "id" | "description" | "isoweekday" | "day" | "month";
 
 @Injectable({
@@ -131,5 +133,11 @@ export class RecurrencesService {
     );
 
     return map.get(month);
+  }
+
+  public getRecurrenceOptions() {
+    return this.http
+      .get<RecurrenceOption[]>(`${environment.apiUrl}/api/recurrences/options`)
+      .pipe(take(1));
   }
 }

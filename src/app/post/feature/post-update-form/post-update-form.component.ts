@@ -5,6 +5,7 @@ import { TuiAlertService, TuiNotification } from "@taiga-ui/core";
 import { omit, pick, toFloat } from "radash";
 import { delay, map, Observable, switchMap } from "rxjs";
 import { MediasService } from "src/app/media/data-access/medias.service";
+import { RecurrencesService } from "src/app/recurrence/data-access/recurrences.service";
 
 import { Post, PostsService } from "../../data-access/posts.service";
 import { PostFormComponent, ValidPostForm } from "../post-form/post-form.component";
@@ -20,14 +21,15 @@ export class PostUpdateFormComponent {
   loading = true;
   post$!: Observable<ValidPostForm>;
   medias$ = this.mediasService.getMediaOptions();
-  recurrences$ = this.postsService.getRecurrenceOptions();
+  recurrences$ = this.recurrencesService.getRecurrenceOptions();
   selectedId!: number;
 
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
     private activatedRoute: ActivatedRoute,
     private postsService: PostsService,
-    private mediasService: MediasService
+    private mediasService: MediasService,
+    private recurrencesService: RecurrencesService
   ) {
     this.post$ = this.activatedRoute.paramMap.pipe(
       switchMap((params) => {
