@@ -25,7 +25,6 @@ export interface Post {
   updated_at: string;
 }
 
-export type MediaOption = Pick<Media, "id" | "path" | "description" | "type">;
 export type RecurrenceOption = Pick<Recurrence, "id" | "description">;
 export type DisplayOption = Pick<Display, "id" | "name">;
 
@@ -85,12 +84,6 @@ export class PostsService {
 
   public remove(postId: number) {
     return this.http.delete(`${environment.apiUrl}/api/posts/${postId}`).pipe(take(1));
-  }
-
-  public getMediaOptions() {
-    return this.http
-      .get<MediaOption[]>(`${environment.apiUrl}/api/posts/medias/options`)
-      .pipe(take(1));
   }
 
   public getRecurrenceOptions() {

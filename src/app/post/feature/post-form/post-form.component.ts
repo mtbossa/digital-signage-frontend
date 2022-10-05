@@ -59,15 +59,11 @@ import {
   switchMap,
   tap,
 } from "rxjs";
+import { MediaOption } from "src/app/media/data-access/medias.service";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 import { disableAllFormControlsBut } from "src/app/shared/utils/form-functions";
 
-import {
-  DisplayOption,
-  MediaOption,
-  PostsService,
-  RecurrenceOption,
-} from "../../data-access/posts.service";
+import { PostsService, RecurrenceOption } from "../../data-access/posts.service";
 
 export type ValidPostForm = {
   description: string;

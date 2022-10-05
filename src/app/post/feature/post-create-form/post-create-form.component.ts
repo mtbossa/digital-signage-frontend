@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Component, Inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { TuiAlertService, TuiDialogService, TuiNotification } from "@taiga-ui/core";
+import { MediasService } from "src/app/media/data-access/medias.service";
 import { environment } from "src/environments/environment";
 
 import { PostsService } from "../../data-access/posts.service";
@@ -16,7 +17,7 @@ import { PostFormComponent, ValidPostForm } from "../post-form/post-form.compone
   styleUrls: ["./post-create-form.component.scss"],
 })
 export class PostCreateFormComponent {
-  medias$ = this.postsService.getMediaOptions();
+  medias$ = this.mediasService.getMediaOptions();
   recurrences$ = this.postsService.getRecurrenceOptions();
 
   constructor(
@@ -24,7 +25,8 @@ export class PostCreateFormComponent {
     @Inject(TuiDialogService)
     private readonly dialogService: TuiDialogService,
     private route: Router,
-    private postsService: PostsService
+    private postsService: PostsService,
+    private mediasService: MediasService
   ) {}
 
   createPost($event: ValidPostForm) {

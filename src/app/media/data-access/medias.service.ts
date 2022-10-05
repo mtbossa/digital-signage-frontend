@@ -16,6 +16,8 @@ export interface Media {
   updated_at: string;
 }
 
+export type MediaOption = Pick<Media, "id" | "path" | "description" | "type">;
+
 export type Key = "id" | "description" | "type" | "size_kb" | "filename";
 
 @Injectable({
@@ -62,5 +64,11 @@ export class MediasService {
 
   public remove(mediaId: number) {
     return this.http.delete(`${environment.apiUrl}/api/medias/${mediaId}`).pipe(take(1));
+  }
+
+  public getMediaOptions() {
+    return this.http
+      .get<MediaOption[]>(`${environment.apiUrl}/api/medias/options`)
+      .pipe(take(1));
   }
 }

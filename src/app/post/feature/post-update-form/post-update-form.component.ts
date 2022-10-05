@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { TuiAlertService, TuiNotification } from "@taiga-ui/core";
 import { omit, pick, toFloat } from "radash";
 import { delay, map, Observable, switchMap } from "rxjs";
+import { MediasService } from "src/app/media/data-access/medias.service";
 
 import { Post, PostsService } from "../../data-access/posts.service";
 import { PostFormComponent, ValidPostForm } from "../post-form/post-form.component";
@@ -15,20 +16,19 @@ import { PostFormComponent, ValidPostForm } from "../post-form/post-form.compone
   templateUrl: "./post-update-form.component.html",
   styleUrls: ["./post-update-form.component.scss"],
 })
-export class PostUpdateFormComponent implements OnInit {
+export class PostUpdateFormComponent {
   loading = true;
   post$!: Observable<ValidPostForm>;
-  medias$ = this.postsService.getMediaOptions();
+  medias$ = this.mediasService.getMediaOptions();
   recurrences$ = this.postsService.getRecurrenceOptions();
   selectedId!: number;
 
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
     private activatedRoute: ActivatedRoute,
-    private postsService: PostsService
-  ) {}
-
-  ngOnInit(): void {
+    private postsService: PostsService,
+    private mediasService: MediasService
+  ) {
     this.post$ = this.activatedRoute.paramMap.pipe(
       switchMap((params) => {
         this.selectedId = Number(params.get("id"));
