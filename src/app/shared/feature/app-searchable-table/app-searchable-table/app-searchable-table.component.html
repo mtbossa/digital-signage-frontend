@@ -1,4 +1,8 @@
 <div>
+  <tui-input [formControl]="searchControl">
+    Type a text
+    <input tuiTextfield />
+  </tui-input>
   <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
     <table
       class="table"

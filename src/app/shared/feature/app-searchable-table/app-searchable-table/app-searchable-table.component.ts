@@ -8,6 +8,7 @@ import {
   OnDestroy,
   OnInit,
 } from "@angular/core";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TuiTableModule, TuiTablePaginationModule } from "@taiga-ui/addon-table";
 import { tuiIsPresent, TuiLetModule, tuiPure } from "@taiga-ui/cdk";
@@ -17,10 +18,12 @@ import {
   TuiLoaderModule,
   TuiNotification,
 } from "@taiga-ui/core";
+import { TuiInputInlineModule, TuiInputModule } from "@taiga-ui/kit";
 import {
   BehaviorSubject,
   combineLatest,
   debounceTime,
+  distinctUntilChanged,
   filter,
   map,
   Observable,
@@ -44,7 +47,9 @@ export interface Listable {
 
   getPaginatedResponse: (
     page: number,
-    size: number
+    size: number,
+    search: string,
+    searchField: string
   ) => Observable<PaginatedResponse<any>>;
 
   remove: (id: string) => Observable<any>;
@@ -55,11 +60,13 @@ export interface Listable {
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     TuiButtonModule,
     TuiTableModule,
     TuiLetModule,
     TuiTablePaginationModule,
     TuiLoaderModule,
+    TuiInputModule,
   ],
   templateUrl: "./app-searchable-table.component.html",
   styleUrls: ["./app-searchable-table.component.scss"],
@@ -75,7 +82,12 @@ export class AppSearchableTableComponent implements OnInit {
     },
   ];
   data$ = new BehaviorSubject<any[]>([]);
-  search = ``;
+  searchControl = new FormControl("", { nonNullable: true });
+  search$ = this.searchControl.valueChanges.pipe(
+    startWith(""),
+    distinctUntilChanged(),
+    debounceTime(500)
+  );
 
   loading$!: Observable<boolean>;
   total$!: Observable<number>;
@@ -95,11 +107,18 @@ export class AppSearchableTableComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.request$ = combineLatest([this.page$, this.size$, this.refresh$]).pipe(
+    this.request$ = combineLatest([
+      this.page$,
+      this.size$,
+      this.search$,
+      this.refresh$,
+    ]).pipe(
       // zero time debounce for a case when both key and direction change
       debounceTime(0),
-      switchMap(([page, size]) =>
-        this.listableService.getPaginatedResponse(page, size).pipe(startWith(null))
+      switchMap(([page, size, search]) =>
+        this.listableService
+          .getPaginatedResponse(page, size, search, "short_name")
+          .pipe(startWith(null))
       ),
       tap((res) => this.data$.next(res?.data.filter(tuiIsPresent) ?? [])),
       share()

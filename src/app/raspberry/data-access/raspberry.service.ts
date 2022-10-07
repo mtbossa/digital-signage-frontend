@@ -51,12 +51,18 @@ export class RaspberriesService implements Listable {
 
   constructor(private http: HttpClient) {}
 
-  getPaginatedResponse<Raspberry>(page: number, size: number) {
+  getPaginatedResponse<Raspberry>(
+    page: number,
+    size: number,
+    search: string,
+    searchField: string
+  ) {
     return this.http
       .get<PaginatedResponse<Raspberry>>(`${environment.apiUrl}/api/raspberries`, {
         params: {
           page,
           size,
+          search,
         },
       })
       .pipe(take(1));
