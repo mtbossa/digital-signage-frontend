@@ -170,9 +170,8 @@ export class AppSearchableTableComponent implements OnInit {
 
   @tuiPure
   getColumNames(columns: Column[]): string[] {
-    const test = columns
+    return columns
       .filter((column) => typeof column.key === "string")
       .map((column) => column.key as string);
-    return test;
   }
 }
