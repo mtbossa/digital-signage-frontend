@@ -1,13 +1,5 @@
 import { CommonModule } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-} from "@angular/core";
+import { ChangeDetectorRef, Component, Inject, Input, OnInit } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TuiTableModule, TuiTablePaginationModule } from "@taiga-ui/addon-table";
@@ -18,7 +10,7 @@ import {
   TuiLoaderModule,
   TuiNotification,
 } from "@taiga-ui/core";
-import { TuiInputInlineModule, TuiInputModule } from "@taiga-ui/kit";
+import { TuiInputModule } from "@taiga-ui/kit";
 import {
   BehaviorSubject,
   combineLatest,
@@ -29,7 +21,6 @@ import {
   Observable,
   share,
   startWith,
-  Subscription,
   switchMap,
   take,
   tap,
