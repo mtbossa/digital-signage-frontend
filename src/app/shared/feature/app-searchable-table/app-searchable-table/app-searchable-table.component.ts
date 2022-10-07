@@ -81,18 +81,17 @@ export class AppSearchableTableComponent implements OnInit {
       title: "",
     },
   ];
+
+  request$!: Observable<PaginatedResponse<any> | null>;
   data$ = new BehaviorSubject<any[]>([]);
+  loading$!: Observable<boolean>;
+  total$!: Observable<number>;
   searchControl = new FormControl("", { nonNullable: true });
   search$ = this.searchControl.valueChanges.pipe(
     startWith(""),
     distinctUntilChanged(),
     debounceTime(500)
   );
-
-  loading$!: Observable<boolean>;
-  total$!: Observable<number>;
-
-  request$!: Observable<any>;
 
   private readonly page$ = new BehaviorSubject(1);
   private readonly size$ = new BehaviorSubject(10);
