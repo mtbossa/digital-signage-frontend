@@ -40,7 +40,7 @@ export interface Listable {
     page: number,
     size: number,
     search: string,
-    searchField?: string
+    searchColumn?: string
   ) => Observable<PaginatedResponse<any>>;
 
   remove: (id: string) => Observable<any>;
