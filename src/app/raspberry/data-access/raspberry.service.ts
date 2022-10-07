@@ -55,7 +55,7 @@ export class RaspberriesService implements Listable {
     page: number,
     size: number,
     search: string,
-    searchField: string
+    searchField = "mac_address"
   ) {
     return this.http
       .get<PaginatedResponse<Raspberry>>(`${environment.apiUrl}/api/raspberries`, {
@@ -63,6 +63,7 @@ export class RaspberriesService implements Listable {
           page,
           size,
           search,
+          searchField,
         },
       })
       .pipe(take(1));

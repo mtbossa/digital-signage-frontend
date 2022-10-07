@@ -49,7 +49,7 @@ export interface Listable {
     page: number,
     size: number,
     search: string,
-    searchField: string
+    searchField?: string
   ) => Observable<PaginatedResponse<any>>;
 
   remove: (id: string) => Observable<any>;
@@ -116,7 +116,7 @@ export class AppSearchableTableComponent implements OnInit {
       debounceTime(0),
       switchMap(([page, size, search]) =>
         this.listableService
-          .getPaginatedResponse(page, size, search, "short_name")
+          .getPaginatedResponse(page, size, search)
           .pipe(startWith(null))
       ),
       tap((res) => this.data$.next(res?.data.filter(tuiIsPresent) ?? [])),
