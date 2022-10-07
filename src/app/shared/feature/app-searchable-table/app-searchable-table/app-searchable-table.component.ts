@@ -86,7 +86,7 @@ export class AppSearchableTableComponent implements OnInit {
 
   private readonly page$ = new BehaviorSubject(1);
   private readonly size$ = new BehaviorSubject(10);
-  private refresh$ = new BehaviorSubject<boolean>(false);
+  private readonly refresh$ = new BehaviorSubject<boolean>(false);
   readonly direction$ = new BehaviorSubject<-1 | 1>(-1);
 
   constructor(
