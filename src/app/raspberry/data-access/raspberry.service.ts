@@ -55,7 +55,7 @@ export class RaspberriesService implements Listable {
     page: number,
     size: number,
     search: string,
-    searchColumn = "mac_address"
+    searchColumn = "short_name"
   ) {
     return this.http
       .get<PaginatedResponse<Raspberry>>(`${environment.apiUrl}/api/raspberries`, {
