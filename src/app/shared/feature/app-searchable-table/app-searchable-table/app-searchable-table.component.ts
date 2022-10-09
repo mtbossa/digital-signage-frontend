@@ -80,11 +80,13 @@ export class AppSearchableTableComponent implements OnInit {
   searchControl = new FormControl("", { nonNullable: true });
   search$ = this.searchControl.valueChanges.pipe(
     startWith(""),
+    tap(() => this.page$.next(1)),
     distinctUntilChanged(),
     debounceTime(500)
   );
 
   private readonly page$ = new BehaviorSubject(1);
+  readonly pagination$ = this.page$.pipe(map((page) => page - 1));
   private readonly size$ = new BehaviorSubject(10);
   private readonly refresh$ = new BehaviorSubject<boolean>(false);
   readonly direction$ = new BehaviorSubject<-1 | 1>(-1);

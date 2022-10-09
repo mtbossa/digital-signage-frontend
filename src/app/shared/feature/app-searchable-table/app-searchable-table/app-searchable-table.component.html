@@ -58,6 +58,7 @@
               class="tui-space_top-2"
               [items]="[10, 25, 50, 100]"
               [total]="(total$ | async) || 0"
+              [page]="(pagination$ | async) || 0"
               (pageChange)="changePage($event)"
               (sizeChange)="changeSize($event)"
             ></tui-table-pagination>
