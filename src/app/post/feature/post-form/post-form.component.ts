@@ -29,6 +29,7 @@ import {
   TuiDataListModule,
   TuiErrorModule,
   TuiExpandModule,
+  TuiHintModule,
   TuiLoaderModule,
   TuiTextfieldControllerModule,
 } from "@taiga-ui/core";
@@ -64,6 +65,7 @@ import { MediaOption } from "src/app/media/data-access/medias.service";
 import { RecurrenceOption } from "src/app/recurrence/data-access/recurrences.service";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
 import { disableAllFormControlsBut } from "src/app/shared/utils/form-functions";
+import { msTimeConverter, secondsTimeConverter } from "src/app/shared/utils/functions";
 
 import { PostsService } from "../../data-access/posts.service";
 
@@ -106,6 +108,7 @@ export type ValidPostForm = {
     TuiDataListWrapperModule,
     TuiCheckboxLabeledModule,
     TuiExpandModule,
+    TuiHintModule,
   ],
   providers: [
     {
@@ -165,9 +168,9 @@ export class PostFormComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    expose_time: new FormControl<number | null>(1000, {
+    expose_time: new FormControl<number | null>(1, {
       nonNullable: true,
-      validators: [Validators.min(1000)],
+      validators: [Validators.min(1), Validators.max(3600)],
     }),
     media_id: new FormControl<number | null>(null, {
       nonNullable: true,
@@ -228,6 +231,13 @@ export class PostFormComponent implements OnInit {
       } as ValidPostForm;
     }
 
+    if (validFormData.expose_time) {
+      validFormData.expose_time = secondsTimeConverter({
+        secondsTime: validFormData.expose_time,
+        toUnit: "ms",
+      });
+    }
+
     if (this.postData) {
       this.handleUpdate(validFormData);
     } else {
@@ -277,6 +287,13 @@ export class PostFormComponent implements OnInit {
     // Since isRecurrent is not inside the main form, we need to do it manually here.
     this.isRecurrent.setValue(!!postData.recurrence_id);
     this.isRecurrent.disable();
+
+    if (postData.expose_time) {
+      postData.expose_time = msTimeConverter({
+        msTime: postData.expose_time,
+        toUnit: "s",
+      });
+    }
 
     if (!postData.recurrence_id) {
       this.postForm.patchValue({
