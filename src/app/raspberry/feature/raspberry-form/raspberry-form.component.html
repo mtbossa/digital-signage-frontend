@@ -46,7 +46,7 @@
           </div>
 
           <!-- Display -->
-          <h3 class="tui-form__header">Seleção de Display</h3>
+          <h3 class="tui-form__header">Qual Display está ligado</h3>
           <div class="tui-form__row">
             <tui-select
               *tuiLet="displays$ | async as items"
@@ -55,7 +55,7 @@
               [tuiTextfieldCleaner]="true"
               formControlName="display_id"
             >
-              Ligado no Display:
+              Selecione o Display
               <ng-template tuiDataList>
                 <tui-data-list
                   *ngIf="items; else loading"
