@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
 } from "@angular/core";
@@ -57,6 +58,7 @@ import {
   of,
   shareReplay,
   startWith,
+  Subscription,
   switchMap,
   tap,
 } from "rxjs";
@@ -117,7 +119,7 @@ export type ValidPostForm = {
     },
   ],
 })
-export class PostFormComponent implements OnInit {
+export class PostFormComponent implements OnInit, OnDestroy {
   @Output() formSubmitted = new EventEmitter<ValidPostForm>();
 
   // If postData, means it's an update
@@ -186,8 +188,18 @@ export class PostFormComponent implements OnInit {
 
   isRecurrent = new FormControl<boolean>(false, { nonNullable: true });
 
+  private subscriptions: Subscription[] = [];
+
   get exposeTimeFormControl() {
     return this.postForm.get("expose_time");
+  }
+
+  get endDateFormControl() {
+    return this.postForm.get("end_date");
+  }
+
+  get startDateFormControl() {
+    return this.postForm.get("start_date");
   }
 
   constructor(
@@ -196,13 +208,32 @@ export class PostFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.isRecurrent.valueChanges.subscribe((isRecurrent) => {
-      this.configureIsRecurrent(isRecurrent);
-    });
+    this.configureFormSubscriptions();
 
     if (this.postData) {
       this.configureUpdate(this.postData);
     }
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  private configureFormSubscriptions() {
+    this.subscriptions.push(
+      this.isRecurrent.valueChanges.subscribe((isRecurrent) => {
+        this.configureIsRecurrent(isRecurrent);
+      })
+    );
+
+    this.subscriptions.push(
+      this.startDateFormControl!.valueChanges.subscribe((startDate) => {
+        const endDate = this.endDateFormControl?.value;
+        if (endDate && startDate && startDate?.dayAfter(endDate)) {
+          this.endDateFormControl?.setValue(startDate);
+        }
+      })
+    );
   }
 
   onSubmit() {
@@ -246,7 +277,7 @@ export class PostFormComponent implements OnInit {
   }
 
   getMinEndDate() {
-    const currentStartDate = this.postForm.get("start_date")?.value;
+    const currentStartDate = this.startDateFormControl?.value;
     if (!currentStartDate) return TuiDay.currentLocal();
     return currentStartDate;
   }
