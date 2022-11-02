@@ -64,7 +64,7 @@ import { DisplaysService } from "src/app/display/data-access/displays.service";
 import { MediaOption } from "src/app/media/data-access/medias.service";
 import { RecurrenceOption } from "src/app/recurrence/data-access/recurrences.service";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
-import { disableAllFormControlsBut } from "src/app/shared/utils/form-functions";
+import { disableOnlyFormControls } from "src/app/shared/utils/form-functions";
 import { msTimeConverter, secondsTimeConverter } from "src/app/shared/utils/functions";
 
 import { PostsService } from "../../data-access/posts.service";
@@ -286,7 +286,7 @@ export class PostFormComponent implements OnInit {
 
     // Since isRecurrent is not inside the main form, we need to do it manually here.
     this.isRecurrent.setValue(!!postData.recurrence_id);
-    this.isRecurrent.disable();
+    // this.isRecurrent.disable();
 
     if (postData.expose_time) {
       postData.expose_time = msTimeConverter({
@@ -311,7 +311,7 @@ export class PostFormComponent implements OnInit {
       });
     }
 
-    disableAllFormControlsBut(["description", "displays_ids"], this.postForm);
+    disableOnlyFormControls(["media_id"], this.postForm);
 
     this.postForm.valueChanges
       .pipe(

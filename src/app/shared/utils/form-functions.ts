@@ -13,5 +13,13 @@ export const disableAllFormControlsBut = (
     });
 };
 
+export const disableOnlyFormControls = (mustBeDisabled: string[], form: FormGroup) => {
+  Object.keys(form.controls)
+    .filter((key) => mustBeDisabled.includes(key))
+    .forEach((key) => {
+      form.get(key)?.disable();
+    });
+};
+
 export const isFormSameData = <T>(form: FormGroup, compareData: T) =>
   form.valueChanges.pipe(map((newFormData) => isEqual(newFormData, compareData)));
