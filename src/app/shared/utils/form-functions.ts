@@ -23,3 +23,17 @@ export const disableOnlyFormControls = (mustBeDisabled: string[], form: FormGrou
 
 export const isFormSameData = <T>(form: FormGroup, compareData: T) =>
   form.valueChanges.pipe(map((newFormData) => isEqual(newFormData, compareData)));
+
+export const getDirtyValues = (form: FormGroup) => {
+  const dirtyValues: { [key: string]: any } = {};
+
+  Object.keys(form.controls).forEach((key) => {
+    const currentControl = form.controls[key];
+
+    if (currentControl.dirty) {
+      dirtyValues[key] = currentControl.value;
+    }
+  });
+
+  return dirtyValues;
+};

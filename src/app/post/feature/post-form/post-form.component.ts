@@ -66,7 +66,10 @@ import { DisplaysService } from "src/app/display/data-access/displays.service";
 import { MediaOption } from "src/app/media/data-access/medias.service";
 import { RecurrenceOption } from "src/app/recurrence/data-access/recurrences.service";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
-import { disableOnlyFormControls } from "src/app/shared/utils/form-functions";
+import {
+  disableOnlyFormControls,
+  getDirtyValues,
+} from "src/app/shared/utils/form-functions";
 import { msTimeConverter, secondsTimeConverter } from "src/app/shared/utils/functions";
 
 import { PostsService } from "../../data-access/posts.service";
@@ -121,6 +124,9 @@ export type ValidPostForm = {
 })
 export class PostFormComponent implements OnInit, OnDestroy {
   @Output() formSubmitted = new EventEmitter<ValidPostForm>();
+  @Output() descriptionUpdateSubmitted = new EventEmitter<
+    Pick<ValidPostForm, "description">
+  >();
 
   // If postData, means it's an update
   @Input() postData?: ValidPostForm;
@@ -362,7 +368,20 @@ export class PostFormComponent implements OnInit, OnDestroy {
   private handleUpdate(formData: ValidPostForm) {
     this.postData = formData;
     this.formDisabled = true;
-    this.formSubmitted.emit(formData);
+
+    if (this.onlyDescriptionChanged()) {
+      this.descriptionUpdateSubmitted.emit({ description: formData.description });
+    } else {
+      this.formSubmitted.emit(formData);
+    }
+  }
+
+  private onlyDescriptionChanged() {
+    return (
+      Object.keys(getDirtyValues(this.postForm)).filter(
+        (changedValue) => changedValue !== "description"
+      ).length === 0
+    );
   }
 
   private transformDateToTuiDay(date: string) {

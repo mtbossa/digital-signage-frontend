@@ -68,10 +68,15 @@ export class PostsService {
       .pipe(take(1));
   }
 
-  // Can only update post description
   public update(postId: number, data: ValidPostForm) {
     return this.http
-      .patch(`${environment.apiUrl}/api/posts/${postId}`, data)
+      .patch<Post>(`${environment.apiUrl}/api/posts/${postId}`, data)
+      .pipe(take(1));
+  }
+
+  public updateDescription(postId: number, data: Pick<ValidPostForm, "description">) {
+    return this.http
+      .patch<Post>(`${environment.apiUrl}/api/posts/${postId}/description`, data)
       .pipe(take(1));
   }
 

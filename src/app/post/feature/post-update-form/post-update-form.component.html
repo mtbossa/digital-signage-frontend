@@ -1,6 +1,7 @@
 <ng-container *ngIf="post$ | async as post; else loading">
   <app-post-form
     (formSubmitted)="updatePost($event)"
+    (descriptionUpdateSubmitted)="updatePostDescription($event)"
     [postData]="post"
     [medias$]="medias$"
     [recurrences$]="recurrences$"
