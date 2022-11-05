@@ -367,7 +367,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
 
   private transformDateToTuiDay(date: string) {
     const [year, month, day] = date.split("-").map(Number);
-    return new TuiDay(year, month, day);
+    return new TuiDay(year, month - 1, day);
   }
 
   private transformTimeToTuiTime(time: string) {
