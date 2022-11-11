@@ -15,6 +15,7 @@ import {
 } from "@taiga-ui/core";
 import {
   TUI_VALIDATION_ERRORS,
+  TuiCheckboxLabeledModule,
   TuiFieldErrorPipeModule,
   TuiInputCountModule,
   TuiInputModule,
@@ -44,6 +45,7 @@ export type ValidInvitationForm = {
     TuiButtonModule,
     TuiInputModule,
     TuiInputCountModule,
+    TuiCheckboxLabeledModule,
   ],
   providers: [
     {
