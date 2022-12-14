@@ -10,8 +10,7 @@ const routes: Routes = [
     children: [
       {
         path: "",
-        loadChildren: () =>
-          import("../dashboard/feature/dashboard.module").then((m) => m.DashboardModule),
+        redirectTo: '/posts', pathMatch: 'full'
       },
       {
         path: "midias",
