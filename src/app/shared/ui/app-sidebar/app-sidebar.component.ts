@@ -19,11 +19,6 @@ type Menu = {
 export class AppSidebarComponent {
   menu: Array<Menu> = [
     {
-      title: "Dashboard",
-      path: "/dashboard",
-      icon: "tuiIconChartLineLarge",
-    },
-    {
       title: "Mídias",
       path: "/midias",
       icon: "tuiIconVideo",
