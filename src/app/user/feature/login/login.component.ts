@@ -13,11 +13,11 @@ export class LoginComponent {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   loginForm = new FormGroup({
-    email: new FormControl("t@t", {
+    email: new FormControl("", {
       nonNullable: true,
       validators: [Validators.required, Validators.email],
     }),
-    password: new FormControl("password", {
+    password: new FormControl("", {
       nonNullable: true,
       validators: [Validators.required],
     }),

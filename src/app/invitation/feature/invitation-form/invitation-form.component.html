@@ -1,5 +1,5 @@
 <article>
-  <h1>Criar Display</h1>
+  <h1>Criar Usuário</h1>
   <div class="tui-container">
     <form [formGroup]="invitationForm" (ngSubmit)="onSubmit()">
       <div class="tui-row tui-row_sme">
@@ -14,6 +14,13 @@
               formControlName="email"
               [error]="[] | tuiFieldError | async"
             ></tui-error>
+          </div>
+          <div class="tui-form__row">
+            <div class="tui-form__row">
+              <tui-checkbox-labeled formControlName="is_admin"
+                >Administrador</tui-checkbox-labeled
+              >
+            </div>
           </div>
           <div class="tui-form__buttons">
             <button

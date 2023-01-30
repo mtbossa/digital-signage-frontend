@@ -21,17 +21,74 @@
             <div class="tui-form__row" *ngIf="exposeTimeFormControl?.value !== null">
               <tui-input-count
                 formControlName="expose_time"
-                [min]="1000"
-                [max]="86400000"
+                [min]="1"
+                [max]="3600"
+                [postfix]="'s'"
+                [tuiHint]="'Máximo: 3600s (1h)'"
+                [tuiHintDirection]="'top-left'"
               >
-                Tempo de exposição
+                Tempo de exposição (segundos)
                 <input tuiTextfield placeholder="Tempo de exposição" />
               </tui-input-count>
+              <p></p>
               <tui-error
                 formControlName="expose_time"
                 [error]="[] | tuiFieldError | async"
               ></tui-error>
             </div>
+          </div>
+
+          <h3 class="tui-form__header tui-form__header_margin-top_1">
+            Mostrar nos Displays:
+          </h3>
+          <!-- Displays -->
+          <tui-multi-select
+            *tuiLet="displaysOptionsRequest$ | async"
+            [stringify]="(displaysStringify$ | async)!"
+            [tuiTextfieldLabelOutside]="true"
+            [expandable]="false"
+            (searchChange)="onSearchChange($event)"
+            formControlName="displays_ids"
+          >
+            Selecione os displays
+            <tui-data-list-wrapper
+              *tuiDataList
+              tuiMultiSelectGroup
+              [items]="displaysIds$ | async"
+              [itemContent]="(displaysStringify$ | async)!"
+            ></tui-data-list-wrapper>
+          </tui-multi-select>
+
+          <h3 class="tui-form__header tui-form__header_margin-top_1">Mídia</h3>
+          <!-- Media -->
+          <div class="tui-form__row">
+            <tui-select
+              *tuiLet="medias$ | async as items"
+              [tuiTextfieldLabelOutside]="true"
+              [valueContent]="items ? stringifyOptions(items) : loading"
+              formControlName="media_id"
+            >
+              Selecione a mídia
+              <ng-template tuiDataList>
+                <tui-data-list *ngIf="items; else loading">
+                  <button
+                    *ngFor="let item of items"
+                    tuiOption
+                    [value]="item.id"
+                    (click)="onMediaChanged(item.type)"
+                  >
+                    {{ item.description }}
+                  </button>
+                </tui-data-list>
+              </ng-template>
+              <ng-template #loading>
+                <tui-loader class="tui-space_vertical-3 loader"></tui-loader>
+              </ng-template>
+            </tui-select>
+            <tui-error
+              formControlName="media_id"
+              [error]="[] | tuiFieldError | async"
+            ></tui-error>
           </div>
 
           <h3 class="tui-form__header tui-form__header_margin-top_1">Agendamento</h3>
@@ -107,57 +164,6 @@
               ></tui-error>
             </div>
           </div>
-
-          <h3 class="tui-form__header tui-form__header_margin-top_1">Mídia</h3>
-          <!-- Media -->
-          <div class="tui-form__row">
-            <tui-select
-              *tuiLet="medias$ | async as items"
-              [tuiTextfieldLabelOutside]="true"
-              [valueContent]="items ? stringifyOptions(items) : loading"
-              formControlName="media_id"
-            >
-              Selecione a mídia
-              <ng-template tuiDataList>
-                <tui-data-list *ngIf="items; else loading">
-                  <button
-                    *ngFor="let item of items"
-                    tuiOption
-                    [value]="item.id"
-                    (click)="onMediaChanged(item.type)"
-                  >
-                    {{ item.description }}
-                  </button>
-                </tui-data-list>
-              </ng-template>
-              <ng-template #loading>
-                <tui-loader class="tui-space_vertical-3 loader"></tui-loader>
-              </ng-template>
-            </tui-select>
-            <tui-error
-              formControlName="media_id"
-              [error]="[] | tuiFieldError | async"
-            ></tui-error>
-          </div>
-
-          <h3 class="tui-form__header tui-form__header_margin-top_1">Displays</h3>
-          <!-- Displays -->
-          <tui-multi-select
-            *tuiLet="displaysOptionsRequest$ | async"
-            [stringify]="(displaysStringify$ | async)!"
-            [tuiTextfieldLabelOutside]="true"
-            [expandable]="false"
-            (searchChange)="onSearchChange($event)"
-            formControlName="displays_ids"
-          >
-            Selecione os displays
-            <tui-data-list-wrapper
-              *tuiDataList
-              tuiMultiSelectGroup
-              [items]="displaysIds$ | async"
-              [itemContent]="(displaysStringify$ | async)!"
-            ></tui-data-list-wrapper>
-          </tui-multi-select>
 
           <div class="tui-form__buttons">
             <button

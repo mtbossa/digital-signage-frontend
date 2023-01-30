@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
 } from "@angular/core";
@@ -29,6 +30,7 @@ import {
   TuiDataListModule,
   TuiErrorModule,
   TuiExpandModule,
+  TuiHintModule,
   TuiLoaderModule,
   TuiTextfieldControllerModule,
 } from "@taiga-ui/core";
@@ -56,6 +58,7 @@ import {
   of,
   shareReplay,
   startWith,
+  Subscription,
   switchMap,
   tap,
 } from "rxjs";
@@ -63,7 +66,11 @@ import { DisplaysService } from "src/app/display/data-access/displays.service";
 import { MediaOption } from "src/app/media/data-access/medias.service";
 import { RecurrenceOption } from "src/app/recurrence/data-access/recurrences.service";
 import CustomValidators from "src/app/shared/data-access/validators/CustomValidators";
-import { disableAllFormControlsBut } from "src/app/shared/utils/form-functions";
+import {
+  disableOnlyFormControls,
+  getDirtyValues,
+} from "src/app/shared/utils/form-functions";
+import { msTimeConverter, secondsTimeConverter } from "src/app/shared/utils/functions";
 
 import { PostsService } from "../../data-access/posts.service";
 
@@ -106,6 +113,7 @@ export type ValidPostForm = {
     TuiDataListWrapperModule,
     TuiCheckboxLabeledModule,
     TuiExpandModule,
+    TuiHintModule,
   ],
   providers: [
     {
@@ -114,8 +122,11 @@ export type ValidPostForm = {
     },
   ],
 })
-export class PostFormComponent implements OnInit {
+export class PostFormComponent implements OnInit, OnDestroy {
   @Output() formSubmitted = new EventEmitter<ValidPostForm>();
+  @Output() descriptionUpdateSubmitted = new EventEmitter<
+    Pick<ValidPostForm, "description">
+  >();
 
   // If postData, means it's an update
   @Input() postData?: ValidPostForm;
@@ -165,9 +176,9 @@ export class PostFormComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    expose_time: new FormControl<number | null>(1000, {
+    expose_time: new FormControl<number | null>(1, {
       nonNullable: true,
-      validators: [Validators.min(1000)],
+      validators: [Validators.min(1), Validators.max(3600)],
     }),
     media_id: new FormControl<number | null>(null, {
       nonNullable: true,
@@ -183,8 +194,18 @@ export class PostFormComponent implements OnInit {
 
   isRecurrent = new FormControl<boolean>(false, { nonNullable: true });
 
+  private subscriptions: Subscription[] = [];
+
   get exposeTimeFormControl() {
     return this.postForm.get("expose_time");
+  }
+
+  get endDateFormControl() {
+    return this.postForm.get("end_date");
+  }
+
+  get startDateFormControl() {
+    return this.postForm.get("start_date");
   }
 
   constructor(
@@ -193,13 +214,32 @@ export class PostFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.isRecurrent.valueChanges.subscribe((isRecurrent) => {
-      this.configureIsRecurrent(isRecurrent);
-    });
+    this.configureFormSubscriptions();
 
     if (this.postData) {
       this.configureUpdate(this.postData);
     }
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  private configureFormSubscriptions() {
+    this.subscriptions.push(
+      this.isRecurrent.valueChanges.subscribe((isRecurrent) => {
+        this.configureIsRecurrent(isRecurrent);
+      })
+    );
+
+    this.subscriptions.push(
+      this.startDateFormControl!.valueChanges.subscribe((startDate) => {
+        const endDate = this.endDateFormControl?.value;
+        if (endDate && startDate && startDate?.dayAfter(endDate)) {
+          this.endDateFormControl?.setValue(startDate);
+        }
+      })
+    );
   }
 
   onSubmit() {
@@ -228,6 +268,13 @@ export class PostFormComponent implements OnInit {
       } as ValidPostForm;
     }
 
+    if (validFormData.expose_time) {
+      validFormData.expose_time = secondsTimeConverter({
+        secondsTime: validFormData.expose_time,
+        toUnit: "ms",
+      });
+    }
+
     if (this.postData) {
       this.handleUpdate(validFormData);
     } else {
@@ -236,7 +283,7 @@ export class PostFormComponent implements OnInit {
   }
 
   getMinEndDate() {
-    const currentStartDate = this.postForm.get("start_date")?.value;
+    const currentStartDate = this.startDateFormControl?.value;
     if (!currentStartDate) return TuiDay.currentLocal();
     return currentStartDate;
   }
@@ -276,7 +323,14 @@ export class PostFormComponent implements OnInit {
 
     // Since isRecurrent is not inside the main form, we need to do it manually here.
     this.isRecurrent.setValue(!!postData.recurrence_id);
-    this.isRecurrent.disable();
+    // this.isRecurrent.disable();
+
+    if (postData.expose_time) {
+      postData.expose_time = msTimeConverter({
+        msTime: postData.expose_time,
+        toUnit: "s",
+      });
+    }
 
     if (!postData.recurrence_id) {
       this.postForm.patchValue({
@@ -294,7 +348,7 @@ export class PostFormComponent implements OnInit {
       });
     }
 
-    disableAllFormControlsBut(["description", "displays_ids"], this.postForm);
+    disableOnlyFormControls(["media_id"], this.postForm);
 
     this.postForm.valueChanges
       .pipe(
@@ -314,12 +368,25 @@ export class PostFormComponent implements OnInit {
   private handleUpdate(formData: ValidPostForm) {
     this.postData = formData;
     this.formDisabled = true;
-    this.formSubmitted.emit(formData);
+
+    if (this.onlyDescriptionChanged()) {
+      this.descriptionUpdateSubmitted.emit({ description: formData.description });
+    } else {
+      this.formSubmitted.emit(formData);
+    }
+  }
+
+  private onlyDescriptionChanged() {
+    return (
+      Object.keys(getDirtyValues(this.postForm)).filter(
+        (changedValue) => changedValue !== "description"
+      ).length === 0
+    );
   }
 
   private transformDateToTuiDay(date: string) {
     const [year, month, day] = date.split("-").map(Number);
-    return new TuiDay(year, month, day);
+    return new TuiDay(year, month - 1, day);
   }
 
   private transformTimeToTuiTime(time: string) {

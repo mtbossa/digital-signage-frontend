@@ -40,7 +40,15 @@ export class PostUpdateFormComponent {
   }
 
   updatePost($event: ValidPostForm) {
-    this.postsService.update(this.selectedId, $event).subscribe(() => {
+    this.makeUpdateRequest(this.postsService.update(this.selectedId, $event));
+  }
+
+  updatePostDescription($event: Pick<ValidPostForm, "description">) {
+    this.makeUpdateRequest(this.postsService.updateDescription(this.selectedId, $event));
+  }
+
+  private makeUpdateRequest(request$: Observable<Post>) {
+    request$.subscribe(() => {
       this.alertService
         .open(`Post atualizado com sucesso!`, { status: TuiNotification.Success })
         .subscribe();
