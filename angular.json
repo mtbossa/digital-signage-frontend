@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "intus-frontend": {
+    "paroquia-pio-x-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/intus-frontend",
+            "outputPath": "dist/paroquia-pio-x-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -98,13 +98,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "intus-frontend:build:production"
+              "browserTarget": "paroquia-pio-x-frontend:build:production"
             },
             "staging": {
-              "browserTarget": "intus-frontend:build:staging"
+              "browserTarget": "paroquia-pio-x-frontend:build:staging"
             },
             "development": {
-              "browserTarget": "intus-frontend:build:development"
+              "browserTarget": "paroquia-pio-x-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -112,7 +112,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "intus-frontend:build"
+            "browserTarget": "paroquia-pio-x-frontend:build"
           }
         },
         "test": {

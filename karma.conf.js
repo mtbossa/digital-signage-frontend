@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/intus-frontend'),
+      dir: require('path').join(__dirname, './coverage/paroquia-pio-x-frontend'),
       subdir: '.',
       reporters: [
         { type: 'html' },

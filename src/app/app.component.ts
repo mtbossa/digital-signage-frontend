@@ -6,5 +6,5 @@ import { Component } from "@angular/core";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
-  title = "Intus - Controle de Painéis";
+  title = "paroquia-pio-x - Controle de Painéis";
 }
