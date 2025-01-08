@@ -1,5 +1,5 @@
-# Intus Frontend Angular
-Angular project for Intus Mural.
+# Paróquia Pio X Murais Frontend Angular
+Angular project for Paróquia Pio X Murais.
 
 # Building for **staging** enviroment
 Must run `yarn build --configuration staging`. It'll generate a `dist/` folder, which the contents of this folder must be placed in the server.
