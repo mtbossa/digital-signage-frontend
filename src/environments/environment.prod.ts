@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: "http://api.paroquia-piox.app.br",
+  apiUrl: "https://api.paroquia-piox.app.br",
 };
